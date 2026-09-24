@@ -1,0 +1,6 @@
+{
+  "template": "ashlar",
+  "size": [64, 64],
+  "rows": { "count": 4 },
+  "blocks": { "width": [14, 30] }
+}

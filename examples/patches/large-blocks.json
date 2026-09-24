@@ -1,0 +1,7 @@
+{
+  "extends": "./castle-stone.json",
+  "rows": { "count": 2, "heightVariation": 0 },
+  "blocks": { "width": [24, 40], "minJointOffset": 10 },
+  "mortar": { "size": 3 },
+  "bevel": { "size": 2 }
+}

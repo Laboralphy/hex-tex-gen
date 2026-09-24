@@ -1,0 +1,90 @@
+{
+  "name": "@laboralphy/hex-tex-gen",
+  "version": "0.1.0",
+  "description": "Procedural generator of Hexen/Doom-like 2D bitmap textures, with a CLI producing PNG files.",
+  "author": {
+    "name": "Raphaël Marandet",
+    "email": "raphael.marandet@gmail.com"
+  },
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "hex-tex-gen": "./dist/cli.mjs"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "texture",
+    "procedural",
+    "generator",
+    "hexen",
+    "doom",
+    "bitmap",
+    "png",
+    "typescript"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "cli": "tsx src/cli/index.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "prepublishOnly": "npm run check",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Laboralphy/hex-tex-gen.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Laboralphy/hex-tex-gen/issues"
+  },
+  "homepage": "https://github.com/Laboralphy/hex-tex-gen#readme",
+  "dependencies": {
+    "@laboralphy/algorithms": "^0.2.0",
+    "@laboralphy/rainbow": "^3.0.0",
+    "pngjs": "^7.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.2",
+    "@types/pngjs": "^6.0.5",
+    "@vitest/coverage-v8": "^5.0.1",
+    "eslint": "^10.11.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.9",
+    "tsdown": "^0.23.0",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.70.1",
+    "vitest": "^5.0.1"
+  }
+}
