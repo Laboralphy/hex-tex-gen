@@ -1,4 +1,5 @@
 import { deepClone } from './deep-clone';
+import { isPlainObject } from './is-plain-object';
 
 /** How {@link deepMerge} combines two arrays found at the same key. */
 export type ArrayMergeStrategy = 'replace' | 'concat';
@@ -21,10 +22,6 @@ export interface DeepMergeOptions {
      * to `false` (immutable merge — a new object is returned, `target` untouched).
      */
     mutate?: boolean;
-}
-
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-    return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
 /**

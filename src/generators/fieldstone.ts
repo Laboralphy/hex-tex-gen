@@ -1,5 +1,6 @@
 import { Voronoi } from '@laboralphy/algorithms';
 import { z } from 'zod';
+import { firstPixel, mod } from '../core/math';
 import { DETAIL, LAYOUT, ratio } from '../core/schema';
 import { Texture } from '../core/Texture';
 import {
@@ -114,10 +115,6 @@ export function fieldstoneWear(p: FieldstoneParams): AshlarWear {
     });
 }
 
-function mod(a: number, n: number): number {
-    return ((a % n) + n) % n;
-}
-
 /** the signed shortest offset from b to a, on a circle of the given length */
 function wrap(a: number, b: number, length: number): number {
     return mod(a - b + length / 2, length) - length / 2;
@@ -181,7 +178,7 @@ export function voronoiMasonry(
     // the panel is a rectangle over the stones; there are no rows to snap it to
     const panel = panelRect({ ...p, panel: { ...p.panel, snap: false } }, [], width, height);
     const panelId = panel ? stones.push({ row: rows, block: 0, ...panel }) - 1 : -1;
-    const face = (edge: number) => Math.ceil(edge + mortarAfter - 0.5);
+    const face = (edge: number) => firstPixel(edge, mortarAfter);
     // the top edge of each stone, straight above its center: the first pixel row whose
     // center is on the stone, going up from the center
     const tops = centers.map(([cx, cy], id) => {

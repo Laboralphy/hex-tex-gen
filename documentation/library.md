@@ -133,11 +133,16 @@ Rules:
 - pixel values are marked `.meta(LAYOUT)` when they scale with the patch (multiply them by
   `width / size[0]` or `height / size[1]`), or `.meta(DETAIL)` when they are real pixels;
 - use `hash(seed, ...integers)` for randomness tied to a position rather than a sequence,
-  and `FractalNoise` from `@laboralphy/algorithms` for tileable noise in tile units;
+  `hashSeed(seed, ...integers)` to seed a noise or a sub-patch, and `FractalNoise` from
+  `@laboralphy/algorithms` for tileable noise in tile units;
+- `mod()` wraps coordinates around the tile, `clamp()`, `circularDistance()` and
+  `firstPixel()` (the first pixel of a face after a joint) cover the usual pixel geometry;
 - a template can declare `anchors` (names and descriptions) and fill `texture.anchors` in
   `render`, and set `overlay: true` when it is transparent by design;
 - helpers for schemas: `size()`, `range()` (a `[min, max]` pair), `ratio()` (a number in
-  [0, 1]), `color()`, `palette()`.
+  [0, 1]), `color()`, `palette()`, `ageParam()` (the `age` parameter), `shadowGroup()`
+  (the drop shadow of an overlay), and `FROM_AGE` to end the description of a wear
+  parameter derived from `age`.
 
 To add a template to hex-tex-gen itself, put it in `src/generators/`, register it in
 `src/generators/index.ts`, then run `npm run schemas` and `npm run docs`: the JSON

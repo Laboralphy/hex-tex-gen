@@ -1,10 +1,12 @@
 import { FractalNoise } from '@laboralphy/algorithms';
 import { Rainbow } from '@laboralphy/rainbow';
-import { Texture } from '../core/Texture';
-import { hash, hashRange } from '../core/hash';
-import { createGradient, sample } from '../core/palette';
 import { z } from 'zod';
+import { hash, hashRange, hashSeed } from '../core/hash';
+import { mod } from '../core/math';
+import { createGradient, sample } from '../core/palette';
 import { DETAIL, LAYOUT, palette, range, ratio, size } from '../core/schema';
+import { Texture } from '../core/Texture';
+import { MOSS_PALETTE } from './common/palettes';
 import { defineGenerator } from './define';
 
 /**
@@ -80,7 +82,7 @@ export const mossSchema = z.strictObject({
     moss: z
         .strictObject({
             palette: palette()
-                .default(['#17230f', '#2f441b', '#4f6d2c', '#86a24a'])
+                .default(MOSS_PALETTE)
                 .describe('moss colors, from darkest to lightest'),
             alpha: ratio().default(0.9).describe('alpha of the moss, in [0, 1]'),
             fade: ratio()
@@ -110,10 +112,6 @@ const TONE_VINE = 0.45;
 const TONE_LEAF = 0.7;
 /** tone added to the leftmost pixel of a vine and removed from the rightmost one */
 const TONE_BEVEL = 0.15;
-
-function mod(a: number, n: number): number {
-    return ((a % n) + n) % n;
-}
 
 /**
  * Hanging moss: a mossy cushion along the top edge with vines falling from it. The
@@ -154,7 +152,7 @@ export const moss = defineGenerator({
         // cushion: patches of moss along the edge, in real pixels, and a clump at the top
         // of each vine
         const ledgeNoise = new FractalNoise({
-            seed: Math.floor(hash(seed, SALT_NOISE) * 4294967296),
+            seed: hashSeed(seed, SALT_NOISE),
             period: [Math.max(1, Math.round(width / 6)), 1],
             octaves: 2,
         });

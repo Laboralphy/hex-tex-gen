@@ -1,16 +1,10 @@
+import { isPlainObject } from './is-plain-object';
+
 export type DeepReadonly<T> = T extends (infer R)[]
     ? ReadonlyArray<DeepReadonly<R>>
     : T extends object
       ? { readonly [K in keyof T]: DeepReadonly<T[K]> }
       : T;
-
-/** True for a pure object literal (not an Array, Map, Set, Date, …). */
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-    if (typeof value !== 'object' || value === null) {
-        return false;
-    }
-    return (value as { constructor?: { name?: string } }).constructor?.name === 'Object';
-}
 
 /**
  * Recursively freeze a value, making it and everything it references immutable.

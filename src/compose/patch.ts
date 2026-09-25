@@ -1,5 +1,5 @@
 import { deepMerge } from '../core/object-fusion';
-import { isPlainObject } from '../core/params';
+import { isPlainObject } from '../core/object-fusion';
 import { parseWith, ValidationError } from '../core/schema';
 import type { Texture } from '../core/Texture';
 import { generators } from '../generators';

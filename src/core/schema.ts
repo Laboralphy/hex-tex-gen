@@ -51,6 +51,45 @@ export const range = (item: z.ZodNumber = z.number()) =>
         message: 'expected [min, max] with min <= max',
     });
 
+/** appended to the description of a wear parameter: its default comes from `age` */
+export const FROM_AGE = ' when unset, derived from age';
+
+/**
+ * The `age` parameter of a template, 0.3 by default.
+ * @param noun what aging is called for this material
+ * @param young what age 0 looks like
+ * @param old what age 1 looks like
+ * @param effect what the age does
+ */
+export const ageParam = ({
+    noun = 'weathering',
+    young = 'new',
+    old = 'ruined',
+    effect = 'sets every wear parameter left unset',
+} = {}) =>
+    ratio().default(0.3).describe(`overall ${noun}, from 0 (${young}) to 1 (${old}): ${effect}`);
+
+/**
+ * Shadow of an overlay on the wall, cast to the bottom-right.
+ * @param subject what casts the shadow
+ * @param opacity default darkness of the shadow
+ * @param offset default offset of the shadow, in pixels; 0 for none
+ */
+export const shadowGroup = (subject: string, opacity = 0.45, offset = 1) =>
+    z
+        .strictObject({
+            offset: z
+                .number()
+                .int()
+                .min(0)
+                .default(offset)
+                .describe('shadow cast on the wall, to the bottom-right, in pixels')
+                .meta(DETAIL),
+            opacity: ratio().default(opacity).describe('darkness of the shadow, in [0, 1]'),
+        })
+        .prefault({})
+        .describe(`shadow of the ${subject} on the wall, the light coming from the top-left`);
+
 /**
  * Validation failure, with a readable message listing every issue.
  */

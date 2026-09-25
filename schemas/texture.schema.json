@@ -3298,63 +3298,6 @@
               "type": "string"
             },
             "template": {
-              "const": "stone",
-              "description": "Mottled rock surface made of Perlin noise"
-            },
-            "seed": {
-              "description": "seed of this patch, unless the placement sets one",
-              "type": "integer",
-              "minimum": -9007199254740991,
-              "maximum": 9007199254740991
-            },
-            "size": {
-              "default": [64, 64],
-              "description": "own size of the patch, in pixels",
-              "type": "array",
-              "prefixItems": [
-                {
-                  "type": "integer",
-                  "exclusiveMinimum": 0,
-                  "maximum": 9007199254740991
-                },
-                {
-                  "type": "integer",
-                  "exclusiveMinimum": 0,
-                  "maximum": 9007199254740991
-                }
-              ],
-              "items": false,
-              "minItems": 2,
-              "maxItems": 2
-            },
-            "colors": {
-              "default": ["#1c1a17", "#4a443b", "#7a7064", "#a39888"],
-              "description": "rock colors, from darkest to lightest",
-              "minItems": 2,
-              "type": "array",
-              "items": {
-                "type": "string",
-                "kind": "color"
-              }
-            }
-          },
-          "additionalProperties": false,
-          "title": "stone",
-          "description": "Mottled rock surface made of Perlin noise",
-          "required": ["template"]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "$schema": {
-              "description": "JSON Schema of this file, for editors",
-              "type": "string"
-            },
-            "extends": {
-              "description": "parent patch file, relative to this file, deep-merged under this one",
-              "type": "string"
-            },
-            "template": {
               "const": "moss",
               "description": "Transparent overlay of greenish vines hanging from the top edge"
             },
@@ -3689,6 +3632,305 @@
           "additionalProperties": false,
           "title": "opening",
           "description": "Rectangular opening dug into the wall below, for windows, bars or arches",
+          "required": ["template"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "$schema": {
+              "description": "JSON Schema of this file, for editors",
+              "type": "string"
+            },
+            "extends": {
+              "description": "parent patch file, relative to this file, deep-merged under this one",
+              "type": "string"
+            },
+            "template": {
+              "const": "bars",
+              "description": "Vertical metal bars held by rails: prison windows and grates, rusting and breaking with age"
+            },
+            "seed": {
+              "description": "seed of this patch, unless the placement sets one",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "size": {
+              "default": [32, 48],
+              "description": "own size of the barred area, in pixels",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "bars": {
+              "description": "vertical bars, lit from the top-left",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "count": {
+                  "default": 5,
+                  "description": "number of bars across the patch, evenly spaced (layout: scales with the patch)",
+                  "scale": "layout",
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "thickness": {
+                  "default": 2,
+                  "description": "width of a bar, in pixels (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "profile": {
+                  "default": "round",
+                  "description": "round: a rod, its highlight a third across; square: a flat face between a lit and a dark edge",
+                  "type": "string",
+                  "enum": ["round", "square"]
+                }
+              },
+              "additionalProperties": false
+            },
+            "rails": {
+              "description": "horizontal flat rails holding the bars",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "count": {
+                  "default": 1,
+                  "description": "number of horizontal rails, evenly spaced; 0 for none (layout: scales with the patch)",
+                  "scale": "layout",
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "thickness": {
+                  "default": 2,
+                  "description": "height of a rail, in pixels (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "rivets": {
+                  "default": true,
+                  "description": "a rivet where each bar crosses a rail",
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            },
+            "metal": {
+              "description": "metal of the bars",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "palette": {
+                  "default": ["#2b2f33", "#474d53", "#687077", "#8f979e"],
+                  "description": "metal colors, from darkest to lightest",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "kind": "color"
+                  }
+                },
+                "grain": {
+                  "default": 0.04,
+                  "description": "random brightness variation between pixels, in [0, 1] (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "shadow": {
+              "description": "shadow of the bars on the back of what they close, the light coming from the top-left; none by default, set an offset over an opening whose back is shaded or colored",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "offset": {
+                  "default": 0,
+                  "description": "shadow cast on the wall, to the bottom-right, in pixels (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "opacity": {
+                  "default": 0.45,
+                  "description": "darkness of the shadow, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "age": {
+              "default": 0.3,
+              "description": "overall weathering, from 0 (new) to 1 (ruined): sets every wear parameter left unset",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "rust": {
+              "description": "rust",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "coverage": {
+                  "description": "share of the bars rusted, spreading from their broken ends; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "palette": {
+                  "default": ["#3a1c0c", "#6b3314", "#9a4e1e", "#bf6e2e"],
+                  "description": "rust colors, from darkest to lightest",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "kind": "color"
+                  }
+                },
+                "streaks": {
+                  "description": "ratio of rivets with a rust streak running down; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "length": {
+                  "description": "[min, max] length of the rust streaks, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              },
+              "additionalProperties": false
+            },
+            "tarnish": {
+              "description": "dulled, darkened metal, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "dents": {
+              "description": "dents, shaded against the light",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "density": {
+                  "description": "dents per 32 × 32 pixels; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0
+                },
+                "size": {
+                  "description": "[min, max] dent radius, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              },
+              "additionalProperties": false
+            },
+            "bends": {
+              "description": "bars bent sideways in a smooth bulge",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "ratio": {
+                  "description": "ratio of bent bars, in [0, 1]; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "amount": {
+                  "description": "maximum sideways bulge of a bent bar, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": false
+            },
+            "broken": {
+              "description": "broken bars: a part is missing between two rails, or the bar is gone down to an edge of the patch",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "ratio": {
+                  "description": "ratio of broken bars, a part of them missing, in [0, 1]; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "length": {
+                  "description": "[min, max] length of the missing part; when unset, derived from age (layout: scales with the patch)",
+                  "scale": "layout",
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false,
+          "title": "bars",
+          "description": "Vertical metal bars held by rails: prison windows and grates, rusting and breaking with age",
           "required": ["template"]
         },
         {

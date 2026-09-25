@@ -2,15 +2,23 @@ import { Bresenham, FractalNoise } from '@laboralphy/algorithms';
 import { Rainbow } from '@laboralphy/rainbow';
 import { z } from 'zod';
 import { atAge, rangeAtAge } from '../core/age';
-import { hash, hashRange } from '../core/hash';
+import { hash, hashRange, hashSeed } from '../core/hash';
+import { firstPixel, mod } from '../core/math';
 import { createGradient, sample, shade } from '../core/palette';
-import { color, DETAIL, LAYOUT, palette, range, ratio, size } from '../core/schema';
+import { ageParam, color, DETAIL, LAYOUT, palette, range, ratio, size } from '../core/schema';
 import { Texture } from '../core/Texture';
 import { checkPanelFits, computeAshlarLayout, NO_PANEL, panelGroup, panelRect } from './ashlar';
+import {
+    metalWearBase,
+    rustGroup,
+    scratchesParam,
+    tarnishParam,
+    type MetalWearBase,
+} from './common/metal-wear';
+import { dentsGroup, drawDents, type DentsWear } from './common/dents';
+import { MetalWeathering } from './common/MetalWeathering';
+import { METAL_PALETTE } from './common/palettes';
 import { defineGenerator } from './define';
-
-/** suffix of the descriptions of wear parameters */
-const AGE = ' when unset, derived from age';
 
 /**
  * Parameters of the metal template. "Layout" values are expressed at the patch's own
@@ -102,7 +110,7 @@ export const metalSchema = z
         metal: z
             .strictObject({
                 palette: palette()
-                    .default(['#2b2f33', '#474d53', '#687077', '#8f979e'])
+                    .default(METAL_PALETTE)
                     .describe('metal colors, from darkest to lightest'),
                 sheen: ratio()
                     .default(0.3)
@@ -138,41 +146,11 @@ export const metalSchema = z
             })
             .prefault({})
             .describe('rivets fixing the plates, lit from the top-left'),
-        age: ratio()
-            .default(0.3)
-            .describe(
-                'overall weathering, from 0 (new) to 1 (ruined): sets every wear parameter left unset',
-            ),
-        rust: z
-            .strictObject({
-                coverage: ratio()
-                    .optional()
-                    .describe(`share of the surface rusted, growing from the seams;${AGE}`),
-                palette: palette()
-                    .default(['#3a1c0c', '#6b3314', '#9a4e1e', '#bf6e2e'])
-                    .describe('rust colors, from darkest to lightest'),
-                streaks: ratio()
-                    .optional()
-                    .describe(`ratio of rivets with a rust streak running down;${AGE}`),
-                length: range(z.number().min(0))
-                    .optional()
-                    .describe(`[min, max] length of the rust streaks, in pixels;${AGE}`)
-                    .meta(DETAIL),
-            })
-            .prefault({})
-            .describe('rust'),
-        dents: z
-            .strictObject({
-                density: z.number().min(0).optional().describe(`dents per 32 × 32 pixels;${AGE}`),
-                size: range(z.number().min(0))
-                    .optional()
-                    .describe(`[min, max] dent radius, in pixels;${AGE}`)
-                    .meta(DETAIL),
-            })
-            .prefault({})
-            .describe('dents, shaded against the light'),
-        scratches: z.number().min(0).optional().describe(`scratches per 32 × 32 pixels;${AGE}`),
-        tarnish: ratio().optional().describe(`dulled, darkened metal, in [0, 1];${AGE}`),
+        age: ageParam(),
+        rust: rustGroup('share of the surface rusted, growing from the seams'),
+        dents: dentsGroup(),
+        scratches: scratchesParam(),
+        tarnish: tarnishParam(),
     })
     .superRefine((p, ctx) => {
         checkPanelFits(p, ctx);
@@ -190,11 +168,8 @@ export type MetalParams = z.output<typeof metalSchema>;
 /**
  * Wear values of a metal wall, every one resolved.
  */
-export type MetalWear = {
-    rust: { coverage: number; streaks: number; length: [number, number] };
-    dents: { density: number; size: [number, number] };
-    scratches: number;
-    tarnish: number;
+export type MetalWear = MetalWearBase & {
+    dents: DentsWear;
 };
 
 /**
@@ -204,17 +179,7 @@ export type MetalWear = {
 export function metalWear(p: MetalParams): MetalWear {
     const a = p.age;
     return {
-        rust: {
-            coverage: p.rust.coverage ?? atAge(a, [0, 0.08, 0.5]),
-            streaks: p.rust.streaks ?? atAge(a, [0, 0.15, 0.6]),
-            length:
-                p.rust.length ??
-                rangeAtAge(a, [
-                    [2, 4],
-                    [3, 8],
-                    [6, 18],
-                ]),
-        },
+        ...metalWearBase(p, { coverage: [0, 0.08, 0.5], streaks: [0, 0.15, 0.6] }),
         dents: {
             density: p.dents.density ?? atAge(a, [0, 0.5, 3]),
             size:
@@ -225,8 +190,6 @@ export function metalWear(p: MetalParams): MetalWear {
                     [2, 5],
                 ]),
         },
-        scratches: p.scratches ?? atAge(a, [0, 0.5, 2.5]),
-        tarnish: p.tarnish ?? atAge(a, [0, 0.1, 0.35]),
     };
 }
 
@@ -237,10 +200,6 @@ const SALT_GRAIN = 3;
 const SALT_DENT = 4;
 const SALT_SCRATCH = 5;
 const SALT_STREAK = 6;
-
-function mod(a: number, n: number): number {
-    return ((a % n) + n) % n;
-}
 
 /**
  * Metal wall: plates joined by thin seams and fixed with rivets; rust, dents and scratches
@@ -262,19 +221,25 @@ export const metal = defineGenerator({
         const panel = panelRect(p, layout, width, height);
         const texture = new Texture(width, height);
         const metalPalette = createGradient(p.metal.palette);
-        const rustPalette = createGradient(p.rust.palette);
         const seamColor = Rainbow.parse(p.seam.color);
         const cells = (px: number) => Math.max(1, Math.round(px));
-        const noiseSeed = (i: number) => Math.floor(hash(seed, SALT_NOISE, i) * 4294967296);
         // brushed streaks: long and horizontal, fine vertically, in real pixels
         const brushed = new FractalNoise({
-            seed: noiseSeed(0),
+            seed: hashSeed(seed, SALT_NOISE, 0),
             period: [cells(width / 24), cells(height / 1.5)],
             octaves: 2,
         });
         // rust patches scale with the wall
-        const rustNoise = new FractalNoise({ seed: noiseSeed(1), period: 4, octaves: 4 });
-        const tarnishNoise = new FractalNoise({ seed: noiseSeed(2), period: 3, octaves: 3 });
+        const rustNoise = new FractalNoise({
+            seed: hashSeed(seed, SALT_NOISE, 1),
+            period: 4,
+            octaves: 4,
+        });
+        const tarnishNoise = new FractalNoise({
+            seed: hashSeed(seed, SALT_NOISE, 2),
+            period: 3,
+            octaves: 3,
+        });
 
         // every plate, and its rectangle in pixels; the panel is one more plate
         const plates = layout.flatMap((row, r) =>
@@ -353,35 +318,10 @@ export const metal = defineGenerator({
             }
         }
 
-        // dents: depressions, their top-left side in shadow, their bottom-right side lit
-        const area = (width * height) / 1024;
-        const dentCount = Math.round(wear.dents.density * area);
-        for (let k = 0; k < dentCount; ++k) {
-            const cx = hash(seed, SALT_DENT, k, 0) * width;
-            const cy = hash(seed, SALT_DENT, k, 1) * height;
-            const radius = hashRange(wear.dents.size[0], wear.dents.size[1], seed, SALT_DENT, k, 2);
-            const id = ids[Math.floor(cy) * width + Math.floor(cx)];
-            if (id < 0) {
-                continue;
-            }
-            for (let y = Math.floor(cy - radius); y <= Math.ceil(cy + radius); ++y) {
-                for (let x = Math.floor(cx - radius); x <= Math.ceil(cx + radius); ++x) {
-                    const dx = x + 0.5 - cx;
-                    const dy = y + 0.5 - cy;
-                    const s = Math.hypot(dx, dy) / radius;
-                    const i = mod(y, height) * width + mod(x, width);
-                    if (s >= 1 || ids[i] !== id) {
-                        continue;
-                    }
-                    const side = (dx + dy) / Math.max(0.001, Math.hypot(dx, dy));
-                    const f = 1 + 0.35 * side * (1 - s * s);
-                    texture.setPixel(x, y, shade(texture.getPixel(x, y), f));
-                }
-            }
-        }
+        drawDents(texture, ids, wear.dents, seed, SALT_DENT);
 
         // scratches: short bright lines, within a plate
-        const scratchCount = Math.round(wear.scratches * area);
+        const scratchCount = Math.round((wear.scratches * width * height) / 1024);
         for (let k = 0; k < scratchCount; ++k) {
             const x0 = hash(seed, SALT_SCRATCH, k, 0) * width;
             const y0 = hash(seed, SALT_SCRATCH, k, 1) * height;
@@ -449,64 +389,33 @@ export const metal = defineGenerator({
         }
 
         // rust: patches growing from the seams, then streaks running down from rivets
-        const coverage = wear.rust.coverage;
-        const streak = new Float32Array(width * height);
-        rivets.forEach(([x, y], k) => {
-            if (hash(seed, SALT_STREAK, k, 0) >= wear.rust.streaks) {
-                return;
-            }
-            const length = hashRange(
-                wear.rust.length[0],
-                wear.rust.length[1],
-                seed,
-                SALT_STREAK,
-                k,
-                1,
-            );
-            for (let t = 2; t < length + 2; ++t) {
-                const i = mod(y + t, height) * width + mod(x, width);
-                if (ids[i] < 0) {
-                    break;
-                }
-                streak[i] = Math.max(streak[i], 0.7 * (1 - (t - 2) / length));
-            }
-        });
+        const weathering = new MetalWeathering(width, height, wear, p.rust.palette, tarnishNoise);
+        weathering.addStreaks(
+            rivets.map(([x, y]) => ({ x, y })),
+            seed,
+            SALT_STREAK,
+            (x, y) => {
+                const i = mod(y, height) * width + mod(x, width);
+                return ids[i] < 0 ? -1 : i;
+            },
+        );
         for (let y = 0; y < height; ++y) {
             for (let x = 0; x < width; ++x) {
                 const i = y * width + x;
                 if (ids[i] < 0) {
                     continue;
                 }
-                const u = x / width;
-                const v = y / height;
-                let rgba = Rainbow.convertToRGBA(texture.getPixel(x, y));
                 // rust grows from the seams: the noise is raised near them
                 const near = Math.max(0, 1 - edge[i] / 6);
+                const u = x / width;
+                const v = y / height;
                 const n = rustNoise.sample(u, v) + near * 0.25;
-                let amount = 0;
-                if (coverage > 0) {
-                    amount = Math.max(0, Math.min(1, (n - (1 - coverage)) / 0.12));
-                }
-                amount = Math.max(amount, streak[i]);
-                if (amount > 0) {
-                    const r = Rainbow.convertToRGBA(sample(rustPalette, n + 0.1));
-                    rgba = {
-                        r: rgba.r + (r.r - rgba.r) * amount,
-                        g: rgba.g + (r.g - rgba.g) * amount,
-                        b: rgba.b + (r.b - rgba.b) * amount,
-                        a: 1,
-                    };
-                }
-                if (wear.tarnish > 0) {
-                    const f = 1 - wear.tarnish * (0.5 + 0.5 * tarnishNoise.sample(u, v));
-                    rgba = { r: rgba.r * f, g: rgba.g * f, b: rgba.b * f, a: 1 };
-                }
-                texture.setPixel(x, y, Rainbow.fromRGBA(rgba));
+                texture.setPixel(x, y, weathering.apply(texture.getPixel(x, y), x, y, n, u, v));
             }
         }
 
         // first pixel row (or column) of a plate face
-        const face = (e: number) => Math.ceil(e + after - 0.5);
+        const face = (e: number) => firstPixel(e, after);
         texture.anchors = {
             rows: layout.map((row) => ({ x: 0, y: face(row.y) })),
             plates: layout.flatMap((row) =>

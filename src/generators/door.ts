@@ -1,9 +1,10 @@
 import { Rainbow } from '@laboralphy/rainbow';
 import { z } from 'zod';
-import { hash } from '../core/hash';
+import { hash, hashSeed } from '../core/hash';
 import { createGradient, sample, shade } from '../core/palette';
-import { color, DETAIL, palette, ratio, size } from '../core/schema';
+import { ageParam, color, DETAIL, palette, ratio, size } from '../core/schema';
 import { Texture, type AnchorPoint } from '../core/Texture';
+import { METAL_PALETTE, RUST_PALETTE } from './common/palettes';
 import { defineGenerator } from './define';
 import { metal } from './metal';
 import { planks } from './planks';
@@ -48,7 +49,7 @@ export const doorSchema = z.strictObject({
     metal: z
         .strictObject({
             palette: palette()
-                .default(['#2b2f33', '#474d53', '#687077', '#8f979e'])
+                .default(METAL_PALETTE)
                 .describe('metal colors, from darkest to lightest'),
         })
         .prefault({})
@@ -88,11 +89,7 @@ export const doorSchema = z.strictObject({
         })
         .prefault({})
         .describe('handle, on the opening side'),
-    age: ratio()
-        .default(0.3)
-        .describe(
-            'overall weathering, from 0 (new) to 1 (ruined): passed to the wood or the metal, and rusting the iron',
-        ),
+    age: ageParam({ effect: 'passed to the wood or the metal, and rusting the iron' }),
 });
 
 export type DoorParams = z.output<typeof doorSchema>;
@@ -104,7 +101,7 @@ type Leaf = { x: number; w: number; hinge: 'left' | 'right' | 'none' };
 const SALT_LEAF = 1;
 const SALT_RUST = 2;
 
-const RUST = createGradient(['#3a1c0c', '#6b3314', '#9a4e1e', '#bf6e2e']);
+const RUST = createGradient(RUST_PALETTE);
 
 /**
  * Surface of a leaf: planks or metal plates, laid out at the leaf's size.
@@ -348,7 +345,7 @@ export const door = defineGenerator({
                 : [{ x: 0, w: width, hinge: p.kind === 'lift' ? 'none' : p.hinge }];
 
         leaves.forEach((leaf, k) => {
-            const leafSeed = Math.floor(hash(seed, SALT_LEAF, k) * 4294967296);
+            const leafSeed = hashSeed(seed, SALT_LEAF, k);
             texture.draw(leafSurface(p, leaf.w, height, leafSeed), leaf.x, 0);
             if (p.material === 'wood' && p.style === 'fancy') {
                 raisePanels(texture, leaf, p, height);

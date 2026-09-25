@@ -1,4 +1,5 @@
 import { Rainbow, type Color32 } from '@laboralphy/rainbow';
+import { clamp } from './math';
 
 /**
  * Builds a 256-entry gradient palette from CSS color stops.
@@ -21,7 +22,7 @@ export function createGradient(stops: string[]): Color32[] {
  * Picks a palette entry from a value in [0, 1].
  */
 export function sample(palette: Color32[], t: number): Color32 {
-    const i = Math.round(Math.max(0, Math.min(1, t)) * (palette.length - 1));
+    const i = Math.round(clamp(t) * (palette.length - 1));
     return palette[i];
 }
 

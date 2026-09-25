@@ -146,6 +146,33 @@ function beamAlcove(age?: number): Texture {
     return renderTexture({ size: [64, 128], seed: SEED, patches }, createMemoryLoader({}));
 }
 
+/** a barred window in a stone wall */
+function barsWindow(age?: number): Texture {
+    const patches: Placement[] = [
+        { patch: { template: 'ashlar' }, width: 100, height: 100 },
+        {
+            id: 'hole',
+            patch: { template: 'opening', depth: 3 },
+            x: 25,
+            y: 18.75,
+            width: 50,
+            height: 56.25,
+        },
+        {
+            patch: {
+                template: 'bars',
+                size: [26, 30],
+                bars: { count: 4 },
+                ...(age === undefined ? {} : { age }),
+            },
+            anchor: { to: 'hole', at: 'opening' },
+            width: 40.6,
+            height: 46.9,
+        },
+    ];
+    return renderTexture({ size: [64, 64], seed: SEED, patches }, createMemoryLoader({}));
+}
+
 const images: Record<string, Texture> = {
     'layout-detail.png': strip([
         enlarge(ashlar.generate({ seed: SEED }), 4),
@@ -166,6 +193,9 @@ for (const g of Object.values(generators)) {
                 if (g.name === 'beam') {
                     return enlarge(beamAlcove(age), 2);
                 }
+                if (g.name === 'bars') {
+                    return enlarge(barsWindow(age), 3);
+                }
                 // only templates having an age get here
                 const options = { seed: SEED, age };
                 return enlarge(g.generate(options), 3);
@@ -183,7 +213,9 @@ for (const g of Object.values(generators)) {
                   ? enlarge(bannerWall(), 3)
                   : g.name === 'beam'
                     ? enlarge(beamAlcove(), 3)
-                    : enlarge(g.generate({ seed: SEED }), 4);
+                    : g.name === 'bars'
+                      ? enlarge(barsWindow(), 4)
+                      : enlarge(g.generate({ seed: SEED }), 4);
 }
 
 const pages = await renderDocs();

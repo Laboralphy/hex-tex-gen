@@ -1,4 +1,5 @@
 import type { Color32 } from '@laboralphy/rainbow';
+import { mod } from './math';
 
 /**
  * A point of interest reported by a generator, in pixels of the texture it rendered.
@@ -36,11 +37,7 @@ export class Texture {
      * Wraps coordinates so that textures behave as tiles.
      */
     private offset(x: number, y: number): number {
-        const w = this.width;
-        const h = this.height;
-        const xw = ((x % w) + w) % w;
-        const yw = ((y % h) + h) % h;
-        return (yw * w + xw) << 2;
+        return (mod(y, this.height) * this.width + mod(x, this.width)) << 2;
     }
 
     getPixel(x: number, y: number): Color32 {

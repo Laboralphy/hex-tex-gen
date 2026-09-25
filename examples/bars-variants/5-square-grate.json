@@ -1,0 +1,52 @@
+{
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": {
+        "template": "bricks"
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "hole",
+      "patch": {
+        "template": "opening",
+        "depth": 3,
+        "back": {
+          "mode": "shade",
+          "shade": 0.6
+        }
+      },
+      "x": 25,
+      "y": 18.75,
+      "width": 50,
+      "height": 56.25
+    },
+    {
+      "patch": {
+        "template": "bars",
+        "size": [26, 30],
+        "bars": {
+          "count": 6,
+          "thickness": 2,
+          "profile": "square"
+        },
+        "rails": {
+          "count": 2
+        },
+        "shadow": {
+          "offset": 2
+        }
+      },
+      "anchor": {
+        "to": "hole",
+        "at": "opening"
+      },
+      "width": 40.6,
+      "height": 46.9
+    }
+  ]
+}

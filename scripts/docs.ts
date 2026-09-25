@@ -7,6 +7,7 @@ import { z } from 'zod';
 import {
     ashlarWear,
     bannerWear,
+    barsWear,
     beamWear,
     fieldstoneWear,
     type FieldstoneParams,
@@ -17,6 +18,8 @@ import {
     type MetalWear,
     type BannerParams,
     type BannerWear,
+    type BarsParams,
+    type BarsWear,
     patchDefinitionSchema,
     placementAnchorSchema,
     placementSchema,
@@ -269,6 +272,20 @@ const BEAM_WEAR_PARAMETERS: [string, (w: BeamWear) => number | [number, number]]
     ['tarnish', (w) => w.tarnish],
 ];
 
+/** bars parameters derived from age, and where they are in the resolved wear */
+const BARS_WEAR_PARAMETERS: [string, (w: BarsWear) => number | [number, number]][] = [
+    ['rust.coverage', (w) => w.rust.coverage],
+    ['rust.streaks', (w) => w.rust.streaks],
+    ['rust.length', (w) => w.rust.length],
+    ['tarnish', (w) => w.tarnish],
+    ['dents.density', (w) => w.dents.density],
+    ['dents.size', (w) => w.dents.size],
+    ['bends.ratio', (w) => w.bends.ratio],
+    ['bends.amount', (w) => w.bends.amount],
+    ['broken.ratio', (w) => w.broken.ratio],
+    ['broken.length', (w) => w.broken.length],
+];
+
 type WearRow = [string, (params: object) => number | [number, number]];
 
 /**
@@ -284,6 +301,12 @@ function wearRows(generator: TextureGenerator): WearRow[] {
         return BEAM_WEAR_PARAMETERS.map(([path, get]) => [
             path,
             (params) => get(beamWear(params as BeamParams)),
+        ]);
+    }
+    if (generator.name === 'bars') {
+        return BARS_WEAR_PARAMETERS.map(([path, get]) => [
+            path,
+            (params) => get(barsWear(params as BarsParams)),
         ]);
     }
     if (generator.name === 'metal') {
@@ -353,7 +376,7 @@ without streaks. See [Aging](../concepts.md#aging).
 ![${name} at age 0, 0.3, 0.6 and 1](../images/${name}-ages.png)
 
 ${
-    ['planks', 'parchment', 'banner', 'metal', 'beam'].includes(name)
+    ['planks', 'parchment', 'banner', 'metal', 'beam', 'bars'].includes(name)
         ? `With its default parameters, \`${name}\` derives:`
         : `Derived sizes in pixels are proportional to the height of the stones at own size, 16
 pixels giving the values of \`ashlar\`. With its default parameters, \`${name}\` derives:`
@@ -588,6 +611,43 @@ A door fills its whole texture, and is always opaque.
 \`\`\`json
 { "template": "door", "kind": "double", "style": "fancy", "panels": { "rows": 4 }, "bands": { "count": 0 } }
 \`\`\``,
+    bars: `## Usage
+
+\`bars\` is an overlay: vertical metal bars held by horizontal rails, the whole patch being
+the barred area. Lay it over an [\`opening\`](opening.md), anchored on the back of the
+opening, for a prison window or a grate:
+
+\`\`\`json
+{
+  "size": [64, 64],
+  "patches": [
+    { "patch": { "template": "ashlar" }, "width": 100, "height": 100 },
+    {
+      "id": "hole",
+      "patch": { "template": "opening", "depth": 3 },
+      "x": 25, "y": 18.75, "width": 50, "height": 56.25
+    },
+    {
+      "patch": { "template": "bars", "size": [26, 30], "bars": { "count": 4 } },
+      "anchor": { "to": "hole", "at": "opening" },
+      "width": 40.6, "height": 46.9
+    }
+  ]
+}
+\`\`\`
+
+- The bars run from the top to the bottom of the patch, \`bars.count\` of them evenly
+  spaced, so that the patch tiles horizontally: placed across a whole texture, it makes a
+  fence or a masked texture of bars. \`bars.profile\` draws \`round\` rods or \`square\` bars.
+- \`rails.count\` flat rails cross them, evenly spaced, with a rivet at each crossing.
+- The opening cuts the wall out, so the space between the bars is transparent (alpha 0),
+  like the masked textures Doom uses for bars and fences. Over an opening whose back is
+  shaded or colored instead, give the bars a shadow on it with \`shadow.offset\`: they
+  cast none by default, since a cut-out back has nothing to cast it on.
+- As they age, the bars rust, rust streaks running down from the crossings, get tarnish and
+  dents, bulge sideways between two rails (\`bends\`), and break (\`broken\`): a part of a
+  bar is missing between two rails, its jagged ends rusting first, or the bar is gone down
+  to the top or the bottom of the patch. Rails never break.`,
     beam: `## Usage
 
 \`beam\` is an overlay: a metal support beam laid over a wall, the whole patch being the

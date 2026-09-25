@@ -1,5 +1,6 @@
 import { ashlar } from './ashlar';
 import { banner } from './banner';
+import { bars } from './bars';
 import { beam } from './beam';
 import { bricks } from './bricks';
 import { door } from './door';
@@ -10,12 +11,12 @@ import { opening } from './opening';
 import { panel } from './panel';
 import { parchment } from './parchment';
 import { planks } from './planks';
-import { stone } from './stone';
 import type { TextureGenerator } from './types';
 
 export {
     ashlar,
     banner,
+    bars,
     beam,
     bricks,
     door,
@@ -26,7 +27,6 @@ export {
     panel,
     parchment,
     planks,
-    stone,
 };
 export {
     ashlarSchema,
@@ -43,6 +43,7 @@ export {
     wallSchema,
 } from './ashlar';
 export { bannerSchema, bannerWear } from './banner';
+export { barsSchema, barsWear } from './bars';
 export { beamSchema, beamWear } from './beam';
 export { bricksSchema } from './bricks';
 export { doorSchema } from './door';
@@ -53,7 +54,6 @@ export { openingSchema } from './opening';
 export { panelSchema } from './panel';
 export { parchmentSchema, parchmentWear } from './parchment';
 export { computePlanksLayout, planksSchema, planksWear } from './planks';
-export { stoneSchema } from './stone';
 export type {
     AshlarBlock,
     AshlarParams,
@@ -67,6 +67,7 @@ export type {
     WearParams,
 } from './ashlar';
 export type { BannerParams, BannerWear } from './banner';
+export type { BarsParams, BarsWear } from './bars';
 export type { BeamParams, BeamWear } from './beam';
 export type { BricksParams } from './bricks';
 export type { DoorParams } from './door';
@@ -77,7 +78,6 @@ export type { OpeningParams } from './opening';
 export type { PanelParams } from './panel';
 export type { ParchmentParams, ParchmentWear } from './parchment';
 export type { Plank, PlankColumn, PlanksParams, PlanksWear } from './planks';
-export type { StoneParams } from './stone';
 export { defineGenerator } from './define';
 export type { GeneratorDefinition } from './define';
 export type {
@@ -100,9 +100,9 @@ export const generators: Record<string, TextureGenerator> = Object.fromEntries(
         metal,
         planks,
         door,
-        stone,
         moss,
         opening,
+        bars,
         parchment,
         banner,
         beam,

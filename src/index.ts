@@ -5,19 +5,21 @@
  */
 export { Texture } from './core/Texture';
 export type { AnchorPoint } from './core/Texture';
-export { Random } from './core/Random';
-export { hash, hashRange } from './core/hash';
-export { createNoise } from './core/noise';
+export { hash, hashRange, hashSeed } from './core/hash';
+export { circularDistance, clamp, firstPixel, mod } from './core/math';
 export { createGradient, sample, shade } from './core/palette';
 export {
+    ageParam,
     color,
     DETAIL,
     formatIssues,
+    FROM_AGE,
     LAYOUT,
     palette,
     parseWith,
     range,
     ratio,
+    shadowGroup,
     size,
     ValidationError,
 } from './core/schema';
@@ -51,6 +53,9 @@ export {
     banner,
     bannerSchema,
     bannerWear,
+    bars,
+    barsSchema,
+    barsWear,
     beam,
     beamSchema,
     beamWear,
@@ -77,8 +82,6 @@ export {
     planksSchema,
     planksWear,
     computePlanksLayout,
-    stone,
-    stoneSchema,
     computeAshlarLayout,
     NO_PANEL,
     renderWall,
@@ -92,6 +95,8 @@ export type {
     AshlarWear,
     BannerParams,
     BannerWear,
+    BarsParams,
+    BarsWear,
     BeamParams,
     BeamWear,
     BaseParams,
@@ -113,7 +118,6 @@ export type {
     PlanksWear,
     ParamsSchema,
     RenderContext,
-    StoneParams,
     TextureGenerator,
     WallDefaults,
 } from './generators';

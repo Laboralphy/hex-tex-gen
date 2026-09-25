@@ -1,5 +1,6 @@
 import { Rainbow } from '@laboralphy/rainbow';
-import { hash } from '../core/hash';
+import { hash, hashSeed } from '../core/hash';
+import { mod } from '../core/math';
 import { deepMerge } from '../core/object-fusion';
 import { parseWith, ValidationError } from '../core/schema';
 import { Texture, type AnchorPoint } from '../core/Texture';
@@ -55,10 +56,6 @@ type PreparedPlacement = {
 
 /** salt of the random ranks of anchor points, apart from the seeds of the copies */
 const SALT_RATIO = 1;
-
-function mod(a: number, n: number): number {
-    return ((a % n) + n) % n;
-}
 
 /**
  * Loads, validates and sizes every placement, and checks anchor references.
@@ -184,7 +181,7 @@ export function renderTexture(
             .sort((a, b) => a.i - b.i);
         for (const { i, at } of kept) {
             // each copy gets its own seed, stable whatever points are skipped
-            const seed = Math.floor(hash(p.seed, i) * 4294967296);
+            const seed = hashSeed(p.seed, i);
             const image = renderPatch(p.patch, seed, p.width, p.height);
             texture.draw(image, at.x + dx, at.y + dy, opacity);
         }

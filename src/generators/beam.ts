@@ -1,15 +1,20 @@
 import { Bresenham, FractalNoise } from '@laboralphy/algorithms';
 import { Rainbow } from '@laboralphy/rainbow';
 import { z } from 'zod';
-import { atAge, rangeAtAge } from '../core/age';
-import { hash, hashRange } from '../core/hash';
+import { hash, hashRange, hashSeed } from '../core/hash';
 import { createGradient, sample, shade } from '../core/palette';
-import { DETAIL, palette, range, ratio, size } from '../core/schema';
+import { ageParam, DETAIL, palette, ratio, shadowGroup, size } from '../core/schema';
 import { Texture } from '../core/Texture';
+import {
+    metalWearBase,
+    rustGroup,
+    scratchesParam,
+    tarnishParam,
+    type MetalWearBase,
+} from './common/metal-wear';
+import { MetalWeathering } from './common/MetalWeathering';
+import { METAL_PALETTE } from './common/palettes';
 import { defineGenerator } from './define';
-
-/** suffix of the descriptions of wear parameters */
-const AGE = ' when unset, derived from age';
 
 /**
  * Parameters of the beam template. The whole patch is the beam and its shadow.
@@ -40,7 +45,7 @@ export const beamSchema = z.strictObject({
     metal: z
         .strictObject({
             palette: palette()
-                .default(['#2b2f33', '#474d53', '#687077', '#8f979e'])
+                .default(METAL_PALETTE)
                 .describe('metal colors, from darkest to lightest'),
             brushed: ratio().default(0.12).describe('streaks along the beam, in [0, 1]'),
             grain: ratio()
@@ -66,42 +71,11 @@ export const beamSchema = z.strictObject({
         })
         .prefault({})
         .describe('rivets, lit from the top-left'),
-    shadow: z
-        .strictObject({
-            offset: z
-                .number()
-                .int()
-                .min(0)
-                .default(1)
-                .describe('shadow cast on the wall, to the bottom-right, in pixels')
-                .meta(DETAIL),
-            opacity: ratio().default(0.45).describe('darkness of the shadow, in [0, 1]'),
-        })
-        .prefault({})
-        .describe('shadow of the beam on the wall, the light coming from the top-left'),
-    age: ratio()
-        .default(0.3)
-        .describe(
-            'overall weathering, from 0 (new) to 1 (ruined): sets every wear parameter left unset',
-        ),
-    rust: z
-        .strictObject({
-            coverage: ratio().optional().describe(`share of the surface rusted;${AGE}`),
-            palette: palette()
-                .default(['#3a1c0c', '#6b3314', '#9a4e1e', '#bf6e2e'])
-                .describe('rust colors, from darkest to lightest'),
-            streaks: ratio()
-                .optional()
-                .describe(`ratio of rivets with a rust streak running down;${AGE}`),
-            length: range(z.number().min(0))
-                .optional()
-                .describe(`[min, max] length of the rust streaks, in pixels;${AGE}`)
-                .meta(DETAIL),
-        })
-        .prefault({})
-        .describe('rust'),
-    scratches: z.number().min(0).optional().describe(`scratches per 32 × 32 pixels;${AGE}`),
-    tarnish: ratio().optional().describe(`dulled, darkened metal, in [0, 1];${AGE}`),
+    shadow: shadowGroup('beam'),
+    age: ageParam(),
+    rust: rustGroup(),
+    scratches: scratchesParam(),
+    tarnish: tarnishParam(),
 });
 
 export type BeamParams = z.output<typeof beamSchema>;
@@ -109,33 +83,14 @@ export type BeamParams = z.output<typeof beamSchema>;
 /**
  * Wear values of a beam, every one resolved.
  */
-export type BeamWear = {
-    rust: { coverage: number; streaks: number; length: [number, number] };
-    scratches: number;
-    tarnish: number;
-};
+export type BeamWear = MetalWearBase;
 
 /**
  * Resolves the wear values of a beam: values set in the parameters win, the others are
  * derived from `age`.
  */
 export function beamWear(p: BeamParams): BeamWear {
-    const a = p.age;
-    return {
-        rust: {
-            coverage: p.rust.coverage ?? atAge(a, [0, 0.1, 0.55]),
-            streaks: p.rust.streaks ?? atAge(a, [0, 0.2, 0.6]),
-            length:
-                p.rust.length ??
-                rangeAtAge(a, [
-                    [2, 4],
-                    [3, 8],
-                    [6, 18],
-                ]),
-        },
-        scratches: p.scratches ?? atAge(a, [0, 0.5, 2.5]),
-        tarnish: p.tarnish ?? atAge(a, [0, 0.1, 0.35]),
-    };
+    return metalWearBase(p, { coverage: [0, 0.1, 0.55], streaks: [0, 0.2, 0.6] });
 }
 
 // each random decision draws from its own sequence
@@ -153,7 +108,7 @@ function renderBody(p: BeamParams, length: number, thickness: number, seed: numb
     const metal = createGradient(p.metal.palette);
     const cells = (px: number) => Math.max(1, Math.round(px));
     const brushed = new FractalNoise({
-        seed: Math.floor(hash(seed, SALT_NOISE, 0) * 4294967296),
+        seed: hashSeed(seed, SALT_NOISE, 0),
         period: [cells(length / 16), cells(thickness)],
         octaves: 2,
     });
@@ -275,55 +230,26 @@ export const beam = defineGenerator({
         texture.draw(body, 0, 0);
 
         // rust: patches, and streaks running down from rivets, in the final orientation
-        const rust = createGradient(p.rust.palette);
         const rustNoise = new FractalNoise({
-            seed: Math.floor(hash(seed, SALT_NOISE, 1) * 4294967296),
+            seed: hashSeed(seed, SALT_NOISE, 1),
             period: [Math.max(1, Math.round(width / 12)), Math.max(1, Math.round(height / 12))],
             octaves: 3,
         });
         const tarnishNoise = new FractalNoise({
-            seed: Math.floor(hash(seed, SALT_NOISE, 2) * 4294967296),
+            seed: hashSeed(seed, SALT_NOISE, 2),
             period: 3,
             octaves: 2,
         });
-        const streak = new Float32Array(width * height);
-        rivets.forEach(({ x, y }, k) => {
-            if (hash(seed, SALT_STREAK, k, 0) >= wear.rust.streaks) {
-                return;
-            }
-            const l = hashRange(wear.rust.length[0], wear.rust.length[1], seed, SALT_STREAK, k, 1);
-            for (let t = 2; t < l + 2 && y + t < bodyHeight; ++t) {
-                streak[(y + t) * width + x] = Math.max(
-                    streak[(y + t) * width + x],
-                    0.7 * (1 - (t - 2) / l),
-                );
-            }
-        });
+        const weathering = new MetalWeathering(width, height, wear, p.rust.palette, tarnishNoise);
+        weathering.addStreaks(rivets, seed, SALT_STREAK, (x, y) =>
+            y < bodyHeight ? y * width + x : -1,
+        );
         for (let y = 0; y < bodyHeight; ++y) {
             for (let x = 0; x < bodyWidth; ++x) {
                 const u = x / width;
                 const v = y / height;
-                let rgba = Rainbow.convertToRGBA(texture.getPixel(x, y));
                 const n = rustNoise.sample(u, v);
-                let amount = 0;
-                if (wear.rust.coverage > 0) {
-                    amount = Math.max(0, Math.min(1, (n - (1 - wear.rust.coverage)) / 0.12));
-                }
-                amount = Math.max(amount, streak[y * width + x]);
-                if (amount > 0) {
-                    const r = Rainbow.convertToRGBA(sample(rust, n + 0.1));
-                    rgba = {
-                        r: rgba.r + (r.r - rgba.r) * amount,
-                        g: rgba.g + (r.g - rgba.g) * amount,
-                        b: rgba.b + (r.b - rgba.b) * amount,
-                        a: 1,
-                    };
-                }
-                if (wear.tarnish > 0) {
-                    const f = 1 - wear.tarnish * (0.5 + 0.5 * tarnishNoise.sample(u, v));
-                    rgba = { r: rgba.r * f, g: rgba.g * f, b: rgba.b * f, a: 1 };
-                }
-                texture.setPixel(x, y, Rainbow.fromRGBA(rgba));
+                texture.setPixel(x, y, weathering.apply(texture.getPixel(x, y), x, y, n, u, v));
             }
         }
 

@@ -74,7 +74,7 @@ describe('opening', () => {
     it('lets patches drawn afterwards fill the hole', () => {
         const t = wall({}, [
             {
-                patch: { template: 'stone', size: [8, 8] },
+                patch: { template: 'ashlar', size: [8, 8], rows: { count: 1 } },
                 anchor: { to: 'hole', at: 'openingCenter', offset: [-4, -4] },
             },
         ]);

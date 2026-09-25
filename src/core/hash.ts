@@ -17,11 +17,19 @@ function fmix(h: number): number {
  * so resizing a texture does not reshuffle it.
  */
 export function hash(seed: number, ...values: number[]): number {
+    return hashSeed(seed, ...values) / 4294967296;
+}
+
+/**
+ * {@link hash} as a 32-bit unsigned integer, to seed another generator (a noise, a
+ * sub-patch...) from a seed and any number of integers.
+ */
+export function hashSeed(seed: number, ...values: number[]): number {
     let h = fmix((seed >>> 0) + 0x9e3779b9);
     for (const v of values) {
         h = fmix((h ^ (v | 0)) + 0x9e3779b9);
     }
-    return h / 4294967296;
+    return h;
 }
 
 /**

@@ -2,14 +2,21 @@ import { FractalNoise } from '@laboralphy/algorithms';
 import { Rainbow } from '@laboralphy/rainbow';
 import { z } from 'zod';
 import { atAge, rangeAtAge } from '../core/age';
-import { hash, hashRange } from '../core/hash';
+import { hash, hashRange, hashSeed } from '../core/hash';
 import { createGradient, sample, shade } from '../core/palette';
-import { color, DETAIL, palette, range, ratio, size } from '../core/schema';
+import {
+    ageParam,
+    color,
+    DETAIL,
+    FROM_AGE,
+    palette,
+    range,
+    ratio,
+    shadowGroup,
+    size,
+} from '../core/schema';
 import { Texture } from '../core/Texture';
 import { defineGenerator } from './define';
-
-/** suffix of the descriptions of wear parameters */
-const AGE = ' when unset, derived from age';
 
 /**
  * Parameters of the parchment template. The whole patch is the sheet, its shadow
@@ -41,19 +48,7 @@ export const parchmentSchema = z.strictObject({
         .default(3)
         .describe('margin around the writing area, reported by the sheet anchor, in pixels')
         .meta(DETAIL),
-    shadow: z
-        .strictObject({
-            offset: z
-                .number()
-                .int()
-                .min(0)
-                .default(1)
-                .describe('shadow cast on the wall, to the bottom-right, in pixels')
-                .meta(DETAIL),
-            opacity: ratio().default(0.45).describe('darkness of the shadow, in [0, 1]'),
-        })
-        .prefault({})
-        .describe('shadow of the sheet on the wall, the light coming from the top-left'),
+    shadow: shadowGroup('sheet'),
     folds: z
         .strictObject({
             x: z.number().int().min(0).default(0).describe('number of vertical fold lines'),
@@ -75,22 +70,18 @@ export const parchmentSchema = z.strictObject({
         })
         .prefault({})
         .describe('pins holding the sheet on the wall'),
-    age: ratio()
-        .default(0.3)
-        .describe(
-            'overall aging, from 0 (blank) to 1 (ancient): sets every wear parameter left unset',
-        ),
-    yellowing: ratio().optional().describe(`paper turned yellow-brown, in [0, 1];${AGE}`),
+    age: ageParam({ noun: 'aging', young: 'blank', old: 'ancient' }),
+    yellowing: ratio().optional().describe(`paper turned yellow-brown, in [0, 1];${FROM_AGE}`),
     foxing: z
         .strictObject({
             density: z
                 .number()
                 .min(0)
                 .optional()
-                .describe(`brown age spots per 32 × 32 pixels;${AGE}`),
+                .describe(`brown age spots per 32 × 32 pixels;${FROM_AGE}`),
             size: range(z.number().min(0))
                 .optional()
-                .describe(`[min, max] spot radius, in pixels;${AGE}`)
+                .describe(`[min, max] spot radius, in pixels;${FROM_AGE}`)
                 .meta(DETAIL),
         })
         .prefault({})
@@ -101,14 +92,14 @@ export const parchmentSchema = z.strictObject({
                 .number()
                 .min(0)
                 .optional()
-                .describe(`width of the darkened edges, in pixels;${AGE}`)
+                .describe(`width of the darkened edges, in pixels;${FROM_AGE}`)
                 .meta(DETAIL),
-            darkness: ratio().optional().describe(`darkening of the edges, in [0, 1];${AGE}`),
+            darkness: ratio().optional().describe(`darkening of the edges, in [0, 1];${FROM_AGE}`),
             roughness: z
                 .number()
                 .min(0)
                 .optional()
-                .describe(`maximum displacement of the torn outline, in pixels;${AGE}`)
+                .describe(`maximum displacement of the torn outline, in pixels;${FROM_AGE}`)
                 .meta(DETAIL),
         })
         .prefault({})
@@ -182,16 +173,19 @@ export const parchment = defineGenerator({
         const sheetWidth = Math.max(1, width - offset);
         const sheetHeight = Math.max(1, height - offset);
         const cells = (px: number) => Math.max(1, Math.round(px));
-        const noiseSeed = (i: number) => Math.floor(hash(seed, SALT_NOISE, i) * 4294967296);
         // blotches scale with the sheet; the torn outline has a grain in real pixels
-        const blotches = new FractalNoise({ seed: noiseSeed(0), period: 3, octaves: 4 });
+        const blotches = new FractalNoise({
+            seed: hashSeed(seed, SALT_NOISE, 0),
+            period: 3,
+            octaves: 4,
+        });
         const warpX = new FractalNoise({
-            seed: noiseSeed(1),
+            seed: hashSeed(seed, SALT_NOISE, 1),
             period: [cells(width / 3), cells(height / 3)],
             octaves: 2,
         });
         const warpY = new FractalNoise({
-            seed: noiseSeed(2),
+            seed: hashSeed(seed, SALT_NOISE, 2),
             period: [cells(width / 3), cells(height / 3)],
             octaves: 2,
         });

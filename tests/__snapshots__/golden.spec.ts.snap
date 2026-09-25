@@ -1,0 +1,165 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`golden examples > banners/1-flat.json 1`] = `"64x128 f7769e1848908dfe1cf079724357b9a1720419b48782bd16150f8ed3ed285a14"`;
+
+exports[`golden examples > banners/2-point.json 1`] = `"64x128 fd653b360dc35f0e983ab9aa9af6a7ca84d442acfe62231b9dc9ad517118bd1d"`;
+
+exports[`golden examples > banners/3-swallowtail.json 1`] = `"64x128 3630f5730d1ab5ab58ba3b73723179b7ed0c0c0d936dc634bbcbd9068a6fbfd0"`;
+
+exports[`golden examples > banners/4-tails.json 1`] = `"64x128 636b6d566b7c751977a96e90f9712bb49ec7fd7bffa477fd8ed02d144793ce70"`;
+
+exports[`golden examples > banners/5-aged-oriflamme.json 1`] = `"64x128 dbd03e1b9a7a85ad6ed0bcd7062ccc0b942ec8838eabb414030543a9e3ba26da"`;
+
+exports[`golden examples > banners/6-tattered.json 1`] = `"64x128 7aa857f5725975fc2d399b5c021889b9041f1858f83ad6e81f383670ec5cd8f0"`;
+
+exports[`golden examples > banners/7-bricks-pair.json 1`] = `"64x128 f45b089a75759f2953d5891e4d3357c64c8e2569d5e6c29b2c768cf350f47c55"`;
+
+exports[`golden examples > banners/8-planks.json 1`] = `"64x128 b9d66951234233d58d5688452b9abb280d460c2064939f89315140a21c5e6f43"`;
+
+exports[`golden examples > bars-variants/1-prison-window.json 1`] = `"64x64 c04bfa65675c861fdcba7788818a3423ceb99ef8a8287c0bf001e9fa273db129"`;
+
+exports[`golden examples > bars-variants/2-new.json 1`] = `"64x64 8a25fc12104f8b662432b4e331fd402d72c64146a58fa8bd6559b2820eb50bc6"`;
+
+exports[`golden examples > bars-variants/3-ruined.json 1`] = `"64x64 4e9c5d241d111c625147d972a7ffe99e1847a90a79238d2a8629ce36885f652c"`;
+
+exports[`golden examples > bars-variants/4-broken.json 1`] = `"64x64 0cb8eb6e390fe42611382a84887a7f611cb364b76d5091cc0131e8b6f2acf0e6"`;
+
+exports[`golden examples > bars-variants/5-square-grate.json 1`] = `"64x64 381585ab7b5295a82911b049624c0a52f851a54b7773b47aeacca1b70daae66c"`;
+
+exports[`golden examples > bars-variants/6-cell-door.json 1`] = `"64x128 4c029896c855544a7e4deb733b5c6e5b4675b96998e94181ff55075d070de4e9"`;
+
+exports[`golden examples > bars-variants/7-masked-fence.json 1`] = `"64x64 c9bce4e9a05145bbbbaae3527c12cae72fe3cbe8a3b7c189c7e3beed7dff4edd"`;
+
+exports[`golden examples > brick-anchor-ratio/ratio-0.5.json 1`] = `"64x64 8e2a415b7768bdfa97f6a960ec5f9bbd04313116de89367bd36f4d08cac29d08"`;
+
+exports[`golden examples > brick-anchor-ratio/ratio-0.25.json 1`] = `"64x64 c31a8f40d9985ce86f3a5c64d06b2767fec53f1825bbf5c1a2313d3d19dc88af"`;
+
+exports[`golden examples > brick-anchor-ratio/ratio-0.75.json 1`] = `"64x64 d2dce83abcef316880342a8f0c33ca13796fb73b6eab165534c51f8eef94cf4b"`;
+
+exports[`golden examples > brick-anchor-ratio/ratio-1.json 1`] = `"64x64 6a597b60e9d2215db1d09616962698556f92d4bbb9f110b821c6e2f7f49f0b0f"`;
+
+exports[`golden examples > brick-variants/01-default.json 1`] = `"64x64 220cf58c6b90200415435c5ea493c72e98dd69b1e63b992b5a9b3eb952bfb7ce"`;
+
+exports[`golden examples > brick-variants/02-new.json 1`] = `"64x64 064738c8679d114f267e7c117a13ff6574f63f5d961b69eca79848ba4107577a"`;
+
+exports[`golden examples > brick-variants/03-ruined.json 1`] = `"64x64 d645885fe9dbfea114ce8b05c36d5e78dcc6dddb814742c31474d60f7a320450"`;
+
+exports[`golden examples > brick-variants/04-stack-bond.json 1`] = `"64x64 fc661f2f1582f22d75f02ca5cabeeabe8a3da99810ccd350d8b7591706195fb3"`;
+
+exports[`golden examples > brick-variants/05-large-bricks.json 1`] = `"64x64 0eb0004b596eb7d3035ccb513734e32ac9f1da2a51f23a03c1d381f2beac4453"`;
+
+exports[`golden examples > brick-variants/06-roman-thin.json 1`] = `"64x64 b05503053a1b310d36e5ef578d17e9957b20c5430583270227d93f7dc5d6175c"`;
+
+exports[`golden examples > brick-variants/07-random-bond.json 1`] = `"64x64 7f5090fb79c241bf042547d15ee32e63c606f653949f219159a5aeb5503c8962"`;
+
+exports[`golden examples > brick-variants/08-yellow-clay.json 1`] = `"64x64 203543c2e1599876d1827dc92b1f5b3139f258323c07b4c1869bcbea9826d47d"`;
+
+exports[`golden examples > brick-variants/09-dark-soot.json 1`] = `"64x64 4782b67076cb29b463f934b0aa8cf8fbd14adfc10788da36fa145f3e4b5dc56d"`;
+
+exports[`golden examples > brick-variants/10-mossy-bricks.json 1`] = `"64x64 62655ad2a161c93b25b38d318ff3f6326c8197874d44e25bb936cbc48fb9e98e"`;
+
+exports[`golden examples > brick-variants/11-mossy-ruin.json 1`] = `"64x64 c9728540b5e2cd7aa026b01da1da0325c82b2617ae85749715d1fbb2c768fecb"`;
+
+exports[`golden examples > brick-variants/12-mossy-sparse.json 1`] = `"64x64 6d0849d8488813c71313610731a99d2b75a780d9cad75ce0e2a2f95086b2c5f6"`;
+
+exports[`golden examples > castle-wall.json 1`] = `"128x128 437e2280d1682c99fce2110e119eb2445c82fbbe0e24dc9955501ea1c3316cb2"`;
+
+exports[`golden examples > fieldstone-variants/01-default.json 1`] = `"64x64 c2ae854eeec519e1e6473c053ee74a25e2fb12e7135aeeeb911e4048e968c014"`;
+
+exports[`golden examples > fieldstone-variants/02-new.json 1`] = `"64x64 26dc78954ead8d0c28b7ebeb5437683b2002e62f8a555b1bca652174f547ca38"`;
+
+exports[`golden examples > fieldstone-variants/03-ruin.json 1`] = `"64x64 beb7a9026e8f7b4ed6c244fbb99abdbda9db68374b328619785ca2181cf004af"`;
+
+exports[`golden examples > fieldstone-variants/04-boulders.json 1`] = `"64x64 ffc9b5405b3b710cd9af3dbe655ddfc076a811fe4ba8e1cebc0ab43ea7659f89"`;
+
+exports[`golden examples > fieldstone-variants/05-cobbles.json 1`] = `"64x64 c51c25df9150f3efe607e6bec45320b2742510d1194d82bd0778aed07cb374ef"`;
+
+exports[`golden examples > fieldstone-variants/06-hexagons.json 1`] = `"64x64 b89cd4a8adaeddd777dc9e0f205b131eec179cee75faf608d79bdef84f9fc7c4"`;
+
+exports[`golden examples > fieldstone-variants/07-flagstones.json 1`] = `"64x64 31363b440656b1d11508dece5195603d3ec5f2bca52441ba4a0fe002a8628725"`;
+
+exports[`golden examples > fieldstone-variants/08-sandstone.json 1`] = `"64x64 a1def36a87ca1cd259dbe2194eda2d11c298cbf7ba42e0934ae325f510d3e060"`;
+
+exports[`golden examples > fieldstone-variants/09-basalt.json 1`] = `"64x64 d3c69ff097c2b55fe5baea91f550fb1902852d6629ca114b60dce3ea3d8e9362"`;
+
+exports[`golden examples > fieldstone-variants/10-panel.json 1`] = `"64x64 7577c38a8ca83bd36ba51a78867d66f5ee89a7a8b7f5296b0a91db35e3b469ed"`;
+
+exports[`golden examples > fieldstone-variants/11-mossy-fieldstone.json 1`] = `"64x64 03fd654d410825cfdee20f5ceb2b7601d0aaf61cc1958386fdbfb55bbdab9095"`;
+
+exports[`golden examples > fieldstone-variants/12-mossy-ruin.json 1`] = `"64x64 1672a7d5a0902019261b22954dc1c43e0b9e348a89feee173efa619faef952f0"`;
+
+exports[`golden examples > fieldstone-variants/13-mossy-cobbles.json 1`] = `"64x64 c450d4722b9093ade6046b18cee65a17cde09d0d1a56175634d0bc6a69cfb2c3"`;
+
+exports[`golden examples > fieldstone-variants/14-lichen.json 1`] = `"64x64 4bcc6754cb1d161c2cceda43b63c5bb79de350da0828e16de3c607477bb489a5"`;
+
+exports[`golden examples > moss-variants/1-default.json 1`] = `"64x96 0c35c4aeb95dee15a93da1e57f36dea26f230d980c28008d16db5bbf30d3f2ce"`;
+
+exports[`golden examples > moss-variants/2-sparse-wisps.json 1`] = `"64x96 3cffe830082da43b7149ff6a78ffab230ee5b85f06fcc1e0a3518c752f7a73d9"`;
+
+exports[`golden examples > moss-variants/3-lush-curtain.json 1`] = `"64x96 b08a6b7adb6041c07282cad3234739798d3ac90a949176c9712b2add22a65cc7"`;
+
+exports[`golden examples > moss-variants/4-thick-cushion.json 1`] = `"64x96 19c6b0a3e5b1f31fcdf342a5664587dc577fffcf97e1ee194e6fc62d605b2cbd"`;
+
+exports[`golden examples > moss-variants/5-thick-strands.json 1`] = `"64x96 0f2ff0ed36cd589e01ac179a4ee25974ba624e877a6f5bab46f00f92f4d8fd90"`;
+
+exports[`golden examples > moss-variants/6-long-hanging.json 1`] = `"64x96 9b1b415732faf432c596a8ed2cf0e0ed4173224dd916b312d6f6c21d5af81aba"`;
+
+exports[`golden examples > moss-variants/7-dry-brown.json 1`] = `"64x96 f73e5678cce7998d699c9993ad5fc4d6c0d3e072e6c81d391b983e8fc93c6152"`;
+
+exports[`golden examples > moss-variants/8-bright-lichen.json 1`] = `"64x96 e2847bb4f2e7ce72f82f487e91dd720d100c0fbcc2bd46c5e2975248940f7506"`;
+
+exports[`golden examples > mossy-castle-wall.json 1`] = `"128x128 8d58fd863e893d07397718a84ccfd7a86ebc505f34e6b83e6eeb29903298596d"`;
+
+exports[`golden examples > plank-variants/01-default.json 1`] = `"64x64 4ae2c89e603cac5724d24c1f5affe8b0746a1d26a394eb52d1222302a557ca4f"`;
+
+exports[`golden examples > plank-variants/02-full-height.json 1`] = `"64x64 03ad93f9f16a796e2e8005de45f208dfe8626157ec40c716930c3ade2f9b189d"`;
+
+exports[`golden examples > plank-variants/03-short-planks.json 1`] = `"64x64 bdb8677f1be6c86d07adfc838ccdac6a0cf8a56a74494b4c300825eeeb526af6"`;
+
+exports[`golden examples > plank-variants/04-wide-planks.json 1`] = `"64x64 92da63d69d9304e4d47e15a6148b7fdc6985770b54b17707d8e4abdc7cae577c"`;
+
+exports[`golden examples > plank-variants/05-new.json 1`] = `"64x64 478816a4291da33a53b04fa821e7ccdfaab23a6cc460285c3a1fb5b31de2268c"`;
+
+exports[`golden examples > plank-variants/06-weathered.json 1`] = `"64x64 89e7862d478cb720ecbb3e26b0cdb33b487406c7cd88d473045b144d44dc8aae"`;
+
+exports[`golden examples > plank-variants/07-dark-wood.json 1`] = `"64x64 31c8d16d00dd7c340c99241ec5951085b9b43e9cb4f0a8953d1c8072f87092b6"`;
+
+exports[`golden examples > plank-variants/08-horizontal.json 1`] = `"64x64 9d0693d5ca9d3900654bcc046e7f2d524ecb493cdfa0432cbca269e58359864c"`;
+
+exports[`golden examples > plank-variants/09-horizontal-short.json 1`] = `"64x64 e9cc7877b51d01be4408ccc9edd3c306253e9b0906bf6ff641faae5254fea3a3"`;
+
+exports[`golden examples > plank-variants/10-mossy-planks.json 1`] = `"64x64 814fd8733e0429a8155696613bdb06f15dce695459301dc37b1cb59453c6eb39"`;
+
+exports[`golden examples > plank-variants/11-overgrown-fence.json 1`] = `"64x64 5effc802388944902ae5ce3facf9ef9eaebda0795712255ebfad6762fd08ad71"`;
+
+exports[`golden examples > plank-variants/12-mossy-damp.json 1`] = `"64x64 daf39a8bd613e33396bd1cca1e3761e6ca59522ef2a3b0748ec135646654e906"`;
+
+exports[`golden examples > plank-variants/13-mossy-rows.json 1`] = `"64x64 23a3230113345c6b8e0326bea57bc2abd45633933a133eda0cf02596ba5e01f0"`;
+
+exports[`golden examples > plank-variants/14-old-barn.json 1`] = `"64x64 6be7fbcd612035e7ecfc836b9b3e5150b9d50334592e3d3cd7718e2bc832fd93"`;
+
+exports[`golden templates > ashlar 1`] = `"64x64 892bbd7e63dabb13bf78b83918a2c34ad6f060485da908ae927a1fd8e577a85c"`;
+
+exports[`golden templates > banner 1`] = `"24x56 f178f07188b97018f8c9b2f84f07b781807325f2c7d0196132195cc46b96e729"`;
+
+exports[`golden templates > bars 1`] = `"32x48 a48474ea48916bd422efafefbdbe4d8e59f1a7e0d986e6ca83dd8c58fbfdef8f"`;
+
+exports[`golden templates > beam 1`] = `"64x9 2c7421ec2505ad5659cf9d50a3213da66f68c564f8b089002bccdd0ddef4e3b3"`;
+
+exports[`golden templates > bricks 1`] = `"64x64 9cfeb86f23c82c0359744b56af2fb4a5661ec6652df2a89e60dcdfd18f2ce3d4"`;
+
+exports[`golden templates > door 1`] = `"64x128 1a8bbc845d660a3d6c7ee7add8a430cf4098e3b19644232f9dddc2e393af7237"`;
+
+exports[`golden templates > fieldstone 1`] = `"64x64 266a1cc49c5d62a4328fd351165844d9d3c5acd16062d65a0c08ccc42a5daeab"`;
+
+exports[`golden templates > metal 1`] = `"64x64 fb72d16d6ad2cf607d4180ec3d3aef5da1d31b515fb8c2ac3c01bc6bafe555bf"`;
+
+exports[`golden templates > moss 1`] = `"64x16 68993c4f19434e4d5d794f72451da7f6442b7beb05ac65a47f18c8f338778fec"`;
+
+exports[`golden templates > opening 1`] = `"32x32 38d778ec19e1db0c109b364e8f7ec4b5c31c31cb2e967439a89144191b7634bf"`;
+
+exports[`golden templates > panel 1`] = `"64x64 8a8d0a7ebc0c498f7c6c9a48d07248790f50c375f992911c53917874e995a891"`;
+
+exports[`golden templates > parchment 1`] = `"32x40 6d12559cad41ae7e8a008b20e14c3253528eee7f28fd46ecab328c7f8c4a140b"`;
+
+exports[`golden templates > planks 1`] = `"64x64 d890a3523bda7ef2826e787c5867173202ff92fc7f2a06b17c3090bed7dd35c5"`;

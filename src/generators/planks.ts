@@ -2,15 +2,23 @@ import { Bresenham, FractalNoise } from '@laboralphy/algorithms';
 import { Rainbow } from '@laboralphy/rainbow';
 import { z } from 'zod';
 import { atAge, rangeAtAge } from '../core/age';
-import { hash, hashRange } from '../core/hash';
+import { hash, hashRange, hashSeed } from '../core/hash';
+import { firstPixel, mod } from '../core/math';
 import { createGradient, sample, shade } from '../core/palette';
-import { color, DETAIL, LAYOUT, palette, range, ratio, size } from '../core/schema';
+import {
+    ageParam,
+    color,
+    DETAIL,
+    FROM_AGE,
+    LAYOUT,
+    palette,
+    range,
+    ratio,
+    size,
+} from '../core/schema';
 import { Texture } from '../core/Texture';
 import { defineGenerator } from './define';
 import type { RenderContext } from './types';
-
-/** suffix of the descriptions of wear parameters */
-const AGE = ' when unset, derived from age';
 
 /**
  * Parameters of the planks template. "Layout" values are expressed at the patch's own
@@ -152,20 +160,16 @@ export const planksSchema = z.strictObject({
         })
         .prefault({})
         .describe('nails at the ends of the planks'),
-    age: ratio()
-        .default(0.3)
-        .describe(
-            'overall weathering, from 0 (new) to 1 (ruined): sets every wear parameter left unset',
-        ),
+    age: ageParam(),
     weathering: ratio()
         .optional()
-        .describe(`wood turned silver-grey by the weather, in [0, 1];${AGE}`),
+        .describe(`wood turned silver-grey by the weather, in [0, 1];${FROM_AGE}`),
     splits: z
         .strictObject({
-            ratio: ratio().optional().describe(`ratio of split planks, in [0, 1];${AGE}`),
+            ratio: ratio().optional().describe(`ratio of split planks, in [0, 1];${FROM_AGE}`),
             length: range(z.number().min(0))
                 .optional()
-                .describe(`[min, max] split length, in pixels;${AGE}`)
+                .describe(`[min, max] split length, in pixels;${FROM_AGE}`)
                 .meta(DETAIL),
         })
         .prefault({})
@@ -176,12 +180,14 @@ export const planksSchema = z.strictObject({
                 .number()
                 .min(0)
                 .optional()
-                .describe(`maximum displacement of the plank outlines, in pixels;${AGE}`)
+                .describe(`maximum displacement of the plank outlines, in pixels;${FROM_AGE}`)
                 .meta(DETAIL),
         })
         .prefault({})
         .describe('irregularity of plank outlines'),
-    grime: ratio().optional().describe(`blotchy darkening of the whole wall, in [0, 1];${AGE}`),
+    grime: ratio()
+        .optional()
+        .describe(`blotchy darkening of the whole wall, in [0, 1];${FROM_AGE}`),
 });
 
 export type PlanksParams = z.output<typeof planksSchema>;
@@ -248,14 +254,6 @@ const SALT_GRAIN = 9;
 // pixel marks of the split pass
 const SPLIT = 1;
 const HIGHLIGHT = 2;
-
-function mod(a: number, n: number): number {
-    return ((a % n) + n) % n;
-}
-
-function noiseSeed(seed: number, index: number): number {
-    return Math.floor(hash(seed, SALT_NOISE, index) * 4294967296);
-}
 
 /**
  * Plank lengths of a column, in own pixels, summing exactly to the patch height.
@@ -370,7 +368,7 @@ function renderVertical(p: PlanksParams, { width, height, seed }: RenderContext)
 
     // grain: fine across the planks, stretched along them; it scales with the patch
     const grainNoise = new FractalNoise({
-        seed: noiseSeed(seed, 0),
+        seed: hashSeed(seed, SALT_NOISE, 0),
         period: [Math.max(1, Math.round(count * p.wood.grain)), 2],
         octaves: 3,
         persistence: 0.5,
@@ -378,21 +376,25 @@ function renderVertical(p: PlanksParams, { width, height, seed }: RenderContext)
     // detail noises have a fixed grain in real pixels
     const cells = (px: number) => Math.max(1, Math.round(px));
     const warpX = new FractalNoise({
-        seed: noiseSeed(seed, 1),
+        seed: hashSeed(seed, SALT_NOISE, 1),
         period: [cells(width / 4), cells(height / 4)],
         octaves: 2,
     });
     const warpY = new FractalNoise({
-        seed: noiseSeed(seed, 2),
+        seed: hashSeed(seed, SALT_NOISE, 2),
         period: [cells(width / 4), cells(height / 4)],
         octaves: 2,
     });
     const gapNoise = new FractalNoise({
-        seed: noiseSeed(seed, 3),
+        seed: hashSeed(seed, SALT_NOISE, 3),
         period: [cells(width / 2), cells(height / 2)],
         octaves: 1,
     });
-    const grimeNoise = new FractalNoise({ seed: noiseSeed(seed, 4), period: 3, octaves: 3 });
+    const grimeNoise = new FractalNoise({
+        seed: hashSeed(seed, SALT_NOISE, 4),
+        period: 3,
+        octaves: 3,
+    });
 
     // every plank, with its id; knots in the plank's own coordinates
     const planks = layout.flatMap((column, c) =>
@@ -591,7 +593,7 @@ function renderVertical(p: PlanksParams, { width, height, seed }: RenderContext)
     }
 
     // first pixel column (or row) of a plank face
-    const face = (edge: number) => Math.ceil(edge + gapAfter - 0.5);
+    const face = (edge: number) => firstPixel(edge, gapAfter);
     texture.anchors = {
         lines: layout.map((column) => ({ x: face(column.x), y: 0 })),
         // a plank running the whole height has no top: use the lines anchor

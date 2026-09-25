@@ -2,14 +2,21 @@ import { FractalNoise } from '@laboralphy/algorithms';
 import { Rainbow } from '@laboralphy/rainbow';
 import { z } from 'zod';
 import { atAge, rangeAtAge } from '../core/age';
-import { hash, hashRange } from '../core/hash';
+import { hash, hashRange, hashSeed } from '../core/hash';
 import { shade } from '../core/palette';
-import { color, DETAIL, LAYOUT, range, ratio, size } from '../core/schema';
+import {
+    ageParam,
+    color,
+    DETAIL,
+    FROM_AGE,
+    LAYOUT,
+    range,
+    ratio,
+    shadowGroup,
+    size,
+} from '../core/schema';
 import { Texture } from '../core/Texture';
 import { defineGenerator } from './define';
-
-/** suffix of the descriptions of wear parameters */
-const AGE = ' when unset, derived from age';
 
 /**
  * Parameters of the banner template. The whole patch is the banner, its rod and its
@@ -112,26 +119,10 @@ export const bannerSchema = z.strictObject({
         })
         .prefault({})
         .describe('rod the banner hangs from'),
-    shadow: z
-        .strictObject({
-            offset: z
-                .number()
-                .int()
-                .min(0)
-                .default(1)
-                .describe('shadow cast on the wall, to the bottom-right, in pixels')
-                .meta(DETAIL),
-            opacity: ratio().default(0.4).describe('darkness of the shadow, in [0, 1]'),
-        })
-        .prefault({})
-        .describe('shadow of the banner on the wall, the light coming from the top-left'),
-    age: ratio()
-        .default(0.3)
-        .describe(
-            'overall aging, from 0 (new) to 1 (tattered): sets every wear parameter left unset',
-        ),
-    fading: ratio().optional().describe(`colors faded by light, in [0, 1];${AGE}`),
-    stains: ratio().optional().describe(`coverage of the stains, in [0, 1];${AGE}`),
+    shadow: shadowGroup('banner', 0.4),
+    age: ageParam({ noun: 'aging', old: 'tattered' }),
+    fading: ratio().optional().describe(`colors faded by light, in [0, 1];${FROM_AGE}`),
+    stains: ratio().optional().describe(`coverage of the stains, in [0, 1];${FROM_AGE}`),
     rips: z
         .strictObject({
             count: z
@@ -139,21 +130,21 @@ export const bannerSchema = z.strictObject({
                 .int()
                 .min(0)
                 .optional()
-                .describe(`number of notches torn into the edges;${AGE}`),
+                .describe(`number of notches torn into the edges;${FROM_AGE}`),
             depth: range(z.number().min(0))
                 .optional()
-                .describe(`[min, max] depth of the notches, in pixels;${AGE}`)
+                .describe(`[min, max] depth of the notches, in pixels;${FROM_AGE}`)
                 .meta(DETAIL),
             roughness: z
                 .number()
                 .min(0)
                 .optional()
-                .describe(`maximum displacement of the frayed outline, in pixels;${AGE}`)
+                .describe(`maximum displacement of the frayed outline, in pixels;${FROM_AGE}`)
                 .meta(DETAIL),
         })
         .prefault({})
         .describe('torn edges'),
-    holes: z.number().min(0).optional().describe(`moth holes per 32 × 32 pixels;${AGE}`),
+    holes: z.number().min(0).optional().describe(`moth holes per 32 × 32 pixels;${FROM_AGE}`),
 });
 
 export type BannerParams = z.output<typeof bannerSchema>;
@@ -255,19 +246,22 @@ export const banner = defineGenerator({
         const slopeFactor = Math.sqrt(1 + slope * slope);
 
         const cells = (px: number) => Math.max(1, Math.round(px));
-        const noiseSeed = (i: number) => Math.floor(hash(seed, SALT_NOISE, i) * 4294967296);
         const warpX = new FractalNoise({
-            seed: noiseSeed(0),
+            seed: hashSeed(seed, SALT_NOISE, 0),
             period: [cells(width / 3), cells(height / 3)],
             octaves: 2,
         });
         const warpY = new FractalNoise({
-            seed: noiseSeed(1),
+            seed: hashSeed(seed, SALT_NOISE, 1),
             period: [cells(width / 3), cells(height / 3)],
             octaves: 2,
         });
         // stains scale with the banner
-        const stainNoise = new FractalNoise({ seed: noiseSeed(2), period: 3, octaves: 3 });
+        const stainNoise = new FractalNoise({
+            seed: hashSeed(seed, SALT_NOISE, 2),
+            period: 3,
+            octaves: 3,
+        });
 
         // rips: notches torn into the sides and the lower end
         const rips = Array.from({ length: wear.rips.count }, (_, i) => {

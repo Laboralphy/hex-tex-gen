@@ -1,0 +1,26 @@
+{
+  "size": [64, 64],
+  "seed": 1234,
+  "background": "#0000",
+  "patches": [
+    {
+      "patch": {
+        "template": "bars",
+        "size": [64, 64],
+        "bars": {
+          "count": 8,
+          "thickness": 3
+        },
+        "rails": {
+          "count": 2,
+          "thickness": 3
+        },
+        "shadow": {
+          "offset": 0
+        }
+      },
+      "width": 100,
+      "height": 100
+    }
+  ]
+}

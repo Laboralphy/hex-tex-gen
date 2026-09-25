@@ -1,7 +1,7 @@
 import { FractalNoise } from '@laboralphy/algorithms';
 import { Rainbow } from '@laboralphy/rainbow';
 import { z } from 'zod';
-import { hash } from '../core/hash';
+import { hashSeed } from '../core/hash';
 import { color, DETAIL, ratio, size } from '../core/schema';
 import { Texture } from '../core/Texture';
 import { defineGenerator } from './define';
@@ -94,14 +94,13 @@ export const opening = defineGenerator({
         const depth = p.depth;
         const roughness = p.edges.roughness;
         const cells = (px: number) => Math.max(1, Math.round(px));
-        const noiseSeed = (i: number) => Math.floor(hash(seed, SALT_NOISE, i) * 4294967296);
         const warpX = new FractalNoise({
-            seed: noiseSeed(0),
+            seed: hashSeed(seed, SALT_NOISE, 0),
             period: [cells(width / 4), cells(height / 4)],
             octaves: 2,
         });
         const warpY = new FractalNoise({
-            seed: noiseSeed(1),
+            seed: hashSeed(seed, SALT_NOISE, 1),
             period: [cells(width / 4), cells(height / 4)],
             octaves: 2,
         });
