@@ -1,0 +1,42 @@
+{
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": {
+        "template": "bricks",
+        "age": 0.9
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "moss",
+        "vines": {
+          "count": 10,
+          "length": [6, 24]
+        },
+        "leaves": {
+          "ratio": 0.4
+        },
+        "ledge": {
+          "size": 3,
+          "coverage": 0.35,
+          "clump": 3
+        },
+        "moss": {
+          "fade": 0.4
+        }
+      },
+      "anchor": {
+        "to": "wall",
+        "at": "rows"
+      },
+      "width": 100,
+      "height": 37.5,
+      "seed": 11
+    }
+  ]
+}

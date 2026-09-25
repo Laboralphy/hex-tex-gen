@@ -64,8 +64,13 @@ Every texture tiles seamlessly, horizontally and vertically:
 
 ## Overlays and anchors
 
-Some templates, such as [`moss`](templates/moss.md), are **overlays**: transparent outside
-their content, meant to be laid over another patch.
+Some templates, such as [`moss`](templates/moss.md), [`opening`](templates/opening.md),
+[`parchment`](templates/parchment.md) and [`banner`](templates/banner.md), are **overlays**: transparent outside their content,
+meant to be laid over another patch.
+
+An overlay can also **cut**: [`opening`](templates/opening.md) erases the wall below where
+it is drawn, and the texture keeps these pixels transparent, in the PNG too, like the
+masked textures Doom uses for bars and fences. Patches drawn afterwards fill the hole.
 
 Templates can report **anchors**: named points computed while rendering, such as the top
 of each row of stones, just below the mortar. A placement can be repeated on the anchor
@@ -74,10 +79,12 @@ the seed, the size or the number of rows. See [Anchors](texture-files.md#anchors
 
 ## Aging
 
-[`ashlar`](templates/ashlar.md) has an `age` parameter, from 0 (new) to 1 (ruined), 0.3
-by default:
+The walls, [`ashlar`](templates/ashlar.md) and [`bricks`](templates/bricks.md), have an
+`age` parameter, from 0 (new) to 1 (ruined), 0.3 by default:
 
 ![ashlar at age 0, 0.3, 0.6 and 1](images/ashlar-ages.png)
+
+![bricks at age 0, 0.3, 0.6 and 1](images/bricks-ages.png)
 
 `age` sets every **wear parameter** left unset:
 
@@ -92,7 +99,12 @@ by default:
 
 Values set explicitly always win: `age` gives the overall look, and individual parameters
 fine-tune it. `{ "age": 0.8, "stains": { "ratio": 0 } }` is a ruined wall without streaks,
-and `{ "age": 0 }` a brand new one. The [ashlar page](templates/ashlar.md#aging) lists the
+and `{ "age": 0 }` a brand new one.
+
+Derived sizes in pixels (chips, cracks, erosion, spalls...) are proportional to the height
+of the stones at own size: bricks half as high as ashlar stones get chips and erosion half
+as large, so that they age alike. Sizes set explicitly are used as they are. The
+[ashlar](templates/ashlar.md#aging) and [bricks](templates/bricks.md#aging) pages list the
 value of every wear parameter at each age.
 
 ## Validation

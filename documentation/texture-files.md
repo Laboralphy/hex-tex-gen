@@ -64,9 +64,19 @@ such as [`moss`](templates/moss.md), blend with their own alpha too.
 ## Anchors
 
 Templates report **anchor points**: named points computed while rendering, in pixels of
-the rendered patch. [`ashlar`](templates/ashlar.md#anchors) reports `rows`, the top-left of
-the stone faces of each row, just below the mortar, and `stones`, the top-left corner of
-each stone face.
+the rendered patch. The walls ([`ashlar`](templates/ashlar.md#anchors),
+[`bricks`](templates/bricks.md#anchors) and [`panel`](templates/panel.md#anchors)) report:
+
+| Anchor        | Points                                                             |
+| ------------- | ------------------------------------------------------------------ |
+| `rows`        | the top-left of the stone faces of each row, just below the mortar |
+| `stones`      | the top-left corner of each stone face                             |
+| `panel`       | the top-left corner of the face of the slab, when `panel.enabled`  |
+| `panelCenter` | the center of the face of the slab, when `panel.enabled`           |
+
+An anchor places the **top-left corner** of each copy on its point. To center a patch on a
+point, such as a switch on `panelCenter`, shift it by half its size with `offset`: see
+[`panel`](templates/panel.md#usage).
 
 A placement with an `anchor` is repeated on the anchor points of a previous placement,
 instead of being placed with `x` and `y`:
@@ -108,12 +118,13 @@ instead of being placed with `x` and `y`:
 The moss hangs right under each joint, whatever the seed, the size or the number of rows
 of the wall: anchors follow the patch they belong to.
 
-| Anchor key | Description                                                          |
-| ---------- | -------------------------------------------------------------------- |
-| `to`       | `id` of a previous placement, which must not be anchored itself      |
-| `at`       | anchor name, declared by the template of that placement              |
-| `only`     | indices of the points to use, from 0; all of them by default         |
-| `offset`   | `[dx, dy]` shift from each point, in **pixels**; `[0, 0]` by default |
+| Anchor key | Description                                                                     |
+| ---------- | ------------------------------------------------------------------------------- |
+| `to`       | `id` of a previous placement, which must not be anchored itself                 |
+| `at`       | anchor name, declared by the template of that placement                         |
+| `only`     | indices of the points to use, from 0; all of them by default                    |
+| `ratio`    | share of the visible points to use, from 0 to 1, picked at random; 1 by default |
+| `offset`   | `[dx, dy]` shift from each point, in **pixels**; `[0, 0]` by default            |
 
 Rules:
 
@@ -124,6 +135,11 @@ Rules:
 - **each copy has its own seed**, derived from the placement seed and the index of its
   point, so the copies differ, and filtering points with `only` does not change the look
   of the ones kept;
+- **`ratio` picks a random share of the points**: `0.5` keeps half of them, exactly
+  (rounded), chosen with the placement seed. Only the points left by `only` and not hidden
+  count: with 8 visible rows, `"ratio": 0.5` gives 4 of them. Raising the ratio only adds
+  points, lowering it only removes some, so the amount can be tuned without the rest
+  moving; change the `seed` of the placement to pick another subset;
 - an anchored placement cannot set `x` or `y`: use `offset`;
 - `width` and `height` still size each copy, in percent of the texture.
 

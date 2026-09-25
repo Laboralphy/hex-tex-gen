@@ -2,7 +2,7 @@
 
 # `bricks`
 
-Staggered brick wall with mortar joints.
+Brick wall: equal bricks in running bond, with every ashlar parameter.
 
 ![bricks](../images/bricks.png)
 
@@ -12,15 +12,191 @@ Own size: 64 × 64 pixels. Parameters marked **layout** are expressed at this si
 
 ### General
 
-| Parameter     | Type                            | Default                                        | Scale | Description                                           |
-| ------------- | ------------------------------- | ---------------------------------------------- | ----- | ----------------------------------------------------- |
-| `size`        | [width, height] of integers > 0 | `[64, 64]`                                     | —     | own size of the patch, in pixels                      |
-| `brickWidth`  | integer ≥ 1                     | `32`                                           | —     | brick width, in pixels                                |
-| `brickHeight` | integer ≥ 1                     | `16`                                           | —     | brick height, in pixels                               |
-| `mortar`      | integer ≥ 0                     | `2`                                            | —     | mortar thickness, in pixels                           |
-| `mortarColor` | CSS color                       | `"#2a2520"`                                    | —     | mortar color                                          |
-| `colors`      | array of CSS colors, at least 2 | `["#3b1f16", "#6e3a26", "#8f5236", "#a8694a"]` | —     | brick colors, from darkest to lightest                |
-| `variation`   | number in [0, 1]                | `0.25`                                         | —     | random brightness variation between bricks, in [0, 1] |
+| Parameter | Type                            | Default    | Scale | Description                                                                          |
+| --------- | ------------------------------- | ---------- | ----- | ------------------------------------------------------------------------------------ |
+| `size`    | [width, height] of integers > 0 | `[64, 64]` | —     | own size of the patch in pixels; layout values are expressed at this size            |
+| `age`     | number in [0, 1]                | `0.3`      | —     | overall weathering, from 0 (new) to 1 (ruined): sets every wear parameter left unset |
+
+### `rows`
+
+Horizontal courses of stones.
+
+| Parameter              | Type             | Default | Scale  | Description                                     |
+| ---------------------- | ---------------- | ------- | ------ | ----------------------------------------------- |
+| `rows.count`           | integer ≥ 1      | `8`     | layout | number of horizontal courses of stones          |
+| `rows.heightVariation` | number in [0, 1) | `0`     | layout | random height variation between rows, in [0, 1) |
+
+### `blocks`
+
+Stones within a row.
+
+| Parameter               | Type                      | Default     | Scale  | Description                                                                                                             |
+| ----------------------- | ------------------------- | ----------- | ------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `blocks.width`          | [min, max] of numbers > 0 | `[16, 16]`  | layout | [min, max] stone width                                                                                                  |
+| `blocks.minJointOffset` | number ≥ 0                | `0`         | layout | minimum horizontal distance between a joint and the joints of adjacent rows (random bond only)                          |
+| `blocks.bond`           | string                    | `"running"` | —      | random: stones of random width; running: equal bricks, rows offset by half a brick; stack: equal bricks, joints aligned |
+
+### `panel`
+
+A large stone slab: room for an inscription or a switch.
+
+| Parameter       | Type        | Default  | Scale  | Description                                                                                              |
+| --------------- | ----------- | -------- | ------ | -------------------------------------------------------------------------------------------------------- |
+| `panel.enabled` | boolean     | `false`  | —      | adds a large stone slab to the wall, surrounded by mortar                                                |
+| `panel.width`   | number > 0  | `32`     | layout | slab width, mortar included                                                                              |
+| `panel.height`  | number > 0  | `24`     | layout | slab height, mortar included                                                                             |
+| `panel.x`       | number ≥ 0  | centered | layout | left edge of the slab                                                                                    |
+| `panel.y`       | number ≥ 0  | centered | layout | top edge of the slab                                                                                     |
+| `panel.snap`    | boolean     | `true`   | —      | aligns the top and bottom of the slab on the nearest row joints, so that no row is cut into a thin strip |
+| `panel.bevel`   | integer ≥ 0 | `2`      | detail | bevel width of the slab, in pixels                                                                       |
+| `panel.shade`   | number ≥ 0  | `1`      | —      | brightness factor of the slab                                                                            |
+
+### `mortar`
+
+Joints between stones.
+
+| Parameter        | Type             | Default     | Scale  | Description                                                              |
+| ---------------- | ---------------- | ----------- | ------ | ------------------------------------------------------------------------ |
+| `mortar.size`    | integer ≥ 0      | `1`         | detail | joint thickness, in pixels                                               |
+| `mortar.color`   | CSS color        | `"#3a322b"` | —      | mortar color                                                             |
+| `mortar.noise`   | number in [0, 1] | from `age`  | —      | brightness variation of the mortar, in [0, 1]                            |
+| `mortar.erosion` | number in [0, 1] | from `age`  | —      | hollowed joints: darker, pitted mortar shadowed by the stones, in [0, 1] |
+
+### `bevel`
+
+Stone edges lit from the top-left.
+
+| Parameter     | Type        | Default | Scale  | Description                                     |
+| ------------- | ----------- | ------- | ------ | ----------------------------------------------- |
+| `bevel.size`  | integer ≥ 0 | `1`     | detail | bevel width, in pixels                          |
+| `bevel.light` | number ≥ 0  | `1.25`  | —      | brightness factor of the top and left edges     |
+| `bevel.dark`  | number ≥ 0  | `0.7`   | —      | brightness factor of the bottom and right edges |
+
+### `edges`
+
+Irregularity of stone outlines.
+
+| Parameter         | Type       | Default    | Scale  | Description                                           |
+| ----------------- | ---------- | ---------- | ------ | ----------------------------------------------------- |
+| `edges.roughness` | number ≥ 0 | from `age` | detail | maximum displacement of the stone outlines, in pixels |
+
+### `chips`
+
+Broken stone corners.
+
+| Parameter     | Type                      | Default    | Scale  | Description                        |
+| ------------- | ------------------------- | ---------- | ------ | ---------------------------------- |
+| `chips.ratio` | number in [0, 1]          | from `age` | —      | ratio of chipped stones, in [0, 1] |
+| `chips.size`  | [min, max] of numbers ≥ 0 | from `age` | detail | [min, max] chip size, in pixels    |
+
+### `cracks`
+
+Cracks running across stones.
+
+| Parameter       | Type                      | Default    | Scale  | Description                        |
+| --------------- | ------------------------- | ---------- | ------ | ---------------------------------- |
+| `cracks.ratio`  | number in [0, 1]          | from `age` | —      | ratio of cracked stones, in [0, 1] |
+| `cracks.length` | [min, max] of numbers ≥ 0 | from `age` | detail | [min, max] crack length, in pixels |
+
+### `erosion`
+
+Stones worn down by time: rounded corners, uneven edges.
+
+| Parameter         | Type       | Default    | Scale  | Description                                        |
+| ----------------- | ---------- | ---------- | ------ | -------------------------------------------------- |
+| `erosion.corners` | number ≥ 0 | from `age` | detail | radius of the rounded stone corners, in pixels     |
+| `erosion.edges`   | number ≥ 0 | from `age` | detail | maximum depth worn into the stone edges, in pixels |
+
+### `stains`
+
+Dirt: streaks of rainwater and soot, grime.
+
+| Parameter         | Type                      | Default    | Scale  | Description                                                |
+| ----------------- | ------------------------- | ---------- | ------ | ---------------------------------------------------------- |
+| `stains.ratio`    | number in [0, 1]          | from `age` | —      | chance of a streak running down from the top of each stone |
+| `stains.length`   | [min, max] of numbers ≥ 0 | from `age` | layout | [min, max] streak length                                   |
+| `stains.width`    | number ≥ 1                | from `age` | detail | streak width, in pixels                                    |
+| `stains.darkness` | number in [0, 1]          | from `age` | —      | darkening at the top of a streak, in [0, 1]                |
+| `stains.grime`    | number in [0, 1]          | from `age` | —      | blotchy darkening of the whole wall, in [0, 1]             |
+
+### `spalling`
+
+Flaked stone faces.
+
+| Parameter        | Type                      | Default    | Scale  | Description                                              |
+| ---------------- | ------------------------- | ---------- | ------ | -------------------------------------------------------- |
+| `spalling.ratio` | number in [0, 1]          | from `age` | —      | ratio of stones with a flaked, recessed patch, in [0, 1] |
+| `spalling.size`  | [min, max] of numbers ≥ 0 | from `age` | detail | [min, max] patch radius, in pixels                       |
+| `spalling.depth` | number in [0, 1]          | from `age` | —      | darkening of the flaked patches, in [0, 1]               |
+
+### `stone`
+
+Stone surface.
+
+| Parameter                 | Type                            | Default                                        | Scale  | Description                                             |
+| ------------------------- | ------------------------------- | ---------------------------------------------- | ------ | ------------------------------------------------------- |
+| `stone.palette`           | array of CSS colors, at least 2 | `["#3b1f16", "#6e3a26", "#8f5236", "#a8694a"]` | —      | stone colors, from darkest to lightest                  |
+| `stone.contrast`          | number ≥ 0                      | `0.6`                                          | —      | spread of the surface noise over the palette            |
+| `stone.shadeVariation`    | number in [0, 1]                | from `age`                                     | —      | random brightness variation between stones, in [0, 1]   |
+| `stone.paletteShift`      | number in [0, 1]                | `0.12`                                         | —      | random shift of each stone along the palette, in [0, 1] |
+| `stone.grain`             | number in [0, 1]                | from `age`                                     | detail | random brightness variation between pixels, in [0, 1]   |
+| `stone.noise.period`      | integer ≥ 1                     | `16`                                           | layout | noise cells across the patch at the first octave        |
+| `stone.noise.octaves`     | integer in [1, 16]              | `3`                                            | —      | number of noise octaves, each one twice as fine         |
+| `stone.noise.persistence` | number in (0, 1]                | `0.5`                                          | —      | weight ratio between an octave and the previous one     |
+
+## Anchors
+
+| Anchor        | Points                                                                  |
+| ------------- | ----------------------------------------------------------------------- |
+| `rows`        | left edge and top of the stone faces of each row, just below the mortar |
+| `stones`      | top-left corner of the face of each stone, row by row                   |
+| `panel`       | top-left corner of the face of the panel, when enabled                  |
+| `panelCenter` | center of the face of the panel, when enabled                           |
+
+## Bricks and ashlar
+
+`bricks` is the [`ashlar`](ashlar.md) engine with brick defaults: it has exactly the same
+parameters, anchors and aging. Its bricks are equal and laid in running bond
+(`blocks.bond`): each row is offset by half a brick. With `"bond": "stack"`, the joints
+are aligned; with `"bond": "random"`, bricks get random widths, like ashlar stones.
+
+In regular bonds, each row holds as many equal bricks as the mean of `blocks.width` fits
+in the width, and `blocks.minJointOffset` is not used. A running bond needs an even
+`rows.count`, so that the texture tiles vertically.
+
+## Aging
+
+`age`, from 0 (new) to 1 (ruined), sets every wear parameter left unset. Values in
+between are interpolated linearly between age 0, 0.3 (the default) and 1. Parameters set
+explicitly always win: `{ "age": 0.8, "stains": { "ratio": 0 } }` is a ruined wall
+without streaks. See [Aging](../concepts.md#aging).
+
+![bricks at age 0, 0.3, 0.6 and 1](../images/bricks-ages.png)
+
+Derived sizes in pixels are proportional to the height of the stones at own size, 16
+pixels giving the values of `ashlar`. With its default parameters, `bricks` derives:
+
+| Parameter              | age 0    | age 0.3  | age 0.6       | age 1    |
+| ---------------------- | -------- | -------- | ------------- | -------- |
+| `edges.roughness`      | 0.15     | 0.4      | 0.53          | 0.7      |
+| `chips.ratio`          | 0        | 0.25     | 0.49          | 0.8      |
+| `chips.size`           | [0.5, 1] | [1, 2]   | [1.21, 2.86]  | [1.5, 4] |
+| `cracks.ratio`         | 0        | 0.2      | 0.44          | 0.75     |
+| `cracks.length`        | [1.5, 3] | [2.5, 6] | [3.57, 9]     | [5, 13]  |
+| `stone.grain`          | 0.03     | 0.06     | 0.09          | 0.14     |
+| `stone.shadeVariation` | 0.05     | 0.1      | 0.15          | 0.22     |
+| `mortar.noise`         | 0.1      | 0.25     | 0.38          | 0.55     |
+| `mortar.erosion`       | 0        | 0.2      | 0.46          | 0.8      |
+| `erosion.corners`      | 0        | 0.5      | 1.14          | 2        |
+| `erosion.edges`        | 0        | 0.25     | 0.68          | 1.25     |
+| `stains.ratio`         | 0        | 0.15     | 0.39          | 0.7      |
+| `stains.length`        | [2, 5]   | [3, 8]   | [4.29, 13.14] | [6, 20]  |
+| `stains.width`         | 1        | 1        | 1.21          | 1.5      |
+| `stains.darkness`      | 0.15     | 0.25     | 0.36          | 0.5      |
+| `stains.grime`         | 0        | 0.1      | 0.23          | 0.4      |
+| `spalling.ratio`       | 0        | 0.08     | 0.26          | 0.5      |
+| `spalling.size`        | [1, 1.5] | [1, 2.5] | [1.43, 3.57]  | [2, 5]   |
+| `spalling.depth`       | 0.2      | 0.25     | 0.34          | 0.45     |
 
 ## Example
 

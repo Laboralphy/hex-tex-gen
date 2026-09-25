@@ -1,0 +1,23 @@
+{
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": {
+        "template": "bricks",
+        "rows": {
+          "count": 4
+        },
+        "blocks": {
+          "width": [32, 32]
+        },
+        "mortar": {
+          "size": 2
+        }
+      },
+      "width": 100,
+      "height": 100
+    }
+  ]
+}

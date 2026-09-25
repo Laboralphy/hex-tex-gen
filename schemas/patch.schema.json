@@ -94,8 +94,72 @@
             },
             "minJointOffset": {
               "default": 5,
-              "description": "minimum horizontal distance between a joint and the joints of adjacent rows (layout: scales with the patch)",
+              "description": "minimum horizontal distance between a joint and the joints of adjacent rows (random bond only) (layout: scales with the patch)",
               "scale": "layout",
+              "type": "number",
+              "minimum": 0
+            },
+            "bond": {
+              "default": "random",
+              "description": "random: stones of random width; running: equal bricks, rows offset by half a brick; stack: equal bricks, joints aligned",
+              "type": "string",
+              "enum": ["random", "running", "stack"]
+            }
+          },
+          "additionalProperties": false
+        },
+        "panel": {
+          "description": "a large stone slab: room for an inscription or a switch",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "default": false,
+              "description": "adds a large stone slab to the wall, surrounded by mortar",
+              "type": "boolean"
+            },
+            "width": {
+              "default": 32,
+              "description": "slab width, mortar included (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "height": {
+              "default": 24,
+              "description": "slab height, mortar included (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "x": {
+              "description": "left edge of the slab; defaults to centered (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "minimum": 0
+            },
+            "y": {
+              "description": "top edge of the slab; defaults to centered (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "minimum": 0
+            },
+            "snap": {
+              "default": true,
+              "description": "aligns the top and bottom of the slab on the nearest row joints, so that no row is cut into a thin strip",
+              "type": "boolean"
+            },
+            "bevel": {
+              "default": 2,
+              "description": "bevel width of the slab, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "shade": {
+              "default": 1,
+              "description": "brightness factor of the slab",
               "type": "number",
               "minimum": 0
             }
@@ -449,6 +513,1343 @@
           "type": "string"
         },
         "template": {
+          "const": "bricks",
+          "description": "Brick wall: equal bricks in running bond, with every ashlar parameter"
+        },
+        "seed": {
+          "description": "seed of this patch, unless the placement sets one",
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "size": {
+          "default": [64, 64],
+          "description": "own size of the patch in pixels; layout values are expressed at this size",
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "rows": {
+          "description": "horizontal courses of stones",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "count": {
+              "default": 8,
+              "description": "number of horizontal courses of stones (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "heightVariation": {
+              "default": 0,
+              "description": "random height variation between rows, in [0, 1) (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "minimum": 0,
+              "exclusiveMaximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "blocks": {
+          "description": "stones within a row",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "width": {
+              "default": [16, 16],
+              "description": "[min, max] stone width (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "minJointOffset": {
+              "default": 0,
+              "description": "minimum horizontal distance between a joint and the joints of adjacent rows (random bond only) (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "minimum": 0
+            },
+            "bond": {
+              "default": "running",
+              "description": "random: stones of random width; running: equal bricks, rows offset by half a brick; stack: equal bricks, joints aligned",
+              "type": "string",
+              "enum": ["random", "running", "stack"]
+            }
+          },
+          "additionalProperties": false
+        },
+        "panel": {
+          "description": "a large stone slab: room for an inscription or a switch",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "default": false,
+              "description": "adds a large stone slab to the wall, surrounded by mortar",
+              "type": "boolean"
+            },
+            "width": {
+              "default": 32,
+              "description": "slab width, mortar included (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "height": {
+              "default": 24,
+              "description": "slab height, mortar included (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "x": {
+              "description": "left edge of the slab; defaults to centered (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "minimum": 0
+            },
+            "y": {
+              "description": "top edge of the slab; defaults to centered (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "minimum": 0
+            },
+            "snap": {
+              "default": true,
+              "description": "aligns the top and bottom of the slab on the nearest row joints, so that no row is cut into a thin strip",
+              "type": "boolean"
+            },
+            "bevel": {
+              "default": 2,
+              "description": "bevel width of the slab, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "shade": {
+              "default": 1,
+              "description": "brightness factor of the slab",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "mortar": {
+          "description": "joints between stones",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "size": {
+              "default": 1,
+              "description": "joint thickness, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "color": {
+              "default": "#3a322b",
+              "description": "mortar color",
+              "type": "string",
+              "kind": "color"
+            },
+            "noise": {
+              "description": "brightness variation of the mortar, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "erosion": {
+              "description": "hollowed joints: darker, pitted mortar shadowed by the stones, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "bevel": {
+          "description": "stone edges lit from the top-left",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "size": {
+              "default": 1,
+              "description": "bevel width, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "light": {
+              "default": 1.25,
+              "description": "brightness factor of the top and left edges",
+              "type": "number",
+              "minimum": 0
+            },
+            "dark": {
+              "default": 0.7,
+              "description": "brightness factor of the bottom and right edges",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "edges": {
+          "description": "irregularity of stone outlines",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "roughness": {
+              "description": "maximum displacement of the stone outlines, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "chips": {
+          "description": "broken stone corners",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "ratio": {
+              "description": "ratio of chipped stones, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "size": {
+              "description": "[min, max] chip size, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "number",
+                  "minimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "additionalProperties": false
+        },
+        "cracks": {
+          "description": "cracks running across stones",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "ratio": {
+              "description": "ratio of cracked stones, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "length": {
+              "description": "[min, max] crack length, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "number",
+                  "minimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "additionalProperties": false
+        },
+        "erosion": {
+          "description": "stones worn down by time: rounded corners, uneven edges",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "corners": {
+              "description": "radius of the rounded stone corners, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0
+            },
+            "edges": {
+              "description": "maximum depth worn into the stone edges, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "stains": {
+          "description": "dirt: streaks of rainwater and soot, grime",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "ratio": {
+              "description": "chance of a streak running down from the top of each stone; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "length": {
+              "description": "[min, max] streak length; when unset, derived from age (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "number",
+                  "minimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "width": {
+              "description": "streak width, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 1
+            },
+            "darkness": {
+              "description": "darkening at the top of a streak, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "grime": {
+              "description": "blotchy darkening of the whole wall, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "spalling": {
+          "description": "flaked stone faces",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "ratio": {
+              "description": "ratio of stones with a flaked, recessed patch, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "size": {
+              "description": "[min, max] patch radius, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "number",
+                  "minimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "depth": {
+              "description": "darkening of the flaked patches, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "age": {
+          "default": 0.3,
+          "description": "overall weathering, from 0 (new) to 1 (ruined): sets every wear parameter left unset",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "stone": {
+          "description": "stone surface",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "palette": {
+              "default": ["#3b1f16", "#6e3a26", "#8f5236", "#a8694a"],
+              "description": "stone colors, from darkest to lightest",
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "kind": "color"
+              }
+            },
+            "contrast": {
+              "default": 0.6,
+              "description": "spread of the surface noise over the palette",
+              "type": "number",
+              "minimum": 0
+            },
+            "shadeVariation": {
+              "description": "random brightness variation between stones, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "paletteShift": {
+              "default": 0.12,
+              "description": "random shift of each stone along the palette, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "grain": {
+              "description": "random brightness variation between pixels, in [0, 1]; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "noise": {
+              "description": "surface noise",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "period": {
+                  "default": 16,
+                  "description": "noise cells across the patch at the first octave (layout: scales with the patch)",
+                  "scale": "layout",
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "octaves": {
+                  "default": 3,
+                  "description": "number of noise octaves, each one twice as fine",
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 16
+                },
+                "persistence": {
+                  "default": 0.5,
+                  "description": "weight ratio between an octave and the previous one",
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "title": "bricks",
+      "description": "Brick wall: equal bricks in running bond, with every ashlar parameter",
+      "required": ["template"]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "description": "JSON Schema of this file, for editors",
+          "type": "string"
+        },
+        "extends": {
+          "description": "parent patch file, relative to this file, deep-merged under this one",
+          "type": "string"
+        },
+        "template": {
+          "const": "panel",
+          "description": "Ashlar wall with a large stone slab, room for an inscription or a switch"
+        },
+        "seed": {
+          "description": "seed of this patch, unless the placement sets one",
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "size": {
+          "default": [64, 64],
+          "description": "own size of the patch in pixels; layout values are expressed at this size",
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "rows": {
+          "description": "horizontal courses of stones",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "count": {
+              "default": 4,
+              "description": "number of horizontal courses of stones (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "heightVariation": {
+              "default": 0.2,
+              "description": "random height variation between rows, in [0, 1) (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "minimum": 0,
+              "exclusiveMaximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "blocks": {
+          "description": "stones within a row",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "width": {
+              "default": [14, 30],
+              "description": "[min, max] stone width (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "minJointOffset": {
+              "default": 5,
+              "description": "minimum horizontal distance between a joint and the joints of adjacent rows (random bond only) (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "minimum": 0
+            },
+            "bond": {
+              "default": "random",
+              "description": "random: stones of random width; running: equal bricks, rows offset by half a brick; stack: equal bricks, joints aligned",
+              "type": "string",
+              "enum": ["random", "running", "stack"]
+            }
+          },
+          "additionalProperties": false
+        },
+        "panel": {
+          "description": "a large stone slab: room for an inscription or a switch",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "description": "adds a large stone slab to the wall, surrounded by mortar",
+              "type": "boolean"
+            },
+            "width": {
+              "default": 36,
+              "description": "slab width, mortar included (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "height": {
+              "default": 30,
+              "description": "slab height, mortar included (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "x": {
+              "description": "left edge of the slab; defaults to centered (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "minimum": 0
+            },
+            "y": {
+              "description": "top edge of the slab; defaults to centered (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "minimum": 0
+            },
+            "snap": {
+              "default": true,
+              "description": "aligns the top and bottom of the slab on the nearest row joints, so that no row is cut into a thin strip",
+              "type": "boolean"
+            },
+            "bevel": {
+              "default": 2,
+              "description": "bevel width of the slab, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "shade": {
+              "default": 1.08,
+              "description": "brightness factor of the slab",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "mortar": {
+          "description": "joints between stones",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "size": {
+              "default": 2,
+              "description": "joint thickness, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "color": {
+              "default": "#24211d",
+              "description": "mortar color",
+              "type": "string",
+              "kind": "color"
+            },
+            "noise": {
+              "description": "brightness variation of the mortar, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "erosion": {
+              "description": "hollowed joints: darker, pitted mortar shadowed by the stones, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "bevel": {
+          "description": "stone edges lit from the top-left",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "size": {
+              "default": 1,
+              "description": "bevel width, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "light": {
+              "default": 1.3,
+              "description": "brightness factor of the top and left edges",
+              "type": "number",
+              "minimum": 0
+            },
+            "dark": {
+              "default": 0.6,
+              "description": "brightness factor of the bottom and right edges",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "edges": {
+          "description": "irregularity of stone outlines",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "roughness": {
+              "description": "maximum displacement of the stone outlines, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "chips": {
+          "description": "broken stone corners",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "ratio": {
+              "description": "ratio of chipped stones, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "size": {
+              "description": "[min, max] chip size, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "number",
+                  "minimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "additionalProperties": false
+        },
+        "cracks": {
+          "description": "cracks running across stones",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "ratio": {
+              "description": "ratio of cracked stones, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "length": {
+              "description": "[min, max] crack length, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "number",
+                  "minimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "additionalProperties": false
+        },
+        "erosion": {
+          "description": "stones worn down by time: rounded corners, uneven edges",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "corners": {
+              "description": "radius of the rounded stone corners, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0
+            },
+            "edges": {
+              "description": "maximum depth worn into the stone edges, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "stains": {
+          "description": "dirt: streaks of rainwater and soot, grime",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "ratio": {
+              "description": "chance of a streak running down from the top of each stone; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "length": {
+              "description": "[min, max] streak length; when unset, derived from age (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "number",
+                  "minimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "width": {
+              "description": "streak width, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 1
+            },
+            "darkness": {
+              "description": "darkening at the top of a streak, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "grime": {
+              "description": "blotchy darkening of the whole wall, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "spalling": {
+          "description": "flaked stone faces",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "ratio": {
+              "description": "ratio of stones with a flaked, recessed patch, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "size": {
+              "description": "[min, max] patch radius, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "number",
+                  "minimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "depth": {
+              "description": "darkening of the flaked patches, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "age": {
+          "default": 0.3,
+          "description": "overall weathering, from 0 (new) to 1 (ruined): sets every wear parameter left unset",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "stone": {
+          "description": "stone surface",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "palette": {
+              "default": ["#34322e", "#5a5751", "#7e7a72", "#a39e94"],
+              "description": "stone colors, from darkest to lightest",
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "kind": "color"
+              }
+            },
+            "contrast": {
+              "default": 0.9,
+              "description": "spread of the surface noise over the palette",
+              "type": "number",
+              "minimum": 0
+            },
+            "shadeVariation": {
+              "description": "random brightness variation between stones, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "paletteShift": {
+              "default": 0.1,
+              "description": "random shift of each stone along the palette, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "grain": {
+              "description": "random brightness variation between pixels, in [0, 1]; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "noise": {
+              "description": "surface noise",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "period": {
+                  "default": 8,
+                  "description": "noise cells across the patch at the first octave (layout: scales with the patch)",
+                  "scale": "layout",
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "octaves": {
+                  "default": 4,
+                  "description": "number of noise octaves, each one twice as fine",
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 16
+                },
+                "persistence": {
+                  "default": 0.6,
+                  "description": "weight ratio between an octave and the previous one",
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "title": "panel",
+      "description": "Ashlar wall with a large stone slab, room for an inscription or a switch",
+      "required": ["template"]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "description": "JSON Schema of this file, for editors",
+          "type": "string"
+        },
+        "extends": {
+          "description": "parent patch file, relative to this file, deep-merged under this one",
+          "type": "string"
+        },
+        "template": {
+          "const": "planks",
+          "description": "Wall of vertical wooden planks of variable length"
+        },
+        "seed": {
+          "description": "seed of this patch, unless the placement sets one",
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "size": {
+          "default": [64, 64],
+          "description": "own size of the patch in pixels; layout values are expressed at this size",
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "direction": {
+          "default": "vertical",
+          "description": "direction of the planks",
+          "type": "string",
+          "enum": ["vertical", "horizontal"]
+        },
+        "lines": {
+          "description": "lines of planks across the patch, filling it exactly",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "count": {
+              "default": 4,
+              "description": "number of lines of planks across the patch: columns of vertical planks, rows of horizontal ones; ignored when width is set",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "width": {
+              "description": "plank width, across the planks; when set, the lines are as many as this width fits in the patch (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "widthVariation": {
+              "default": 0.1,
+              "description": "random width variation between lines, in [0, 1) (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "minimum": 0,
+              "exclusiveMaximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "planks": {
+          "description": "planks within a line, filling it exactly",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "length": {
+              "default": [0.3, 1],
+              "description": "[min, max] plank length, in fraction of the patch size along the planks (its height for vertical planks, its width for horizontal ones); [1, 1] gives planks running across the whole patch (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 1
+                },
+                {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "additionalProperties": false
+        },
+        "gap": {
+          "description": "gaps between planks",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "size": {
+              "default": 1,
+              "description": "gap between planks, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "color": {
+              "default": "#140d08",
+              "description": "gap color",
+              "type": "string",
+              "kind": "color"
+            }
+          },
+          "additionalProperties": false
+        },
+        "bevel": {
+          "description": "plank edges lit from the top-left",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "size": {
+              "default": 1,
+              "description": "bevel width, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "light": {
+              "default": 1.2,
+              "description": "brightness factor of the top and left edges",
+              "type": "number",
+              "minimum": 0
+            },
+            "dark": {
+              "default": 0.7,
+              "description": "brightness factor of the bottom and right edges",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "wood": {
+          "description": "wood surface",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "palette": {
+              "default": ["#3a2412", "#5e3b1f", "#7d5230", "#9c6b40"],
+              "description": "wood colors, from darkest to lightest",
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "kind": "color"
+              }
+            },
+            "contrast": {
+              "default": 0.8,
+              "description": "spread of the grain over the palette",
+              "type": "number",
+              "minimum": 0
+            },
+            "grain": {
+              "default": 5,
+              "description": "number of grain streaks across a plank",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "shadeVariation": {
+              "default": 0.12,
+              "description": "random brightness variation between planks, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "paletteShift": {
+              "default": 0.12,
+              "description": "random shift of each plank along the palette, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "noise": {
+              "default": 0.05,
+              "description": "random brightness variation between pixels, in [0, 1] (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "knots": {
+          "description": "knots in the wood",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "ratio": {
+              "default": 0.25,
+              "description": "ratio of planks with a knot, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "size": {
+              "default": [1.5, 3],
+              "description": "[min, max] knot radius, in pixels; the grain bends around it (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "number",
+                  "minimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "additionalProperties": false
+        },
+        "nails": {
+          "description": "nails at the ends of the planks",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "ratio": {
+              "default": 0.6,
+              "description": "chance of a nail at each end of a plank, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "inset": {
+              "default": 2,
+              "description": "distance of the nails from the plank ends, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "color": {
+              "default": "#201c18",
+              "description": "nail color",
+              "type": "string",
+              "kind": "color"
+            }
+          },
+          "additionalProperties": false
+        },
+        "age": {
+          "default": 0.3,
+          "description": "overall weathering, from 0 (new) to 1 (ruined): sets every wear parameter left unset",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "weathering": {
+          "description": "wood turned silver-grey by the weather, in [0, 1]; when unset, derived from age",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "splits": {
+          "description": "splits along the grain",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "ratio": {
+              "description": "ratio of split planks, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "length": {
+              "description": "[min, max] split length, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "number",
+                  "minimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "additionalProperties": false
+        },
+        "edges": {
+          "description": "irregularity of plank outlines",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "roughness": {
+              "description": "maximum displacement of the plank outlines, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "grime": {
+          "description": "blotchy darkening of the whole wall, in [0, 1]; when unset, derived from age",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": false,
+      "title": "planks",
+      "description": "Wall of vertical wooden planks of variable length",
+      "required": ["template"]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "description": "JSON Schema of this file, for editors",
+          "type": "string"
+        },
+        "extends": {
+          "description": "parent patch file, relative to this file, deep-merged under this one",
+          "type": "string"
+        },
+        "template": {
           "const": "stone",
           "description": "Mottled rock surface made of Perlin noise"
         },
@@ -492,97 +1893,6 @@
       "additionalProperties": false,
       "title": "stone",
       "description": "Mottled rock surface made of Perlin noise",
-      "required": ["template"]
-    },
-    {
-      "type": "object",
-      "properties": {
-        "$schema": {
-          "description": "JSON Schema of this file, for editors",
-          "type": "string"
-        },
-        "extends": {
-          "description": "parent patch file, relative to this file, deep-merged under this one",
-          "type": "string"
-        },
-        "template": {
-          "const": "bricks",
-          "description": "Staggered brick wall with mortar joints"
-        },
-        "seed": {
-          "description": "seed of this patch, unless the placement sets one",
-          "type": "integer",
-          "minimum": -9007199254740991,
-          "maximum": 9007199254740991
-        },
-        "size": {
-          "default": [64, 64],
-          "description": "own size of the patch, in pixels",
-          "type": "array",
-          "prefixItems": [
-            {
-              "type": "integer",
-              "exclusiveMinimum": 0,
-              "maximum": 9007199254740991
-            },
-            {
-              "type": "integer",
-              "exclusiveMinimum": 0,
-              "maximum": 9007199254740991
-            }
-          ],
-          "items": false,
-          "minItems": 2,
-          "maxItems": 2
-        },
-        "brickWidth": {
-          "default": 32,
-          "description": "brick width, in pixels",
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 9007199254740991
-        },
-        "brickHeight": {
-          "default": 16,
-          "description": "brick height, in pixels",
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 9007199254740991
-        },
-        "mortar": {
-          "default": 2,
-          "description": "mortar thickness, in pixels",
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 9007199254740991
-        },
-        "mortarColor": {
-          "default": "#2a2520",
-          "description": "mortar color",
-          "type": "string",
-          "kind": "color"
-        },
-        "colors": {
-          "default": ["#3b1f16", "#6e3a26", "#8f5236", "#a8694a"],
-          "description": "brick colors, from darkest to lightest",
-          "minItems": 2,
-          "type": "array",
-          "items": {
-            "type": "string",
-            "kind": "color"
-          }
-        },
-        "variation": {
-          "default": 0.25,
-          "description": "random brightness variation between bricks, in [0, 1]",
-          "type": "number",
-          "minimum": 0,
-          "maximum": 1
-        }
-      },
-      "additionalProperties": false,
-      "title": "bricks",
-      "description": "Staggered brick wall with mortar joints",
       "required": ["template"]
     },
     {
@@ -782,6 +2092,669 @@
       "additionalProperties": false,
       "title": "moss",
       "description": "Transparent overlay of greenish vines hanging from the top edge",
+      "required": ["template"]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "description": "JSON Schema of this file, for editors",
+          "type": "string"
+        },
+        "extends": {
+          "description": "parent patch file, relative to this file, deep-merged under this one",
+          "type": "string"
+        },
+        "template": {
+          "const": "opening",
+          "description": "Rectangular opening dug into the wall below, for windows, bars or arches"
+        },
+        "seed": {
+          "description": "seed of this patch, unless the placement sets one",
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "size": {
+          "default": [32, 32],
+          "description": "own size of the opening, reveals included",
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "depth": {
+          "default": 4,
+          "description": "width of the reveals, the inner faces of the cut, in pixels (detail: real pixels, does not scale)",
+          "scale": "detail",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "reveals": {
+          "description": "inner faces of the cut: the wall below, shaded; from -1 (black) to 1 (white), the light coming from the top-left",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "top": {
+              "default": -0.6,
+              "description": "shading of the top reveal, in shadow",
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "left": {
+              "default": -0.45,
+              "description": "shading of the left reveal, in shadow",
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "right": {
+              "default": 0.2,
+              "description": "shading of the right reveal, lit",
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "bottom": {
+              "default": 0.3,
+              "description": "shading of the bottom reveal (the sill), lit",
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "falloff": {
+              "default": 0.2,
+              "description": "extra darkness of the reveals towards the back, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "open": {
+          "default": [],
+          "description": "sides without a reveal, the opening running to the edge of the patch: [\"bottom\"] for a doorway",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["top", "left", "right", "bottom"]
+          }
+        },
+        "back": {
+          "description": "back of the opening",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "mode": {
+              "default": "cut",
+              "description": "cut: erased, transparent in the texture; shade: the wall below, darkened; color: an opaque color",
+              "type": "string",
+              "enum": ["cut", "shade", "color"]
+            },
+            "shade": {
+              "default": 0.7,
+              "description": "darkening of the wall below, in shade mode",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "color": {
+              "default": "#0a0806",
+              "description": "color of the back, in color mode",
+              "type": "string",
+              "kind": "color"
+            }
+          },
+          "additionalProperties": false
+        },
+        "edges": {
+          "description": "irregularity of the outline",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "roughness": {
+              "default": 0,
+              "description": "maximum displacement of the outline of the opening, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "title": "opening",
+      "description": "Rectangular opening dug into the wall below, for windows, bars or arches",
+      "required": ["template"]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "description": "JSON Schema of this file, for editors",
+          "type": "string"
+        },
+        "extends": {
+          "description": "parent patch file, relative to this file, deep-merged under this one",
+          "type": "string"
+        },
+        "template": {
+          "const": "parchment",
+          "description": "Sheet of parchment pinned on a wall, blank or aged, room for decals"
+        },
+        "seed": {
+          "description": "seed of this patch, unless the placement sets one",
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "size": {
+          "default": [32, 40],
+          "description": "own size of the sheet, its shadow included",
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "paper": {
+          "description": "the paper",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "palette": {
+              "default": ["#b39d74", "#d2bf96", "#e6d9b8", "#f3ead3"],
+              "description": "paper colors, from darkest to lightest",
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "kind": "color"
+              }
+            },
+            "contrast": {
+              "default": 0.5,
+              "description": "spread of the blotches over the palette",
+              "type": "number",
+              "minimum": 0
+            },
+            "fiber": {
+              "default": 0.08,
+              "description": "random brightness variation between pixels, the paper fibers (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "margin": {
+          "default": 3,
+          "description": "margin around the writing area, reported by the sheet anchor, in pixels (detail: real pixels, does not scale)",
+          "scale": "detail",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "shadow": {
+          "description": "shadow of the sheet on the wall, the light coming from the top-left",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "offset": {
+              "default": 1,
+              "description": "shadow cast on the wall, to the bottom-right, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "opacity": {
+              "default": 0.45,
+              "description": "darkness of the shadow, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "folds": {
+          "description": "creases of a sheet once folded",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "x": {
+              "default": 0,
+              "description": "number of vertical fold lines",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "y": {
+              "default": 0,
+              "description": "number of horizontal fold lines",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "additionalProperties": false
+        },
+        "pins": {
+          "description": "pins holding the sheet on the wall",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "description": "pins at the top corners",
+              "type": "boolean"
+            },
+            "inset": {
+              "default": 2,
+              "description": "distance of the pins from the edges, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "color": {
+              "default": "#3a3632",
+              "description": "pin color",
+              "type": "string",
+              "kind": "color"
+            }
+          },
+          "additionalProperties": false
+        },
+        "age": {
+          "default": 0.3,
+          "description": "overall aging, from 0 (blank) to 1 (ancient): sets every wear parameter left unset",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "yellowing": {
+          "description": "paper turned yellow-brown, in [0, 1]; when unset, derived from age",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "foxing": {
+          "description": "foxing: small brown age spots",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "density": {
+              "description": "brown age spots per 32 × 32 pixels; when unset, derived from age",
+              "type": "number",
+              "minimum": 0
+            },
+            "size": {
+              "description": "[min, max] spot radius, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "number",
+                  "minimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "additionalProperties": false
+        },
+        "edges": {
+          "description": "edges of the sheet",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "width": {
+              "description": "width of the darkened edges, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0
+            },
+            "darkness": {
+              "description": "darkening of the edges, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "roughness": {
+              "description": "maximum displacement of the torn outline, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "title": "parchment",
+      "description": "Sheet of parchment pinned on a wall, blank or aged, room for decals",
+      "required": ["template"]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "description": "JSON Schema of this file, for editors",
+          "type": "string"
+        },
+        "extends": {
+          "description": "parent patch file, relative to this file, deep-merged under this one",
+          "type": "string"
+        },
+        "template": {
+          "const": "banner",
+          "description": "Banner of fabric hanging from a rod, with a shaped lower end and bordering stripes"
+        },
+        "seed": {
+          "description": "seed of this patch, unless the placement sets one",
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "size": {
+          "default": [24, 56],
+          "description": "own size of the banner, its rod and its shadow included",
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "shape": {
+          "description": "shape of the banner",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "base": {
+              "default": "flat",
+              "description": "lower end: flat; point, a triangle; swallowtail, forked like an oriflamme; tails, several points like a gonfalon",
+              "type": "string",
+              "enum": ["flat", "point", "swallowtail", "tails"]
+            },
+            "depth": {
+              "default": 0.2,
+              "description": "height of the shaped lower end, in fraction of the banner height (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "tails": {
+              "default": 3,
+              "description": "number of points of the tails base",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "additionalProperties": false
+        },
+        "fabric": {
+          "description": "the fabric",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "color": {
+              "default": "#8a1a1a",
+              "description": "color of the fabric",
+              "type": "string",
+              "kind": "color"
+            },
+            "weave": {
+              "default": 0.06,
+              "description": "random brightness variation between pixels, the weave (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "border": {
+          "description": "stripes bordering the banner",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "inset": {
+              "default": 1,
+              "description": "distance of the first stripe from the edge, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "stripes": {
+              "default": [
+                {
+                  "color": "#d4a53a",
+                  "width": 2
+                }
+              ],
+              "description": "stripes along the sides and the lower end, from the edge inwards",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "color": {
+                    "type": "string",
+                    "kind": "color",
+                    "description": "stripe color"
+                  },
+                  "width": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991,
+                    "description": "stripe width, in pixels (detail: real pixels, does not scale)",
+                    "scale": "detail"
+                  }
+                },
+                "required": ["color", "width"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "folds": {
+          "description": "soft vertical folds of the hanging fabric",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "count": {
+              "default": 3,
+              "description": "number of vertical folds across the banner (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "minimum": 0
+            },
+            "depth": {
+              "default": 0.25,
+              "description": "shading of the folds, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "rod": {
+          "description": "rod the banner hangs from",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "description": "a rod across the top",
+              "type": "boolean"
+            },
+            "size": {
+              "default": 2,
+              "description": "rod thickness, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "overhang": {
+              "default": 2,
+              "description": "length of the rod beyond each side of the fabric, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "color": {
+              "default": "#4a3320",
+              "description": "rod color",
+              "type": "string",
+              "kind": "color"
+            }
+          },
+          "additionalProperties": false
+        },
+        "shadow": {
+          "description": "shadow of the banner on the wall, the light coming from the top-left",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "offset": {
+              "default": 1,
+              "description": "shadow cast on the wall, to the bottom-right, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "opacity": {
+              "default": 0.4,
+              "description": "darkness of the shadow, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "age": {
+          "default": 0.3,
+          "description": "overall aging, from 0 (new) to 1 (tattered): sets every wear parameter left unset",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "fading": {
+          "description": "colors faded by light, in [0, 1]; when unset, derived from age",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "stains": {
+          "description": "coverage of the stains, in [0, 1]; when unset, derived from age",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "rips": {
+          "description": "torn edges",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "count": {
+              "description": "number of notches torn into the edges; when unset, derived from age",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "depth": {
+              "description": "[min, max] depth of the notches, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "number",
+                  "minimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "roughness": {
+              "description": "maximum displacement of the frayed outline, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "holes": {
+          "description": "moth holes per 32 × 32 pixels; when unset, derived from age",
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "title": "banner",
+      "description": "Banner of fabric hanging from a rod, with a shaped lower end and bordering stripes",
       "required": ["template"]
     },
     {

@@ -53,6 +53,11 @@ export const placementAnchorSchema = z
             .array(z.number().int().min(0))
             .optional()
             .describe('indices of the anchor points to use; defaults to all of them'),
+        ratio: ratio()
+            .optional()
+            .describe(
+                'share of the visible points to use, picked at random with the placement seed; raising it only adds points; defaults to 1',
+            ),
         offset: z
             .tuple([z.number().int(), z.number().int()])
             .optional()

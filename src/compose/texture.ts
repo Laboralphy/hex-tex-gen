@@ -53,6 +53,9 @@ type PreparedPlacement = {
     opaque: boolean;
 };
 
+/** salt of the random ranks of anchor points, apart from the seeds of the copies */
+const SALT_RATIO = 1;
+
 function mod(a: number, n: number): number {
     return ((a % n) + n) % n;
 }
@@ -167,19 +170,24 @@ export function renderTexture(
         const target = ids.get(anchor.to)!;
         const points = rendered.get(target)!.anchors[anchor.at] ?? [];
         const [dx, dy] = anchor.offset ?? [0, 0];
-        points.forEach((point, i) => {
-            if (anchor.only && !anchor.only.includes(i)) {
-                return;
-            }
-            const at = { x: target.x! + point.x, y: target.y! + point.y };
-            if (isHidden(target, at)) {
-                return;
-            }
+        // candidates: the points selected by `only`, and visible
+        const candidates = points
+            .map((point, i) => ({ i, at: { x: target.x! + point.x, y: target.y! + point.y } }))
+            .filter(({ i }) => !anchor.only || anchor.only.includes(i))
+            .filter(({ at }) => !isHidden(target, at));
+        // ratio: keep the candidates of lowest random rank, an exact share of them; a
+        // point's rank does not depend on the ratio, so raising the ratio only adds points
+        const rank = (i: number) => hash(p.seed, SALT_RATIO, i);
+        const kept = [...candidates]
+            .sort((a, b) => rank(a.i) - rank(b.i))
+            .slice(0, Math.round((anchor.ratio ?? 1) * candidates.length))
+            .sort((a, b) => a.i - b.i);
+        for (const { i, at } of kept) {
             // each copy gets its own seed, stable whatever points are skipped
             const seed = Math.floor(hash(p.seed, i) * 4294967296);
             const image = renderPatch(p.patch, seed, p.width, p.height);
             texture.draw(image, at.x + dx, at.y + dy, opacity);
-        });
+        }
     }
     return texture;
 }

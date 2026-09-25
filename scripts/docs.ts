@@ -5,14 +5,22 @@
 import { format, resolveConfig } from 'prettier';
 import { z } from 'zod';
 import {
-    ashlar,
     ashlarWear,
+    bannerWear,
+    type BannerParams,
+    type BannerWear,
     patchDefinitionSchema,
     placementAnchorSchema,
     placementSchema,
     textureDefinitionSchema,
     type AshlarParams,
     type AshlarWear,
+    parchmentWear,
+    type ParchmentParams,
+    type ParchmentWear,
+    planksWear,
+    type PlanksParams,
+    type PlanksWear,
     type TextureGenerator,
 } from '../src';
 import { generators } from '../src/generators';
@@ -204,12 +212,70 @@ function round(value: number): string {
     return String(Math.round(value * 100) / 100);
 }
 
-function ageTable(): string {
-    const wear = AGES.map((age) => ashlarWear({ ...ashlar.defaults, age } as AshlarParams));
+/** plank parameters derived from age, and where they are in the resolved wear */
+const PLANK_WEAR_PARAMETERS: [string, (w: PlanksWear) => number | [number, number]][] = [
+    ['weathering', (w) => w.weathering],
+    ['splits.ratio', (w) => w.splits.ratio],
+    ['splits.length', (w) => w.splits.length],
+    ['edges.roughness', (w) => w.roughness],
+    ['grime', (w) => w.grime],
+];
+
+/** parchment parameters derived from age, and where they are in the resolved wear */
+const PARCHMENT_WEAR_PARAMETERS: [string, (w: ParchmentWear) => number | [number, number]][] = [
+    ['yellowing', (w) => w.yellowing],
+    ['foxing.density', (w) => w.foxing.density],
+    ['foxing.size', (w) => w.foxing.size],
+    ['edges.width', (w) => w.edges.width],
+    ['edges.darkness', (w) => w.edges.darkness],
+    ['edges.roughness', (w) => w.edges.roughness],
+];
+
+/** banner parameters derived from age, and where they are in the resolved wear */
+const BANNER_WEAR_PARAMETERS: [string, (w: BannerWear) => number | [number, number]][] = [
+    ['fading', (w) => w.fading],
+    ['stains', (w) => w.stains],
+    ['rips.count', (w) => w.rips.count],
+    ['rips.depth', (w) => w.rips.depth],
+    ['rips.roughness', (w) => w.rips.roughness],
+    ['holes', (w) => w.holes],
+];
+
+type WearRow = [string, (params: object) => number | [number, number]];
+
+/**
+ * Parameters derived from age by a template, and how to compute them.
+ */
+function wearRows(generator: TextureGenerator): WearRow[] {
+    if (generator.name === 'banner') {
+        return BANNER_WEAR_PARAMETERS.map(([path, get]) => [
+            path,
+            (params) => get(bannerWear(params as BannerParams)),
+        ]);
+    }
+    if (generator.name === 'parchment') {
+        return PARCHMENT_WEAR_PARAMETERS.map(([path, get]) => [
+            path,
+            (params) => get(parchmentWear(params as ParchmentParams)),
+        ]);
+    }
+    if (generator.name === 'planks') {
+        return PLANK_WEAR_PARAMETERS.map(([path, get]) => [
+            path,
+            (params) => get(planksWear(params as PlanksParams)),
+        ]);
+    }
+    return WEAR_PARAMETERS.map(([path, get]) => [
+        path,
+        (params) => get(ashlarWear(params as AshlarParams)),
+    ]);
+}
+
+function ageTable(generator: TextureGenerator): string {
     const head = `| Parameter | ${AGES.map((a) => `age ${a}`).join(' | ')} |\n| --- |${' --- |'.repeat(AGES.length)}`;
-    const rows = WEAR_PARAMETERS.map(([path, get]) => {
-        const values = wear.map((w) => {
-            const v = get(w);
+    const rows = wearRows(generator).map(([path, get]) => {
+        const values = AGES.map((age) => {
+            const v = get({ ...generator.defaults, age });
             return Array.isArray(v) ? `[${v.map(round).join(', ')}]` : round(v);
         });
         return `| \`${path}\` | ${values.join(' | ')} |`;
@@ -217,18 +283,220 @@ function ageTable(): string {
     return [head, ...rows].join('\n');
 }
 
-/** extra sections of some template pages */
-const EXTRA: Record<string, string> = {
-    ashlar: `## Aging
+function isAging(generator: TextureGenerator): boolean {
+    return 'age' in generator.defaults;
+}
+
+function agingSection(generator: TextureGenerator): string {
+    const name = generator.name;
+    return `## Aging
 
 \`age\`, from 0 (new) to 1 (ruined), sets every wear parameter left unset. Values in
 between are interpolated linearly between age 0, 0.3 (the default) and 1. Parameters set
 explicitly always win: \`{ "age": 0.8, "stains": { "ratio": 0 } }\` is a ruined wall
 without streaks. See [Aging](../concepts.md#aging).
 
-![ashlar at age 0, 0.3, 0.6 and 1](../images/ashlar-ages.png)
+![${name} at age 0, 0.3, 0.6 and 1](../images/${name}-ages.png)
 
-${ageTable()}`,
+${
+    name === 'planks' || name === 'parchment' || name === 'banner'
+        ? `With its default parameters, \`${name}\` derives:`
+        : `Derived sizes in pixels are proportional to the height of the stones at own size, 16
+pixels giving the values of \`ashlar\`. With its default parameters, \`${name}\` derives:`
+}
+
+${ageTable(generator)}`;
+}
+
+/** extra sections of some template pages, before the aging section */
+const EXTRA: Record<string, string> = {
+    bricks: `## Bricks and ashlar
+
+\`bricks\` is the [\`ashlar\`](ashlar.md) engine with brick defaults: it has exactly the same
+parameters, anchors and aging. Its bricks are equal and laid in running bond
+(\`blocks.bond\`): each row is offset by half a brick. With \`"bond": "stack"\`, the joints
+are aligned; with \`"bond": "random"\`, bricks get random widths, like ashlar stones.
+
+In regular bonds, each row holds as many equal bricks as the mean of \`blocks.width\` fits
+in the width, and \`blocks.minJointOffset\` is not used. A running bond needs an even
+\`rows.count\`, so that the texture tiles vertically.`,
+    panel: `## The slab
+
+\`panel\` is the [\`ashlar\`](ashlar.md) engine with its slab enabled: a large stone surrounded
+by mortar, the joints of the wall stopping at its border and the stones around it cut to
+fit. Every wall has the \`panel\` parameters: \`{ "panel": { "enabled": true } }\` adds a slab
+to \`ashlar\` or [\`bricks\`](bricks.md) too.
+
+- \`panel.x\`, \`panel.y\`, \`panel.width\` and \`panel.height\` are layout values, mortar
+  included: they scale with the patch. Without \`x\` or \`y\`, the slab is centered on that
+  axis.
+- \`panel.snap\` (on by default) moves the top and the bottom of the slab to the nearest row
+  joints, so that no row is cut into a thin strip: the slab height may change to match
+  whole rows. Set it to \`false\` to keep the exact height.
+- The slab ages with the wall: \`age\` chips its corners, cracks it and stains it.
+
+## Usage
+
+The slab leaves room for an inscription, a switch or a sign, placed with the \`panel\` or
+\`panelCenter\` anchors. An anchor places the top-left corner of each copy on its point:
+to center a 16 × 16 switch on the slab of a 64 × 64 texture, shift it by half its size:
+
+\`\`\`jsonc
+{
+  "size": [64, 64],
+  "patches": [
+    { "id": "wall", "patch": { "template": "panel" }, "width": 100, "height": 100 },
+    {
+      "patch": "./patches/switch.json",
+      "anchor": { "to": "wall", "at": "panelCenter", "offset": [-8, -8] },
+      "width": 25,
+      "height": 25
+    }
+  ]
+}
+\`\`\``,
+    planks: `## Layout
+
+Planks are laid in **lines**: columns of vertical planks, or rows of horizontal ones with
+\`"direction": "horizontal"\`.
+
+- \`lines.count\` sets the number of lines across the patch, or \`lines.width\` a plank width,
+  the lines being then as many as this width fits. \`lines.widthVariation\` gives the lines
+  random widths; together they always fill the patch exactly, so the texture tiles.
+- \`planks.length\` is the \`[min, max]\` length of the planks, in **fraction of the patch
+  size along the planks**: its height for vertical planks, its width for horizontal ones.
+  Each line is filled with planks of random length, the last one cut to fit, and shifted
+  at random so that the plank ends of neighbour lines do not line up. Planks crossing an
+  edge continue on the opposite one, so the texture tiles in both directions.
+- \`[1, 1]\` gives planks running across the whole patch, without any end. A line that
+  happens to hold a single plank has no end either.
+
+Nails are only placed at plank ends. Knots bend the grain around them. Horizontal planks
+are rendered like vertical ones, transposed: the lighting still comes from the top-left.
+
+## Moss on planks
+
+Anchor moss to \`planks\` to hang it under the plank ends, one patch as wide as a plank
+(25% for 4 lines), with fewer vines, as a narrow moss patch keeps its vine count:
+
+\`\`\`json
+{
+  "patch": { "template": "moss", "vines": { "count": 3, "length": [2, 10] } },
+  "anchor": { "to": "wall", "at": "planks", "ratio": 0.6 },
+  "width": 25,
+  "height": 25
+}
+\`\`\`
+
+Planks running across the whole patch have no end, and no \`planks\` anchor: anchor to
+\`lines\` to hang moss from the top of the columns, or from each row of horizontal planks
+(with \`"width": 100\`). See [\`examples/plank-variants\`](../../examples/plank-variants).`,
+    opening: `## Usage
+
+\`opening\` is an overlay placed over a wall: the whole patch is the opening, placed and
+sized like any patch, or anchored, on a \`panel\` slab for instance. It draws:
+
+- **reveals**, the inner faces of the cut, \`depth\` pixels wide: the wall below, darkened
+  or lightened (\`reveals.*\`, from -1 to 1), so that they are made of the wall's own
+  material. With the light coming from the top-left, the top and left reveals are in
+  shadow, the right and bottom ones lit;
+- a **back**, depending on \`back.mode\`: \`cut\` erases the wall, leaving the texture
+  transparent there (the PNG keeps its alpha, like the masked textures of Doom);
+  \`shade\` darkens the wall for a shallow niche; \`color\` fills it with an opaque color.
+
+\`open\` lists the sides without a reveal, where the opening runs to the edge of the patch:
+\`["bottom"]\` for a doorway or an arch reaching the floor.
+
+Patches drawn afterwards fill the hole: windows, bars, fences... Anchor them to
+\`opening\` (top-left of the back) or \`openingCenter\`:
+
+\`\`\`json
+{
+  "size": [64, 128],
+  "patches": [
+    { "id": "wall", "patch": { "template": "bricks", "size": [64, 128], "rows": { "count": 16 } } },
+    {
+      "id": "door",
+      "patch": { "template": "opening", "depth": 5, "open": ["bottom"] },
+      "x": 18.75,
+      "y": 25,
+      "width": 62.5,
+      "height": 75
+    },
+    {
+      "patch": "./patches/bars.json",
+      "anchor": { "to": "door", "at": "opening" }
+    }
+  ]
+}
+\`\`\``,
+    parchment: `## Usage
+
+\`parchment\` is an overlay: a sheet pinned on a wall, placed and sized like any patch, or
+anchored, on a \`panel\` slab for instance. The whole patch is the sheet and its shadow:
+\`shadow.offset\` pixels are kept at the bottom and on the right for the shadow cast on the
+wall, the light coming from the top-left.
+
+The sheet is blank at \`"age": 0\`; as it ages, it yellows, gets foxing spots, darker
+edges and a torn outline. \`folds\` adds the creases of a folded sheet, \`pins\` the pins
+holding it.
+
+It leaves room for decals, placed with its anchors: \`sheet\`, the top-left corner of the
+writing area, inside the \`margin\`, and \`sheetCenter\`:
+
+\`\`\`json
+{
+  "size": [64, 64],
+  "patches": [
+    { "id": "wall", "patch": { "template": "panel" }, "width": 100, "height": 100 },
+    {
+      "id": "notice",
+      "patch": { "template": "parchment", "size": [24, 20], "age": 0.6 },
+      "anchor": { "to": "wall", "at": "panelCenter", "offset": [-12, -10] },
+      "width": 37.5,
+      "height": 31.25
+    },
+    { "patch": "./patches/decal.json", "anchor": { "to": "notice", "at": "sheet" } }
+  ]
+}
+\`\`\``,
+    banner: `## Usage
+
+\`banner\` is an overlay: a banner of fabric hanging from a rod, placed a few percent from
+the top of a wall, and hanging down to its own height. The whole patch is the banner, its
+rod and its shadow:
+
+\`\`\`json
+{
+  "size": [64, 128],
+  "patches": [
+    { "patch": { "template": "ashlar", "size": [64, 128], "rows": { "count": 8 } } },
+    {
+      "id": "banner",
+      "patch": {
+        "template": "banner",
+        "shape": { "base": "swallowtail", "depth": 0.3 },
+        "fabric": { "color": "#b01818" },
+        "border": { "stripes": [{ "color": "#e8c34a", "width": 1 }, { "color": "#2a1a0a", "width": 1 }] }
+      },
+      "x": 31.25,
+      "y": 3,
+      "width": 37.5,
+      "height": 43.75
+    }
+  ]
+}
+\`\`\`
+
+- \`shape.base\` shapes the lower end: \`flat\`, \`point\` (a triangle), \`swallowtail\` (forked,
+  like the oriflamme) or \`tails\` (\`shape.tails\` points, like a gonfalon);
+  \`shape.depth\` is its height, in fraction of the banner height.
+- \`border.stripes\` lists the stripes along the sides and the lower end, from the edge
+  inwards; they follow the intact outline, so that tears cut through them.
+- As it ages, the fabric fades, gets stains, rips (notches torn into its edges), a frayed
+  outline and moth holes, through which the wall shows.
+- The \`emblem\` anchor, at the center of the field, and \`field\`, its top-left corner
+  inside the border, leave room for a coat of arms.`,
     moss: `## Usage
 
 \`moss\` is an overlay: it is transparent outside the moss, and meant to be anchored under
@@ -243,7 +511,7 @@ As an overlay, it never hides the anchor points of the patches under it. See
 };
 
 function templatePage(generator: TextureGenerator): string {
-    const derivable = generator.name === 'ashlar';
+    const derivable = isAging(generator);
     const anchors = Object.entries(generator.anchors ?? {});
     return [
         `<!-- generated by "npm run docs" from the template schema: do not edit -->`,
@@ -259,6 +527,7 @@ function templatePage(generator: TextureGenerator): string {
                   .join('\n')}`
             : '',
         EXTRA[generator.name] ?? '',
+        isAging(generator) ? agingSection(generator) : '',
         `## Example\n\n\`\`\`json\n${JSON.stringify(
             {
                 $schema: '../../schemas/patch.schema.json',

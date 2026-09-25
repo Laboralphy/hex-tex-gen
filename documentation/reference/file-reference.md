@@ -35,12 +35,13 @@ An item of `patches` in a texture file.
 
 The `anchor` of a placement.
 
-| Key      | Type                  | Default     | Description                                             |
-| -------- | --------------------- | ----------- | ------------------------------------------------------- |
-| `to`     | string                | —           | `id` of a previous placement                            |
-| `at`     | string                | —           | anchor name, declared by the template of that placement |
-| `only`   | array of integers ≥ 0 | all of them | indices of the anchor points to use                     |
-| `offset` | [dx, dy] of integers  | [0, 0]      | [dx, dy] shift from each anchor point, in pixels        |
+| Key      | Type                  | Default     | Description                                                                                               |
+| -------- | --------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| `to`     | string                | —           | `id` of a previous placement                                                                              |
+| `at`     | string                | —           | anchor name, declared by the template of that placement                                                   |
+| `only`   | array of integers ≥ 0 | all of them | indices of the anchor points to use                                                                       |
+| `ratio`  | number in [0, 1]      | 1           | share of the visible points to use, picked at random with the placement seed; raising it only adds points |
+| `offset` | [dx, dy] of integers  | [0, 0]      | [dx, dy] shift from each anchor point, in pixels                                                          |
 
 ## Patch file
 

@@ -89,26 +89,31 @@ points of a previous placement instead of being positioned with `x`, `y`:
 }
 ```
 
-| Anchor key | Description                                                   |
-| ---------- | ------------------------------------------------------------- |
-| `to`       | `id` of a previous placement                                  |
-| `at`       | anchor name, declared by the generator (`hex-tex-gen --list`) |
-| `only`     | indices of the points to use (default: all)                   |
-| `offset`   | `[dx, dy]` shift in pixels (default `[0, 0]`)                 |
+| Anchor key | Description                                                      |
+| ---------- | ---------------------------------------------------------------- |
+| `to`       | `id` of a previous placement                                     |
+| `at`       | anchor name, declared by the generator (`hex-tex-gen --list`)    |
+| `only`     | indices of the points to use (default: all)                      |
+| `ratio`    | share of the visible points to use, picked at random (default 1) |
+| `offset`   | `[dx, dy]` shift in pixels (default `[0, 0]`)                    |
 
 Anchors follow the target whatever its seed, size or parameters. Points hidden by a later
 opaque placement are skipped (overlay generators such as `moss`, and placements with an
 `opacity` below 1, hide nothing). Each copy gets its own seed, derived from the placement
 seed and the point index.
 
-| Template | Anchor   | Points                                                             |
-| -------- | -------- | ------------------------------------------------------------------ |
-| `ashlar` | `rows`   | left edge and top of the stone faces of each row, below the mortar |
-| `ashlar` | `stones` | top-left corner of the face of each stone                          |
+| Template | Anchor        | Points                                                             |
+| -------- | ------------- | ------------------------------------------------------------------ |
+| walls    | `rows`        | left edge and top of the stone faces of each row, below the mortar |
+| walls    | `stones`      | top-left corner of the face of each stone                          |
+| walls    | `panel`       | top-left corner of the face of the slab, when `panel.enabled`      |
+| walls    | `panelCenter` | center of the face of the slab, when `panel.enabled`               |
+
+Walls are `ashlar`, `bricks` and `panel`.
 
 ### Aging
 
-`ashlar` has an `age` parameter, from 0 (new) to 1 (ruined), 0.3 by default. It sets every
+`ashlar` and `bricks` have an `age` parameter, from 0 (new) to 1 (ruined), 0.3 by default. It sets every
 wear parameter left unset: chips, cracks, rough outlines, surface grain, differences
 between stones, and four weathering effects:
 

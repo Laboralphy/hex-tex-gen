@@ -58,10 +58,60 @@ function mossyWall(size: [number, number]): Texture {
     return renderTexture({ size, seed: SEED, patches }, createMemoryLoader({}));
 }
 
+/** a brick wall with a doorway, open at the bottom */
+function openingWall(): Texture {
+    const patches: Placement[] = [
+        { patch: { template: 'bricks' }, width: 100, height: 100 },
+        {
+            patch: { template: 'opening', depth: 3, open: ['bottom'] },
+            x: 25,
+            y: 25,
+            width: 50,
+            height: 75,
+        },
+    ];
+    return renderTexture({ size: [64, 64], seed: SEED, patches }, createMemoryLoader({}));
+}
+
+/** a sheet of parchment on a stone wall */
+function parchmentWall(age?: number): Texture {
+    const patches: Placement[] = [
+        { patch: { template: 'ashlar' }, width: 100, height: 100 },
+        {
+            patch: { template: 'parchment', ...(age === undefined ? {} : { age }) },
+            x: 25,
+            y: 18.75,
+            width: 50,
+            height: 62.5,
+        },
+    ];
+    return renderTexture({ size: [64, 64], seed: SEED, patches }, createMemoryLoader({}));
+}
+
+/** a swallowtailed banner hanging on a stone wall */
+function bannerWall(age?: number): Texture {
+    const patches: Placement[] = [
+        {
+            patch: { template: 'ashlar', size: [64, 128], rows: { count: 8 } },
+            width: 100,
+            height: 100,
+        },
+        {
+            patch: {
+                template: 'banner',
+                shape: { base: 'swallowtail', depth: 0.3 },
+                ...(age === undefined ? {} : { age }),
+            },
+            x: 31.25,
+            y: 3,
+            width: 37.5,
+            height: 43.75,
+        },
+    ];
+    return renderTexture({ size: [64, 128], seed: SEED, patches }, createMemoryLoader({}));
+}
+
 const images: Record<string, Texture> = {
-    'ashlar-ages.png': strip(
-        [0, 0.3, 0.6, 1].map((age) => enlarge(ashlar.generate({ seed: SEED, age }), 3)),
-    ),
     'layout-detail.png': strip([
         enlarge(ashlar.generate({ seed: SEED }), 4),
         enlarge(ashlar.generate({ seed: SEED, width: 128, height: 128 }), 2),
@@ -69,10 +119,31 @@ const images: Record<string, Texture> = {
     'anchors.png': enlarge(mossyWall([128, 128]), 3),
 };
 for (const g of Object.values(generators)) {
+    if ('age' in g.defaults) {
+        images[`${g.name}-ages.png`] = strip(
+            [0, 0.3, 0.6, 1].map((age) => {
+                if (g.name === 'parchment') {
+                    return enlarge(parchmentWall(age), 3);
+                }
+                if (g.name === 'banner') {
+                    return enlarge(bannerWall(age), 2);
+                }
+                // only templates having an age get here
+                const options = { seed: SEED, age };
+                return enlarge(g.generate(options), 3);
+            }),
+        );
+    }
     images[`${g.name}.png`] =
         g.name === 'moss'
             ? enlarge(mossyWall([64, 64]), 4)
-            : enlarge(g.generate({ seed: SEED }), 4);
+            : g.name === 'opening'
+              ? enlarge(openingWall(), 4)
+              : g.name === 'parchment'
+                ? enlarge(parchmentWall(), 4)
+                : g.name === 'banner'
+                  ? enlarge(bannerWall(), 3)
+                  : enlarge(g.generate({ seed: SEED }), 4);
 }
 
 const pages = await renderDocs();

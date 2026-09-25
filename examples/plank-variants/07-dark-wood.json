@@ -1,0 +1,21 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": {
+        "template": "planks",
+        "wood": {
+          "palette": ["#1e140c", "#33241a", "#4a3524", "#5f4631"]
+        },
+        "knots": {
+          "ratio": 0.5
+        }
+      },
+      "width": 100,
+      "height": 100
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": {
+        "template": "planks",
+        "direction": "horizontal",
+        "lines": {
+          "count": 5
+        },
+        "age": 1
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "moss",
+        "vines": {
+          "count": 10,
+          "length": [6, 20]
+        },
+        "ledge": {
+          "size": 3,
+          "coverage": 0.6
+        },
+        "moss": {
+          "fade": 0.4
+        }
+      },
+      "anchor": {
+        "to": "wall",
+        "at": "lines",
+        "ratio": 0.8
+      },
+      "width": 100,
+      "height": 30,
+      "seed": 11
+    }
+  ]
+}

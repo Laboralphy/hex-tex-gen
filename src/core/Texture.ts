@@ -16,6 +16,11 @@ export class Texture {
     public readonly data: Uint8ClampedArray;
     /** named anchors reported by the generator, see {@link TextureGenerator.anchors} */
     public anchors: Record<string, AnchorPoint[]> = {};
+    /**
+     * Pixels this texture erases from the textures it is drawn on, 1 per erased pixel:
+     * openings let what is behind the wall show through.
+     */
+    public cut?: Uint8Array;
 
     constructor(
         public readonly width: number,
@@ -64,7 +69,8 @@ export class Texture {
 
     /**
      * Draws another texture over this one ("over" compositing). Coordinates wrap, so a
-     * texture drawn across an edge continues on the opposite side.
+     * texture drawn across an edge continues on the opposite side. Pixels of the source's
+     * `cut` mask are erased first: they become transparent, as much as `opacity`.
      * @param opacity in [0, 1], multiplied with the source alpha
      */
     draw(source: Texture, x: number, y: number, opacity = 1): this {
@@ -74,6 +80,9 @@ export class Texture {
             for (let sx = 0; sx < source.width; ++sx) {
                 const si = (sy * source.width + sx) << 2;
                 const di = this.offset(x + sx, y + sy);
+                if (source.cut?.[si >> 2]) {
+                    d[di + 3] *= 1 - opacity;
+                }
                 const a = (s[si + 3] / 255) * opacity;
                 const da = d[di + 3] / 255;
                 const oa = a + da * (1 - a);
@@ -93,6 +102,7 @@ export class Texture {
     clone(): Texture {
         const t = new Texture(this.width, this.height);
         t.data.set(this.data);
+        t.cut = this.cut?.slice();
         t.anchors = Object.fromEntries(
             Object.entries(this.anchors).map(([name, points]) => [
                 name,

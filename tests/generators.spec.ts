@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { generators } from '../src';
 
+// templates without randomness by default: opening only uses its seed for rough edges
+const SEED_INDEPENDENT = ['opening'];
+
 describe.each(Object.values(generators))('generator $name', (generator) => {
     it('produces a texture of the requested size', () => {
         const t = generator.generate({ width: 64, height: 32, seed: 1 });
@@ -13,7 +16,9 @@ describe.each(Object.values(generators))('generator $name', (generator) => {
         const b = generator.generate({ width: 64, height: 64, seed: 42 });
         const c = generator.generate({ width: 64, height: 64, seed: 43 });
         expect(a.data).toEqual(b.data);
-        expect(a.data).not.toEqual(c.data);
+        if (!SEED_INDEPENDENT.includes(generator.name)) {
+            expect(a.data).not.toEqual(c.data);
+        }
     });
 
     it.skipIf(generator.overlay)('produces opaque pixels', () => {

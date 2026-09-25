@@ -44,6 +44,19 @@ const dot = defineGenerator({
     render: (_, { width, height }) => new Texture(width, height).fill(RED),
 }) as unknown as TextureGenerator;
 
+// a block reporting 10 points in a row: (0, 0), (3, 0), ... (27, 0)
+const row = defineGenerator({
+    name: 'test-row',
+    description: 'test',
+    schema: z.strictObject({ size: size().default([32, 4]) }),
+    anchors: { points: 'test points' },
+    render(_, { width, height }) {
+        const t = new Texture(width, height).fill(BLACK);
+        t.anchors = { points: Array.from({ length: 10 }, (_, i) => ({ x: i * 3, y: 0 })) };
+        return t;
+    },
+}) as unknown as TextureGenerator;
+
 const loader = createMemoryLoader({});
 const redPixels = (t: Texture) => {
     const found: [number, number][] = [];
@@ -61,10 +74,12 @@ describe('anchored placements', () => {
     beforeAll(() => {
         generators[target.name] = target;
         generators[dot.name] = dot;
+        generators[row.name] = row;
     });
     afterAll(() => {
         delete generators[target.name];
         delete generators[dot.name];
+        delete generators[row.name];
     });
 
     const render = (patches: object[]) =>
@@ -129,6 +144,65 @@ describe('anchored placements', () => {
         expect(seen).toEqual([all[2]]);
     });
 
+    describe('ratio', () => {
+        const renderRow = (anchor: object, seed = 3, extra: object[] = []) =>
+            redPixels(
+                renderTexture(
+                    {
+                        size: [32, 4],
+                        patches: [
+                            { id: 'row', patch: { template: 'test-row' } },
+                            ...extra,
+                            {
+                                patch: { template: 'test-dot' },
+                                anchor: { to: 'row', at: 'points', ...anchor },
+                                seed,
+                            },
+                        ],
+                    },
+                    loader,
+                ),
+            ).map(([x]) => x / 3);
+
+        it('keeps every point at 1, none at 0', () => {
+            expect(renderRow({ ratio: 1 })).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+            expect(renderRow({})).toHaveLength(10);
+            expect(renderRow({ ratio: 0 })).toEqual([]);
+        });
+
+        it('keeps an exact share of the points', () => {
+            expect(renderRow({ ratio: 0.5 })).toHaveLength(5);
+            expect(renderRow({ ratio: 0.33 })).toHaveLength(3);
+        });
+
+        it('only adds points when the ratio rises', () => {
+            const smaller = renderRow({ ratio: 0.3 });
+            const larger = renderRow({ ratio: 0.7 });
+            expect(larger).toEqual(expect.arrayContaining(smaller));
+        });
+
+        it('picks another subset with another seed', () => {
+            const subsets = new Set(
+                [1, 2, 3, 4, 5].map((seed) => renderRow({ ratio: 0.5 }, seed).join()),
+            );
+            expect(subsets.size).toBeGreaterThan(1);
+        });
+
+        it('picks among the points of only', () => {
+            const kept = renderRow({ only: [0, 1, 2, 3], ratio: 0.5 });
+            expect(kept).toHaveLength(2);
+            kept.forEach((i) => expect([0, 1, 2, 3]).toContain(i));
+        });
+
+        it('counts only the visible points', () => {
+            // an opaque block hiding points 5 to 9
+            const cover = { patch: { template: 'test-target' }, x: 45, width: 55, height: 100 };
+            const kept = renderRow({ ratio: 0.4 }, 3, [cover]);
+            expect(kept).toHaveLength(2);
+            kept.forEach((i) => expect(i).toBeLessThan(5));
+        });
+    });
+
     it('reports invalid anchors', () => {
         expect(() => render([wall, dots({ to: 'nope' })])).toThrow(
             'texture: patches[1].anchor: no previous placement with id "nope"',
@@ -140,6 +214,9 @@ describe('anchored placements', () => {
         expect(() => render([wall, wall])).toThrow(/duplicate id "wall"/);
         expect(() => render([wall, { ...dots({}), id: 'a' }, dots({ to: 'a' })])).toThrow(
             /"a" is anchored itself/,
+        );
+        expect(() => render([wall, dots({ ratio: 1.5 })])).toThrow(
+            'texture: patches[1].anchor.ratio: Too big: expected number to be <=1',
         );
         expect(() => render([wall, dots({ offset: [1.5, 0] })])).toThrow(
             'texture: patches[1].anchor.offset[0]: Invalid input: expected int, received number',

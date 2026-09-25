@@ -47,7 +47,7 @@ describe('computeAshlarLayout', () => {
     it('rejects invalid block widths', () => {
         expect(() =>
             computeAshlarLayout(
-                { ...params, blocks: { width: [0, 10], minJointOffset: 0 } },
+                { ...params, blocks: { width: [0, 10], minJointOffset: 0, bond: 'random' } },
                 1,
                 64,
                 64,

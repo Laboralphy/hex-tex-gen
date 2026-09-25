@@ -1,6 +1,6 @@
 # hex-tex-gen documentation
 
-hex-tex-gen generates Hexen/Doom-like 2D bitmap textures: stone walls, bricks, moss... It is
+hex-tex-gen generates Hexen/Doom-like 2D bitmap textures: stone walls, bricks, wooden planks, moss... It is
 a TypeScript library, with a command line tool writing PNG files.
 
 ![a mossy castle wall](images/anchors.png)
@@ -39,4 +39,4 @@ match the code.
 | [File reference](reference/file-reference.md) | every key of texture files, placements, anchors, patches |
 
 Examples live in [`examples/`](../examples): [`mossy-castle-wall.json`](../examples/mossy-castle-wall.json)
-and eight [moss variants](../examples/moss-variants).
+eight [moss variants](../examples/moss-variants), and variants of [bricks](../examples/brick-variants) and [planks](../examples/plank-variants).
