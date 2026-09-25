@@ -1,0 +1,75 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 96],
+  "seed": 1234,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": "../patches/castle-stone.json",
+      "width": 100,
+      "height": 100,
+      "params": {
+        "rows": {
+          "count": 6
+        }
+      }
+    },
+    {
+      "id": "base",
+      "patch": "../patches/large-blocks.json",
+      "y": 66.67,
+      "width": 100,
+      "height": 33.33,
+      "seed": 7
+    },
+    {
+      "patch": "../patches/moss.json",
+      "anchor": {
+        "to": "wall",
+        "at": "rows"
+      },
+      "width": 100,
+      "height": 16.67,
+      "seed": 11,
+      "params": {
+        "vines": {
+          "count": 4,
+          "length": [2, 8]
+        },
+        "leaves": {
+          "ratio": 0.1
+        },
+        "ledge": {
+          "size": 1,
+          "coverage": 0.2,
+          "clump": 1
+        }
+      }
+    },
+    {
+      "patch": "../patches/moss.json",
+      "anchor": {
+        "to": "base",
+        "at": "rows",
+        "only": [0]
+      },
+      "width": 100,
+      "height": 16.67,
+      "seed": 14,
+      "params": {
+        "vines": {
+          "count": 4,
+          "length": [2, 8]
+        },
+        "leaves": {
+          "ratio": 0.1
+        },
+        "ledge": {
+          "size": 1,
+          "coverage": 0.2,
+          "clump": 1
+        }
+      }
+    }
+  ]
+}
