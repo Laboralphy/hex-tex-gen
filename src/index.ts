@@ -24,7 +24,7 @@ export type {
     ResolvedPatch,
     TextureDefinition,
 } from './compose';
-export { generators, ashlar, bricks, stone, computeAshlarLayout } from './generators';
+export { generators, ashlar, bricks, moss, stone, computeAshlarLayout } from './generators';
 export type {
     AshlarBlock,
     AshlarParams,
@@ -33,6 +33,7 @@ export type {
     BricksParams,
     DeepPartial,
     GeneratorOptions,
+    MossParams,
     StoneParams,
     TextureGenerator,
 } from './generators';

@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { generators } from '../src';
 
+// generators meant to be laid over another patch, transparent by design
+const overlays = ['moss'];
+
 describe.each(Object.values(generators))('generator $name', (generator) => {
     it('produces a texture of the requested size', () => {
         const t = generator.generate({ width: 64, height: 32, seed: 1 });
@@ -16,7 +19,7 @@ describe.each(Object.values(generators))('generator $name', (generator) => {
         expect(a.data).not.toEqual(c.data);
     });
 
-    it('produces opaque pixels', () => {
+    it.skipIf(overlays.includes(generator.name))('produces opaque pixels', () => {
         const t = generator.generate({ width: 32, height: 32, seed: 7 });
         for (let i = 3; i < t.data.length; i += 4) {
             expect(t.data[i]).toBe(255);
