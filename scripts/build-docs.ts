@@ -111,6 +111,41 @@ function bannerWall(age?: number): Texture {
     return renderTexture({ size: [64, 128], seed: SEED, patches }, createMemoryLoader({}));
 }
 
+/** an alcove in a brick wall, framed by two vertical beams and a lintel */
+function beamAlcove(age?: number): Texture {
+    const aged = age === undefined ? {} : { age };
+    const post = { template: 'beam', direction: 'vertical', size: [9, 96], ...aged };
+    const patches: Placement[] = [
+        {
+            patch: { template: 'bricks', size: [64, 128], rows: { count: 16 } },
+            width: 100,
+            height: 100,
+        },
+        {
+            patch: {
+                template: 'opening',
+                depth: 4,
+                back: { mode: 'shade', shade: 0.75 },
+                open: ['bottom'],
+            },
+            x: 25,
+            y: 31.25,
+            width: 50,
+            height: 68.75,
+        },
+        { patch: post, x: 14, y: 25, width: 14.06, height: 75 },
+        { patch: post, x: 72, y: 25, width: 14.06, height: 75 },
+        {
+            patch: { template: 'beam', size: [64, 10], ...aged },
+            x: 12.5,
+            y: 23.4,
+            width: 76,
+            height: 7.8,
+        },
+    ];
+    return renderTexture({ size: [64, 128], seed: SEED, patches }, createMemoryLoader({}));
+}
+
 const images: Record<string, Texture> = {
     'layout-detail.png': strip([
         enlarge(ashlar.generate({ seed: SEED }), 4),
@@ -128,6 +163,9 @@ for (const g of Object.values(generators)) {
                 if (g.name === 'banner') {
                     return enlarge(bannerWall(age), 2);
                 }
+                if (g.name === 'beam') {
+                    return enlarge(beamAlcove(age), 2);
+                }
                 // only templates having an age get here
                 const options = { seed: SEED, age };
                 return enlarge(g.generate(options), 3);
@@ -143,7 +181,9 @@ for (const g of Object.values(generators)) {
                 ? enlarge(parchmentWall(), 4)
                 : g.name === 'banner'
                   ? enlarge(bannerWall(), 3)
-                  : enlarge(g.generate({ seed: SEED }), 4);
+                  : g.name === 'beam'
+                    ? enlarge(beamAlcove(), 3)
+                    : enlarge(g.generate({ seed: SEED }), 4);
 }
 
 const pages = await renderDocs();

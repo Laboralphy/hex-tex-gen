@@ -99,6 +99,35 @@ export class Texture {
         return this;
     }
 
+    /**
+     * A copy with the axes swapped, anchors and cut mask included. The top-left lighting of
+     * a texture is kept, as transposing swaps its left and top edges.
+     */
+    transposed(): Texture {
+        const t = new Texture(this.height, this.width);
+        for (let y = 0; y < this.height; ++y) {
+            for (let x = 0; x < this.width; ++x) {
+                t.setPixel(y, x, this.getPixel(x, y));
+            }
+        }
+        if (this.cut) {
+            const cut = new Uint8Array(this.cut.length);
+            for (let y = 0; y < this.height; ++y) {
+                for (let x = 0; x < this.width; ++x) {
+                    cut[x * this.height + y] = this.cut[y * this.width + x];
+                }
+            }
+            t.cut = cut;
+        }
+        t.anchors = Object.fromEntries(
+            Object.entries(this.anchors).map(([name, points]) => [
+                name,
+                points.map(({ x, y }) => ({ x: y, y: x })),
+            ]),
+        );
+        return t;
+    }
+
     clone(): Texture {
         const t = new Texture(this.width, this.height);
         t.data.set(this.data);

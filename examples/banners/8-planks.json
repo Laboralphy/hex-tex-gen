@@ -1,23 +1,14 @@
 {
-  "size": [
-    64,
-    128
-  ],
+  "size": [64, 128],
   "seed": 1234,
   "patches": [
     {
       "id": "wall",
       "patch": {
         "template": "planks",
-        "size": [
-          64,
-          128
-        ],
+        "size": [64, 128],
         "planks": {
-          "length": [
-            1,
-            1
-          ]
+          "length": [1, 1]
         }
       },
       "width": 100,

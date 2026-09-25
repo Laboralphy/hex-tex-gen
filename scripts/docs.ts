@@ -7,6 +7,14 @@ import { z } from 'zod';
 import {
     ashlarWear,
     bannerWear,
+    beamWear,
+    fieldstoneWear,
+    type FieldstoneParams,
+    type BeamParams,
+    type BeamWear,
+    metalWear,
+    type MetalParams,
+    type MetalWear,
     type BannerParams,
     type BannerWear,
     patchDefinitionSchema,
@@ -241,12 +249,49 @@ const BANNER_WEAR_PARAMETERS: [string, (w: BannerWear) => number | [number, numb
     ['holes', (w) => w.holes],
 ];
 
+/** metal parameters derived from age, and where they are in the resolved wear */
+const METAL_WEAR_PARAMETERS: [string, (w: MetalWear) => number | [number, number]][] = [
+    ['rust.coverage', (w) => w.rust.coverage],
+    ['rust.streaks', (w) => w.rust.streaks],
+    ['rust.length', (w) => w.rust.length],
+    ['dents.density', (w) => w.dents.density],
+    ['dents.size', (w) => w.dents.size],
+    ['scratches', (w) => w.scratches],
+    ['tarnish', (w) => w.tarnish],
+];
+
+/** beam parameters derived from age, and where they are in the resolved wear */
+const BEAM_WEAR_PARAMETERS: [string, (w: BeamWear) => number | [number, number]][] = [
+    ['rust.coverage', (w) => w.rust.coverage],
+    ['rust.streaks', (w) => w.rust.streaks],
+    ['rust.length', (w) => w.rust.length],
+    ['scratches', (w) => w.scratches],
+    ['tarnish', (w) => w.tarnish],
+];
+
 type WearRow = [string, (params: object) => number | [number, number]];
 
 /**
  * Parameters derived from age by a template, and how to compute them.
  */
 function wearRows(generator: TextureGenerator): WearRow[] {
+    if (generator.name === 'fieldstone') {
+        return WEAR_PARAMETERS.filter(
+            ([path]) => !path.startsWith('chips.') && path !== 'erosion.corners',
+        ).map(([path, get]) => [path, (params) => get(fieldstoneWear(params as FieldstoneParams))]);
+    }
+    if (generator.name === 'beam') {
+        return BEAM_WEAR_PARAMETERS.map(([path, get]) => [
+            path,
+            (params) => get(beamWear(params as BeamParams)),
+        ]);
+    }
+    if (generator.name === 'metal') {
+        return METAL_WEAR_PARAMETERS.map(([path, get]) => [
+            path,
+            (params) => get(metalWear(params as MetalParams)),
+        ]);
+    }
     if (generator.name === 'banner') {
         return BANNER_WEAR_PARAMETERS.map(([path, get]) => [
             path,
@@ -289,6 +334,15 @@ function isAging(generator: TextureGenerator): boolean {
 
 function agingSection(generator: TextureGenerator): string {
     const name = generator.name;
+    if (name === 'door') {
+        return `## Aging
+
+\`age\`, from 0 (new) to 1 (ruined), is passed to the wood (\`planks\`) or to the metal
+(\`metal\`) of the door, which weather as described on their pages, and rusts the iron
+bands. The rough style adds 0.25 to the age of its wood.
+
+![${name} at age 0, 0.3, 0.6 and 1](../images/${name}-ages.png)`;
+    }
     return `## Aging
 
 \`age\`, from 0 (new) to 1 (ruined), sets every wear parameter left unset. Values in
@@ -299,7 +353,7 @@ without streaks. See [Aging](../concepts.md#aging).
 ![${name} at age 0, 0.3, 0.6 and 1](../images/${name}-ages.png)
 
 ${
-    name === 'planks' || name === 'parchment' || name === 'banner'
+    ['planks', 'parchment', 'banner', 'metal', 'beam'].includes(name)
         ? `With its default parameters, \`${name}\` derives:`
         : `Derived sizes in pixels are proportional to the height of the stones at own size, 16
 pixels giving the values of \`ashlar\`. With its default parameters, \`${name}\` derives:`
@@ -497,6 +551,105 @@ rod and its shadow:
   outline and moth holes, through which the wall shows.
 - The \`emblem\` anchor, at the center of the field, and \`field\`, its top-left corner
   inside the border, leave room for a coat of arms.`,
+    metal: `## Plates, rivets and panel
+
+\`metal\` lays plates like the stone walls lay stones: \`rows\` and \`blocks\` work the same
+way, with a stack bond by default (\`blocks.bond\`: \`stack\`, \`running\` or \`random\`), and
+thin seams (\`seam.size\`). Each plate has a soft sheen, lighter towards the top-left, and
+brushed horizontal streaks.
+
+Rivets are placed along the edges of every plate, every \`rivets.spacing\` pixels, and at
+its corners. Like the other walls, \`metal\` has a \`panel\`: a larger plate, with its own
+rivets, reported by the \`panel\` and \`panelCenter\` anchors.
+
+As it ages, rust grows from the seams (\`rust.coverage\`) and runs down from rivets
+(\`rust.streaks\`), the plates get dents, shaded against the light, and scratches, and the
+metal dulls (\`tarnish\`). \`rust.palette\` sets the rust colors, \`metal.palette\` the metal
+ones: a bronze or copper palette works too.`,
+    door: `## Kinds, materials and fittings
+
+A door fills its whole texture, and is always opaque.
+
+- \`kind\`: \`single\`, one leaf opening from its \`hinge\` side (\`left\` or \`right\`);
+  \`double\`, two leaves opening left and right; \`lift\`, a door going up into the
+  ceiling like in Doom: horizontal planks, bands across, no handle.
+- \`material\`: \`wood\`, drawn with the [\`planks\`](planks.md) engine, or \`metal\`, full
+  metal plates drawn with the [\`metal\`](metal.md) engine.
+- \`style\`, for wood: \`rough\`, irregular planks with wide gaps; \`solid\`, tight planks
+  running the whole height; \`fancy\`, a frame with \`panels.columns\` × \`panels.rows\` raised
+  panels on each leaf.
+- \`bands\`: iron bands reinforcing the leaves. They start from the hinge side as strap
+  hinges with a pointed end, \`bands.length\` of the leaf wide, with the knuckle of the
+  hinge on the hinge edge; \`"length": 1\` runs them across the leaf, \`"count": 0\` removes
+  them. They are nailed, and rust with age.
+- \`handle\`: a \`ring\` pull or a vertical \`bar\` on the opening side, near the middle of a
+  double door, with a \`keyhole\` below it.
+
+\`\`\`json
+{ "template": "door", "kind": "double", "style": "fancy", "panels": { "rows": 4 }, "bands": { "count": 0 } }
+\`\`\``,
+    beam: `## Usage
+
+\`beam\` is an overlay: a metal support beam laid over a wall, the whole patch being the
+beam and its shadow. Several beams frame an alcove, a door or a panel, or reinforce a
+plank wall:
+
+\`\`\`json
+{
+  "size": [64, 128],
+  "patches": [
+    { "patch": { "template": "bricks", "size": [64, 128], "rows": { "count": 16 } } },
+    {
+      "patch": { "template": "opening", "back": { "mode": "shade" }, "open": ["bottom"] },
+      "x": 25, "y": 31.25, "width": 50, "height": 68.75
+    },
+    {
+      "patch": { "template": "beam", "direction": "vertical", "size": [9, 96] },
+      "x": 14, "y": 25, "width": 14.06, "height": 75
+    },
+    {
+      "patch": { "template": "beam", "direction": "vertical", "size": [9, 96] },
+      "x": 72, "y": 25, "width": 14.06, "height": 75
+    },
+    {
+      "patch": { "template": "beam", "size": [64, 10] },
+      "x": 12.5, "y": 23.4, "width": 76, "height": 7.8
+    }
+  ]
+}
+\`\`\`
+
+- \`direction\`: a vertical beam is a horizontal one transposed, so that its lighting stays
+  top-left; give it a \`[thickness, length]\` size.
+- \`profile\`: \`girder\`, an I-beam seen from the front, with lit flanges along its edges
+  (\`flange\` pixels thick) and a recessed web in their shadow; \`flat\`, a flat strap.
+- Rivets run along each flange of a girder, or along the middle of a strap, every
+  \`rivets.spacing\` pixels. As it ages, the beam rusts, its rivets bleed rust streaks
+  running down, whatever its direction, and it gets scratches and tarnish.`,
+    fieldstone: `## Voronoi stones
+
+\`fieldstone\` lays natural stones of irregular shapes: the cells of a Voronoi diagram, from
+the \`Voronoi\` class of [@laboralphy/algorithms](https://www.npmjs.com/package/@laboralphy/algorithms).
+
+- \`stones.cells\` sets the number of stones across the patch, \`[columns, rows]\`: their
+  centers lie on a jittered grid. \`stones.jitter\` moves them inside their grid cell: 0
+  gives a regular grid, 1 the most irregular stones. \`stones.stagger\` shifts every other
+  row: with no jitter, a stagger of 0.5 gives hexagons.
+- The diagram is computed on a torus, its distances wrapping around the patch: stones
+  crossing an edge continue on the opposite one, and the texture tiles seamlessly.
+- The mortar follows the exact perpendicular distance to the cell borders, so that the
+  joints have a constant width.
+
+Everything else is the engine of the other walls: the stone surface, the bevel lit from
+the top-left, cracks, worn edges, spalling, stains, hollowed joints, \`age\`, and the panel.
+Chips and rounded corners, which need the corners of rectangular stones, do not apply.
+
+\`moss.coverage\` grows moss along the top edges of the stones, following their shape,
+with vines hanging down their faces: see [Moss on stone walls](../concepts.md#moss-on-stone-walls).
+
+The \`stones\` anchor reports the top-left corner of the bounding box of each stone face,
+\`centers\` the center of each stone, and \`tops\` the top edge of each stone, straight
+above its center. See [\`examples/fieldstone-variants\`](../../examples/fieldstone-variants).`,
     moss: `## Usage
 
 \`moss\` is an overlay: it is transparent outside the moss, and meant to be anchored under

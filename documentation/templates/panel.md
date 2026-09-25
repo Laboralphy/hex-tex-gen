@@ -129,6 +129,19 @@ Flaked stone faces.
 | `spalling.size`  | [min, max] of numbers ≥ 0 | from `age` | detail | [min, max] patch radius, in pixels                       |
 | `spalling.depth` | number in [0, 1]          | from `age` | —      | darkening of the flaked patches, in [0, 1]               |
 
+### `moss`
+
+Moss growing along the top edges of the stones.
+
+| Parameter       | Type                            | Default                                        | Scale  | Description                                                      |
+| --------------- | ------------------------------- | ---------------------------------------------- | ------ | ---------------------------------------------------------------- |
+| `moss.coverage` | number in [0, 1]                | `0`                                            | —      | share of the stone tops covered with moss, in [0, 1]; 0 for none |
+| `moss.depth`    | number ≥ 0                      | `2`                                            | detail | thickness of the moss along the top edges, in pixels             |
+| `moss.vines`    | number in [0, 1]                | `0.25`                                         | —      | chance of a vine hanging from each column of moss, in [0, 1]     |
+| `moss.length`   | [min, max] of numbers ≥ 0       | `[2, 7]`                                       | detail | [min, max] length of the vines, in pixels                        |
+| `moss.joints`   | number in [0, 1]                | `0.3`                                          | —      | moss in the joints where the stones are mossy, in [0, 1]         |
+| `moss.palette`  | array of CSS colors, at least 2 | `["#17230f", "#2f441b", "#4f6d2c", "#86a24a"]` | —      | moss colors, from darkest to lightest                            |
+
 ### `stone`
 
 Stone surface.

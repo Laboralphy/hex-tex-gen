@@ -4,14 +4,18 @@
 
 A template is a generator: a patch file names it in `template` and sets its parameters.
 
-| Template                    | Description                                                                        | Own size | Overlay | Anchors                                  |
-| --------------------------- | ---------------------------------------------------------------------------------- | -------- | ------- | ---------------------------------------- |
-| [`ashlar`](ashlar.md)       | Dressed stone wall: rows of stones of random width                                 | 64 × 64  | no      | `rows`, `stones`, `panel`, `panelCenter` |
-| [`bricks`](bricks.md)       | Brick wall: equal bricks in running bond, with every ashlar parameter              | 64 × 64  | no      | `rows`, `stones`, `panel`, `panelCenter` |
-| [`panel`](panel.md)         | Ashlar wall with a large stone slab, room for an inscription or a switch           | 64 × 64  | no      | `rows`, `stones`, `panel`, `panelCenter` |
-| [`planks`](planks.md)       | Wall of vertical wooden planks of variable length                                  | 64 × 64  | no      | `lines`, `planks`                        |
-| [`stone`](stone.md)         | Mottled rock surface made of Perlin noise                                          | 64 × 64  | no      | —                                        |
-| [`moss`](moss.md)           | Transparent overlay of greenish vines hanging from the top edge                    | 64 × 16  | yes     | —                                        |
-| [`opening`](opening.md)     | Rectangular opening dug into the wall below, for windows, bars or arches           | 32 × 32  | yes     | `opening`, `openingCenter`               |
-| [`parchment`](parchment.md) | Sheet of parchment pinned on a wall, blank or aged, room for decals                | 32 × 40  | yes     | `sheet`, `sheetCenter`                   |
-| [`banner`](banner.md)       | Banner of fabric hanging from a rod, with a shaped lower end and bordering stripes | 24 × 56  | yes     | `field`, `emblem`                        |
+| Template                      | Description                                                                        | Own size | Overlay | Anchors                                             |
+| ----------------------------- | ---------------------------------------------------------------------------------- | -------- | ------- | --------------------------------------------------- |
+| [`ashlar`](ashlar.md)         | Dressed stone wall: rows of stones of random width                                 | 64 × 64  | no      | `rows`, `stones`, `panel`, `panelCenter`            |
+| [`bricks`](bricks.md)         | Brick wall: equal bricks in running bond, with every ashlar parameter              | 64 × 64  | no      | `rows`, `stones`, `panel`, `panelCenter`            |
+| [`panel`](panel.md)           | Ashlar wall with a large stone slab, room for an inscription or a switch           | 64 × 64  | no      | `rows`, `stones`, `panel`, `panelCenter`            |
+| [`fieldstone`](fieldstone.md) | Natural stone wall: irregular stones laid as the cells of a Voronoi diagram        | 64 × 64  | no      | `stones`, `centers`, `tops`, `panel`, `panelCenter` |
+| [`metal`](metal.md)           | Metal wall of riveted plates, rusting and dented with age                          | 64 × 64  | no      | `rows`, `plates`, `panel`, `panelCenter`            |
+| [`planks`](planks.md)         | Wall of vertical wooden planks of variable length                                  | 64 × 64  | no      | `lines`, `planks`                                   |
+| [`door`](door.md)             | Door: single, double or lifting; wooden or metal, with iron bands and a handle     | 64 × 128 | no      | `leaves`, `handles`, `center`                       |
+| [`stone`](stone.md)           | Mottled rock surface made of Perlin noise                                          | 64 × 64  | no      | —                                                   |
+| [`moss`](moss.md)             | Transparent overlay of greenish vines hanging from the top edge                    | 64 × 16  | yes     | —                                                   |
+| [`opening`](opening.md)       | Rectangular opening dug into the wall below, for windows, bars or arches           | 32 × 32  | yes     | `opening`, `openingCenter`                          |
+| [`parchment`](parchment.md)   | Sheet of parchment pinned on a wall, blank or aged, room for decals                | 32 × 40  | yes     | `sheet`, `sheetCenter`                              |
+| [`banner`](banner.md)         | Banner of fabric hanging from a rod, with a shaped lower end and bordering stripes | 24 × 56  | yes     | `field`, `emblem`                                   |
+| [`beam`](beam.md)             | Metal support beam, horizontal or vertical: a riveted girder or strap              | 64 × 9   | yes     | `start`, `center`                                   |

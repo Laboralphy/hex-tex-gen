@@ -1,18 +1,12 @@
 {
-  "size": [
-    64,
-    128
-  ],
+  "size": [64, 128],
   "seed": 1234,
   "patches": [
     {
       "id": "wall",
       "patch": {
         "template": "bricks",
-        "size": [
-          64,
-          128
-        ],
+        "size": [64, 128],
         "rows": {
           "count": 16
         }
@@ -23,10 +17,7 @@
     {
       "patch": {
         "template": "banner",
-        "size": [
-          20,
-          48
-        ],
+        "size": [20, 48],
         "shape": {
           "base": "point"
         }
@@ -39,10 +30,7 @@
     {
       "patch": {
         "template": "banner",
-        "size": [
-          20,
-          48
-        ],
+        "size": [20, 48],
         "shape": {
           "base": "point"
         },

@@ -353,28 +353,9 @@ export const planks = defineGenerator({
             { ...p, size: [p.size[1], p.size[0]] },
             { width: height, height: width, seed },
         );
-        return transpose(transposed);
+        return transposed.transposed();
     },
 });
-
-/**
- * Swaps the axes of a texture and of its anchors.
- */
-function transpose(source: Texture): Texture {
-    const texture = new Texture(source.height, source.width);
-    for (let y = 0; y < source.height; ++y) {
-        for (let x = 0; x < source.width; ++x) {
-            texture.setPixel(y, x, source.getPixel(x, y));
-        }
-    }
-    texture.anchors = Object.fromEntries(
-        Object.entries(source.anchors).map(([name, points]) => [
-            name,
-            points.map(({ x, y }) => ({ x: y, y: x })),
-        ]),
-    );
-    return texture;
-}
 
 /**
  * Renders vertical planks with validated parameters.

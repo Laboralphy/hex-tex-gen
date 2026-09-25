@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": {
+        "template": "fieldstone",
+        "stone": {
+          "palette": ["#3a3a36", "#5e5e56", "#84847a", "#a8a89c"]
+        },
+        "moss": {
+          "coverage": 0.5,
+          "vines": 0.1,
+          "palette": ["#2f4a1a", "#5f8a2a", "#8fbf3a", "#c8e870"]
+        }
+      },
+      "width": 100,
+      "height": 100
+    }
+  ]
+}

@@ -65,7 +65,8 @@ Every texture tiles seamlessly, horizontally and vertically:
 ## Overlays and anchors
 
 Some templates, such as [`moss`](templates/moss.md), [`opening`](templates/opening.md),
-[`parchment`](templates/parchment.md) and [`banner`](templates/banner.md), are **overlays**: transparent outside their content,
+[`parchment`](templates/parchment.md), [`banner`](templates/banner.md) and
+[`beam`](templates/beam.md), are **overlays**: transparent outside their content,
 meant to be laid over another patch.
 
 An overlay can also **cut**: [`opening`](templates/opening.md) erases the wall below where
@@ -77,10 +78,23 @@ of each row of stones, just below the mortar. A placement can be repeated on the
 points of a previous placement, so that moss always hangs right under the joints, whatever
 the seed, the size or the number of rows. See [Anchors](texture-files.md#anchors).
 
+## Moss on stone walls
+
+Stone walls ([`ashlar`](templates/ashlar.md), [`bricks`](templates/bricks.md),
+[`panel`](templates/panel.md) and [`fieldstone`](templates/fieldstone.md)) can grow moss
+themselves, with their `moss` parameters: along the top edges of the stones, following
+their real shape, in patches (`moss.coverage`, 0 by default), with vines hanging down the
+stone faces and moss in the joints. It suits irregular stones, whose slanted tops an
+overlay cannot follow.
+
+The [`moss`](templates/moss.md) overlay, anchored under the joints, draws longer hanging
+moss, and suits the straight rows of bricks and ashlar: see [Anchors](texture-files.md#anchors).
+
 ## Aging
 
-The walls, [`ashlar`](templates/ashlar.md) and [`bricks`](templates/bricks.md), have an
-`age` parameter, from 0 (new) to 1 (ruined), 0.3 by default:
+The stone walls, [`ashlar`](templates/ashlar.md), [`bricks`](templates/bricks.md),
+[`panel`](templates/panel.md) and [`fieldstone`](templates/fieldstone.md), have an `age`
+parameter, from 0 (new) to 1 (ruined), 0.3 by default:
 
 ![ashlar at age 0, 0.3, 0.6 and 1](images/ashlar-ages.png)
 
@@ -96,6 +110,12 @@ The walls, [`ashlar`](templates/ashlar.md) and [`bricks`](templates/bricks.md), 
 | hollowed joints                  | `mortar.erosion`                                                         |
 | streaks of rainwater, grime      | `stains.*`                                                               |
 | flaked stone faces               | `spalling.*`                                                             |
+
+[`planks`](templates/planks.md), [`metal`](templates/metal.md),
+[`parchment`](templates/parchment.md), [`banner`](templates/banner.md) and
+[`beam`](templates/beam.md) have an `age`
+too, with their own wear parameters: weathered wood, rust and dents, yellowed paper,
+faded and torn fabric. Their pages list what each age derives.
 
 Values set explicitly always win: `age` gives the overall look, and individual parameters
 fine-tune it. `{ "age": 0.8, "stains": { "ratio": 0 } }` is a ruined wall without streaks,

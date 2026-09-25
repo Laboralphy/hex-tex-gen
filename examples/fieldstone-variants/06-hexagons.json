@@ -1,0 +1,20 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": {
+        "template": "fieldstone",
+        "stones": {
+          "cells": [5, 6],
+          "jitter": 0,
+          "stagger": 0.5
+        }
+      },
+      "width": 100,
+      "height": 100
+    }
+  ]
+}

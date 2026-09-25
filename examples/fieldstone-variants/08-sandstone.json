@@ -1,0 +1,21 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": {
+        "template": "fieldstone",
+        "stone": {
+          "palette": ["#5a4630", "#8a6e4a", "#b39468", "#d2b88c"]
+        },
+        "mortar": {
+          "color": "#3a2e22"
+        }
+      },
+      "width": 100,
+      "height": 100
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import { createGradient, sample, shade } from '../core/palette';
 import { z } from 'zod';
 import { color, DETAIL, LAYOUT, palette, range, ratio, size } from '../core/schema';
 import { defineGenerator } from './define';
+import type { AnchorPoint } from '../core/Texture';
 import type { RenderContext } from './types';
 
 /** suffix of the descriptions of wear parameters */
@@ -69,6 +70,123 @@ function panelPosition(p: {
 }
 
 /**
+ * The `moss` parameter group of stone walls: moss growing along the top edges of the
+ * stones, following their shape, with vines hanging down their faces.
+ */
+export function mossGroup() {
+    return z
+        .strictObject({
+            coverage: ratio()
+                .default(0)
+                .describe('share of the stone tops covered with moss, in [0, 1]; 0 for none'),
+            depth: z
+                .number()
+                .min(0)
+                .default(2)
+                .describe('thickness of the moss along the top edges, in pixels')
+                .meta(DETAIL),
+            vines: ratio()
+                .default(0.25)
+                .describe('chance of a vine hanging from each column of moss, in [0, 1]'),
+            length: range(z.number().min(0))
+                .default([2, 7])
+                .describe('[min, max] length of the vines, in pixels')
+                .meta(DETAIL),
+            joints: ratio()
+                .default(0.3)
+                .describe('moss in the joints where the stones are mossy, in [0, 1]'),
+            palette: palette()
+                .default(['#17230f', '#2f441b', '#4f6d2c', '#86a24a'])
+                .describe('moss colors, from darkest to lightest'),
+        })
+        .prefault({})
+        .describe('moss growing along the top edges of the stones');
+}
+
+/**
+ * The `panel` parameter group of walls, with the given defaults.
+ */
+export function panelGroup(d: WallDefaults['panel']) {
+    return z
+        .strictObject({
+            enabled: z
+                .boolean()
+                .default(d.enabled)
+                .describe('adds a large stone slab to the wall, surrounded by mortar'),
+            width: z
+                .number()
+                .positive()
+                .default(d.width)
+                .describe('slab width, mortar included')
+                .meta(LAYOUT),
+            height: z
+                .number()
+                .positive()
+                .default(d.height)
+                .describe('slab height, mortar included')
+                .meta(LAYOUT),
+            x: z
+                .number()
+                .min(0)
+                .optional()
+                .describe('left edge of the slab; defaults to centered')
+                .meta(LAYOUT),
+            y: z
+                .number()
+                .min(0)
+                .optional()
+                .describe('top edge of the slab; defaults to centered')
+                .meta(LAYOUT),
+            snap: z
+                .boolean()
+                .default(d.snap)
+                .describe(
+                    'aligns the top and bottom of the slab on the nearest row joints, so that no row is cut into a thin strip',
+                ),
+            bevel: z
+                .number()
+                .int()
+                .min(0)
+                .default(d.bevel)
+                .describe('bevel width of the slab, in pixels')
+                .meta(DETAIL),
+            shade: z.number().min(0).default(d.shade).describe('brightness factor of the slab'),
+        })
+        .prefault({})
+        .describe('a large stone slab: room for an inscription or a switch');
+}
+
+/**
+ * Reports a panel that does not fit in its patch.
+ */
+export function checkPanelFits(
+    p: {
+        size: [number, number];
+        panel: { enabled: boolean; width: number; height: number; x?: number; y?: number };
+    },
+    ctx: z.RefinementCtx,
+): void {
+    if (!p.panel.enabled) {
+        return;
+    }
+    const { x, y } = panelPosition(p);
+    if (x + p.panel.width > p.size[0]) {
+        ctx.addIssue({
+            code: 'custom',
+            path: ['panel', p.panel.x === undefined ? 'width' : 'x'],
+            message: 'the panel must fit in the width of the patch',
+        });
+    }
+    if (y + p.panel.height > p.size[1]) {
+        ctx.addIssue({
+            code: 'custom',
+            path: ['panel', p.panel.y === undefined ? 'height' : 'y'],
+            message: 'the panel must fit in the height of the patch',
+        });
+    }
+}
+
+/**
  * Parameters of a wall, with the given defaults: `ashlar` and `bricks` share them.
  */
 export function wallSchema(d: WallDefaults) {
@@ -121,57 +239,7 @@ export function wallSchema(d: WallDefaults) {
                 })
                 .prefault({})
                 .describe('stones within a row'),
-            panel: z
-                .strictObject({
-                    enabled: z
-                        .boolean()
-                        .default(d.panel.enabled)
-                        .describe('adds a large stone slab to the wall, surrounded by mortar'),
-                    width: z
-                        .number()
-                        .positive()
-                        .default(d.panel.width)
-                        .describe('slab width, mortar included')
-                        .meta(LAYOUT),
-                    height: z
-                        .number()
-                        .positive()
-                        .default(d.panel.height)
-                        .describe('slab height, mortar included')
-                        .meta(LAYOUT),
-                    x: z
-                        .number()
-                        .min(0)
-                        .optional()
-                        .describe('left edge of the slab; defaults to centered')
-                        .meta(LAYOUT),
-                    y: z
-                        .number()
-                        .min(0)
-                        .optional()
-                        .describe('top edge of the slab; defaults to centered')
-                        .meta(LAYOUT),
-                    snap: z
-                        .boolean()
-                        .default(d.panel.snap)
-                        .describe(
-                            'aligns the top and bottom of the slab on the nearest row joints, so that no row is cut into a thin strip',
-                        ),
-                    bevel: z
-                        .number()
-                        .int()
-                        .min(0)
-                        .default(d.panel.bevel)
-                        .describe('bevel width of the slab, in pixels')
-                        .meta(DETAIL),
-                    shade: z
-                        .number()
-                        .min(0)
-                        .default(d.panel.shade)
-                        .describe('brightness factor of the slab'),
-                })
-                .prefault({})
-                .describe('a large stone slab: room for an inscription or a switch'),
+            panel: panelGroup(d.panel),
             mortar: z
                 .strictObject({
                     size: z
@@ -306,6 +374,7 @@ export function wallSchema(d: WallDefaults) {
                 })
                 .prefault({})
                 .describe('flaked stone faces'),
+            moss: mossGroup(),
             age: ratio()
                 .default(0.3)
                 .describe(
@@ -361,23 +430,7 @@ export function wallSchema(d: WallDefaults) {
                 .describe('stone surface'),
         })
         .superRefine((p, ctx) => {
-            if (p.panel.enabled) {
-                const { x, y } = panelPosition(p);
-                if (x + p.panel.width > p.size[0]) {
-                    ctx.addIssue({
-                        code: 'custom',
-                        path: ['panel', p.panel.x === undefined ? 'width' : 'x'],
-                        message: 'the panel must fit in the width of the patch',
-                    });
-                }
-                if (y + p.panel.height > p.size[1]) {
-                    ctx.addIssue({
-                        code: 'custom',
-                        path: ['panel', p.panel.y === undefined ? 'height' : 'y'],
-                        message: 'the panel must fit in the height of the patch',
-                    });
-                }
-            }
+            checkPanelFits(p, ctx);
             if (p.blocks.bond === 'running' && p.rows.count % 2 === 1) {
                 ctx.addIssue({
                     code: 'custom',
@@ -429,13 +482,29 @@ export type AshlarWear = {
 /** stone height, in own pixels, that the derived pixel sizes are given for */
 const REFERENCE_STONE_HEIGHT = 16;
 
+/** the parameters the wear of a wall is derived from */
+export type WearParams = Pick<
+    AshlarParams,
+    | 'size'
+    | 'rows'
+    | 'age'
+    | 'chips'
+    | 'cracks'
+    | 'edges'
+    | 'stone'
+    | 'mortar'
+    | 'erosion'
+    | 'stains'
+    | 'spalling'
+>;
+
 /**
  * Resolves the wear values of a wall: values set in the parameters win, the others are
  * derived from `age`. Derived sizes in pixels are given for stones 16 pixels high at own
  * size, and are proportional to the actual stone height: the bricks of `bricks`, 8 pixels
  * high, get chips, cracks and erosion half as large.
  */
-export function ashlarWear(p: AshlarParams): AshlarWear {
+export function ashlarWear(p: WearParams): AshlarWear {
     const a = p.age;
     // derived sizes in pixels are proportional to the stone height at own size
     const k = p.size[1] / Math.max(1, Math.round(p.rows.count)) / REFERENCE_STONE_HEIGHT;
@@ -531,6 +600,7 @@ const SALT_NOISE = 7;
 const SALT_GRAIN = 8;
 const SALT_SPALL = 9;
 const SALT_STAIN = 10;
+const SALT_MOSS = 11;
 
 const JOINT_ATTEMPTS = 16;
 
@@ -557,7 +627,12 @@ function noiseSeed(seed: number, index: number): number {
 /**
  * Stone widths of a row, in own-size pixels, summing exactly to the patch width.
  */
-function rowWidths(p: AshlarParams, seed: number, row: number, attempt: number): number[] {
+function rowWidths(
+    p: Pick<AshlarParams, 'size' | 'blocks'>,
+    seed: number,
+    row: number,
+    attempt: number,
+): number[] {
     const total = p.size[0];
     const [min, max] = p.blocks.width;
     const widths: number[] = [];
@@ -597,7 +672,7 @@ function rowJoints(widths: number[], offset: number, total: number): number[] {
  * stones at any size.
  */
 export function computeAshlarLayout(
-    p: AshlarParams,
+    p: Pick<AshlarParams, 'size' | 'rows' | 'blocks'>,
     seed: number,
     width: number,
     height: number,
@@ -678,6 +753,41 @@ export function computeAshlarLayout(
     }));
 }
 
+/** the panel of a wall, in pixels of the rendered texture */
+export type PanelRect = { x: number; y: number; w: number; h: number };
+
+/**
+ * The panel of a wall rendered at the given size, snapped to the row joints unless told
+ * otherwise; undefined when the panel is disabled.
+ */
+export function panelRect(
+    p: Pick<AshlarParams, 'size' | 'panel'>,
+    layout: AshlarRow[],
+    width: number,
+    height: number,
+): PanelRect | undefined {
+    if (!p.panel.enabled) {
+        return undefined;
+    }
+    const { x, y } = panelPosition(p);
+    const sx = width / p.size[0];
+    const sy = height / p.size[1];
+    const x0 = Math.round(x * sx);
+    let y0 = Math.round(y * sy);
+    let y1 = Math.round((y + p.panel.height) * sy);
+    if (p.panel.snap) {
+        const joints = [...layout.map((row) => row.y), height];
+        const nearest = (v: number) =>
+            joints.reduce((a, b) => (Math.abs(b - v) < Math.abs(a - v) ? b : a));
+        y0 = nearest(y0);
+        y1 = nearest(y1);
+        if (y1 <= y0) {
+            y1 = joints.find((j) => j > y0) ?? height;
+        }
+    }
+    return { x: x0, y: y0, w: Math.round((x + p.panel.width) * sx) - x0, h: y1 - y0 };
+}
+
 /**
  * Anchors of walls: `ashlar` and `bricks` report the same ones.
  */
@@ -688,12 +798,211 @@ export const WALL_ANCHORS = {
     panelCenter: 'center of the face of the panel, when enabled',
 };
 
+/** a stone of a wall, and its bounding box in pixels */
+export type StoneBox = { row: number; block: number; x: number; y: number; w: number; h: number };
+
+/** where a point of a wall falls */
+export type StoneHit = {
+    /** index of the stone in the masonry's stones */
+    id: number;
+    /** coordinates of the point in the stone's box */
+    lx: number;
+    ly: number;
+    /** distance to the stone's edge, mortar excluded: negative in the mortar */
+    d: number;
+    /** the nearest edge is on the top or the left of the stone: lit */
+    lit: boolean;
+    /** the nearest edge is on the bottom or the right: the joint there is in shadow */
+    shadowed: boolean;
+    /** the nearest edge is the top one: where moss grows */
+    top: boolean;
+    /** distances to the left, top, right and bottom edges, for rectangular stones */
+    edges?: { dl: number; dt: number; dr: number; db: number };
+    /** the point is on the panel */
+    panel: boolean;
+};
+
+/**
+ * How stones are laid: their boxes, which stone a point falls on, and the anchors they
+ * report. Rows of rectangles for `ashlar` and `bricks`, Voronoi cells for `fieldstone`.
+ */
+export interface Masonry {
+    stones: StoneBox[];
+    locate(x: number, y: number): StoneHit;
+    anchors(): Record<string, AnchorPoint[]>;
+}
+
+/** parameters the stone renderer reads; the wear is resolved beforehand */
+export type MasonryParams = Pick<
+    AshlarParams,
+    'size' | 'mortar' | 'bevel' | 'panel' | 'stone' | 'moss'
+>;
+
+/**
+ * Moss along the top edges of the stones, in patches, following their shape, with vines
+ * hanging down the stone faces, and moss in the joints below mossy stones.
+ */
+function growMoss(
+    texture: Texture,
+    moss: AshlarParams['moss'],
+    ids: Int32Array,
+    dist: Float32Array,
+    tops: Uint8Array,
+    seed: number,
+): void {
+    const { width, height } = texture;
+    const palette = createGradient(moss.palette);
+    // patches scale with the wall; their outline has a grain in real pixels
+    const patches = new FractalNoise({ seed: noiseSeed(seed, 8), period: 4, octaves: 3 });
+    const threshold = 1 - moss.coverage;
+    const covered = (x: number, y: number) => patches.sample(x / width, y / height) > threshold;
+    const grain = (x: number, y: number) => (hash(seed, SALT_MOSS, x, y, 0) - 0.5) * 0.25;
+    const mossy = new Uint8Array(width * height);
+    for (let y = 0; y < height; ++y) {
+        for (let x = 0; x < width; ++x) {
+            const k = y * width + x;
+            if (ids[k] < 0) {
+                // the joints: speckles of dark moss, where the stones around are mossy
+                if (covered(x, y) && hash(seed, SALT_MOSS, x, y, 1) < moss.joints) {
+                    texture.setPixel(x, y, sample(palette, 0.15 + grain(x, y)));
+                }
+                continue;
+            }
+            if (!tops[k] || !covered(x, y)) {
+                continue;
+            }
+            // thicker where the patch is denser
+            const n = patches.sample(x / width, y / height);
+            const depth = moss.depth * (0.5 + (n - threshold) / Math.max(0.01, moss.coverage));
+            if (dist[k] < depth) {
+                mossy[k] = 1;
+                // lit on top, darker towards the stone
+                const t = 0.85 - (0.5 * dist[k]) / Math.max(1, depth);
+                texture.setPixel(x, y, sample(palette, t + grain(x, y)));
+            }
+        }
+    }
+    // vines: from the lowest moss of a column, down the face of the stone
+    for (let y = 0; y < height; ++y) {
+        for (let x = 0; x < width; ++x) {
+            const k = y * width + x;
+            const below = ((y + 1) % height) * width + x;
+            if (!mossy[k] || mossy[below] || hash(seed, SALT_MOSS, x, y, 2) >= moss.vines) {
+                continue;
+            }
+            const [min, max] = moss.length;
+            const length = min + hash(seed, SALT_MOSS, x, y, 3) * (max - min);
+            for (let t = 1; t <= length; ++t) {
+                const vy = (y + t) % height;
+                if (ids[vy * width + x] !== ids[k]) {
+                    break;
+                }
+                const tone = 0.45 - (0.25 * t) / length + grain(x, vy);
+                texture.setPixel(x, vy, sample(palette, tone));
+            }
+        }
+    }
+}
+
+/**
+ * Rows of rectangular stones, and the panel over them.
+ */
+export function rectMasonry(p: AshlarParams, { width, height, seed }: RenderContext): Masonry {
+    const layout = computeAshlarLayout(p, seed, width, height);
+    // every stone, and its rectangle in pixels; the panel is one more stone, in a row of
+    // its own after the last one
+    const stones: StoneBox[] = [];
+    const stoneIndex = layout.map((row, r) =>
+        row.blocks.map(
+            (block, i) =>
+                stones.push({
+                    row: r,
+                    block: i,
+                    x: block.x,
+                    y: row.y,
+                    w: block.width,
+                    h: row.height,
+                }) - 1,
+        ),
+    );
+    const panel = panelRect(p, layout, width, height);
+    const panelId = panel ? stones.push({ row: layout.length, block: 0, ...panel }) - 1 : -1;
+    // a joint of n pixels: the stone after it (below, right) takes the larger half, so
+    // that odd sizes keep all their pixels when tested at pixel centers
+    const mortarAfter = Math.ceil(p.mortar.size / 2);
+    const mortarBefore = Math.floor(p.mortar.size / 2);
+    // first pixel row (or column) of a stone face: pixel centers at d >= 0
+    const face = (edge: number) => Math.ceil(edge + mortarAfter - 0.5);
+    return {
+        stones,
+        locate(wx, wy) {
+            // the stone under the point: the panel covers the stones behind it
+            const inPanel =
+                panel !== undefined &&
+                mod(wx - panel.x, width) < panel.w &&
+                mod(wy - panel.y, height) < panel.h;
+            let id = panelId;
+            if (!inPanel) {
+                const row = layout.findIndex((row) => wy >= row.y && wy < row.y + row.height);
+                const block = layout[row].blocks.findIndex((b) => mod(wx - b.x, width) < b.width);
+                id = stoneIndex[row][block];
+            }
+            const stone = stones[id];
+            const lx = mod(wx - stone.x, width);
+            const ly = mod(wy - stone.y, height);
+            // distance to each edge of the stone, mortar excluded
+            const dl = lx - mortarAfter;
+            const dr = stone.w - lx - mortarBefore;
+            const dt = ly - mortarAfter;
+            const db = stone.h - ly - mortarBefore;
+            const d = Math.min(dl, dr, dt, db);
+            return {
+                id,
+                lx,
+                ly,
+                d,
+                lit: d === dl || d === dt,
+                shadowed: d === db || d === dr,
+                top: d === dt,
+                edges: { dl, dt, dr, db },
+                panel: inPanel,
+            };
+        },
+        anchors: () => ({
+            rows: layout.map((row) => ({ x: 0, y: face(row.y) })),
+            stones: layout.flatMap((row) =>
+                row.blocks.map((block) => ({ x: mod(face(block.x), width), y: face(row.y) })),
+            ),
+            panel: panel ? [{ x: mod(face(panel.x), width), y: mod(face(panel.y), height) }] : [],
+            panelCenter: panel
+                ? [
+                      {
+                          x: mod(Math.floor(panel.x + panel.w / 2), width),
+                          y: mod(Math.floor(panel.y + panel.h / 2), height),
+                      },
+                  ]
+                : [],
+        }),
+    };
+}
+
 /**
  * Renders a wall with validated parameters: shared by `ashlar` and `bricks`.
  */
-export function renderWall(p: AshlarParams, { width, height, seed }: RenderContext): Texture {
+export function renderWall(p: AshlarParams, context: RenderContext): Texture {
+    return renderMasonry(p, context, rectMasonry(p, context), ashlarWear(p));
+}
+
+/**
+ * Renders the stones of a masonry: surface, bevel, mortar, and every wear effect.
+ */
+export function renderMasonry(
+    p: MasonryParams,
+    { width, height, seed }: RenderContext,
+    masonry: Masonry,
+    wear: AshlarWear,
+): Texture {
     const scale = Math.min(width / p.size[0], height / p.size[1]);
-    const layout = computeAshlarLayout(p, seed, width, height);
 
     const texture = new Texture(width, height);
     const palette = createGradient(p.stone.palette);
@@ -724,7 +1033,6 @@ export function renderWall(p: AshlarParams, { width, height, seed }: RenderConte
         octaves: 1,
     });
 
-    const wear = ashlarWear(p);
     const sy = height / p.size[1];
     // wear noises: fixed grain in real pixels, except grime which scales like the stones
     const edgeWear = new FractalNoise({
@@ -746,48 +1054,10 @@ export function renderWall(p: AshlarParams, { width, height, seed }: RenderConte
 
     // stone index of each pixel, -1 for mortar
     const ids = new Int32Array(width * height).fill(-1);
-    // every stone, and its rectangle in pixels; the panel is one more stone, in a row of
-    // its own after the last one
-    const stones: { row: number; block: number; x: number; y: number; w: number; h: number }[] = [];
-    const stoneIndex = layout.map((row, r) =>
-        row.blocks.map(
-            (block, i) =>
-                stones.push({
-                    row: r,
-                    block: i,
-                    x: block.x,
-                    y: row.y,
-                    w: block.width,
-                    h: row.height,
-                }) - 1,
-        ),
-    );
-    const panel = p.panel.enabled
-        ? (() => {
-              const { x, y } = panelPosition(p);
-              const sx = width / p.size[0];
-              const x0 = Math.round(x * sx);
-              let y0 = Math.round(y * sy);
-              let y1 = Math.round((y + p.panel.height) * sy);
-              if (p.panel.snap) {
-                  const joints = [...layout.map((row) => row.y), height];
-                  const nearest = (v: number) =>
-                      joints.reduce((a, b) => (Math.abs(b - v) < Math.abs(a - v) ? b : a));
-                  y0 = nearest(y0);
-                  y1 = nearest(y1);
-                  if (y1 <= y0) {
-                      y1 = joints.find((j) => j > y0) ?? height;
-                  }
-              }
-              return {
-                  x: x0,
-                  y: y0,
-                  w: Math.round((x + p.panel.width) * sx) - x0,
-                  h: y1 - y0,
-              };
-          })()
-        : undefined;
-    const panelId = panel ? stones.push({ row: layout.length, block: 0, ...panel }) - 1 : -1;
+    const stones = masonry.stones;
+    // distance of each stone pixel to its edge, and whether that edge is the top one
+    const dist = new Float32Array(width * height);
+    const tops = new Uint8Array(width * height);
 
     // flaked patches, in the stone's own coordinates
     const spalls = stones.map(({ row: r, block: i }, id) => {
@@ -802,10 +1072,7 @@ export function renderWall(p: AshlarParams, { width, height, seed }: RenderConte
         };
     });
 
-    // a joint of n pixels: the stone after it (below, right) takes the larger half, so
-    // that odd sizes keep all their pixels when tested at pixel centers
     const mortarAfter = Math.ceil(p.mortar.size / 2);
-    const mortarBefore = Math.floor(p.mortar.size / 2);
     const roughness = wear.roughness;
     const radius = wear.erosion.corners;
     for (let y = 0; y < height; ++y) {
@@ -815,41 +1082,25 @@ export function renderWall(p: AshlarParams, { width, height, seed }: RenderConte
             const wx = mod(x + 0.5 + (warpX.sample(u, v) - 0.5) * 2 * roughness, width);
             const wy = mod(y + 0.5 + (warpY.sample(u, v) - 0.5) * 2 * roughness, height);
 
-            // the stone under the pixel: the panel covers the stones behind it
-            const inPanel =
-                panel !== undefined &&
-                mod(wx - panel.x, width) < panel.w &&
-                mod(wy - panel.y, height) < panel.h;
-            let id = panelId;
-            if (!inPanel) {
-                const row = layout.findIndex((row) => wy >= row.y && wy < row.y + row.height);
-                const block = layout[row].blocks.findIndex((b) => mod(wx - b.x, width) < b.width);
-                id = stoneIndex[row][block];
-            }
+            const hit = masonry.locate(wx, wy);
+            const { id, lx, ly, d, lit, shadowed, edges, top } = hit;
+            const inPanel = hit.panel;
             const stone = stones[id];
             const r = stone.row;
             const i = stone.block;
-            const lx = mod(wx - stone.x, width);
-            const ly = mod(wy - stone.y, height);
-
-            // distance to each edge of the stone, mortar excluded
-            const dl = lx - mortarAfter;
-            const dr = stone.w - lx - mortarBefore;
-            const dt = ly - mortarAfter;
-            const db = stone.h - ly - mortarBefore;
-            const d = Math.min(dl, dr, dt, db);
             // edges worn down in smooth waves
             const worn = d - wear.erosion.edges * edgeWear.sample(u, v);
-            const corners = [
-                [dl, dt],
-                [dr, dt],
-                [dr, db],
-                [dl, db],
+            // corners of rectangular stones: rounded, or chipped
+            const corners = edges && [
+                [edges.dl, edges.dt],
+                [edges.dr, edges.dt],
+                [edges.dr, edges.db],
+                [edges.dl, edges.db],
             ];
 
             let isMortar = worn < 0;
             // rounded corners
-            if (!isMortar && radius > 0) {
+            if (!isMortar && corners && radius > 0) {
                 isMortar = corners.some(
                     ([cx, cy]) =>
                         cx < radius &&
@@ -857,7 +1108,7 @@ export function renderWall(p: AshlarParams, { width, height, seed }: RenderConte
                         (radius - cx) ** 2 + (radius - cy) ** 2 > radius ** 2,
                 );
             }
-            if (!isMortar && hash(seed, SALT_CHIP, r, i, 0) < wear.chips.ratio) {
+            if (!isMortar && corners && hash(seed, SALT_CHIP, r, i, 0) < wear.chips.ratio) {
                 const [min, max] = wear.chips.size;
                 const chip = hashRange(min, max, seed, SALT_CHIP, r, i, 1);
                 const [cx, cy] = corners[Math.floor(hash(seed, SALT_CHIP, r, i, 2) * 4)];
@@ -872,7 +1123,7 @@ export function renderWall(p: AshlarParams, { width, height, seed }: RenderConte
                     // hollowed joints: pitted, and in the shadow of the stone above or
                     // on the left, the light coming from the top-left
                     brightness *= 1 - erosion * (0.2 + 0.4 * mortarHoles.sample(u, v));
-                    if (d === db || d === dr) {
+                    if (shadowed) {
                         brightness *= 1 - erosion * 0.35;
                     }
                 }
@@ -881,6 +1132,8 @@ export function renderWall(p: AshlarParams, { width, height, seed }: RenderConte
             }
 
             ids[y * width + x] = id;
+            dist[y * width + x] = d;
+            tops[y * width + x] = top ? 1 : 0;
             const ox = hash(seed, SALT_STONE, r, i, 0);
             const oy = hash(seed, SALT_STONE, r, i, 1);
             const n = stoneNoise.sample(u + ox, v + oy);
@@ -890,7 +1143,7 @@ export function renderWall(p: AshlarParams, { width, height, seed }: RenderConte
                 (1 + (hash(seed, SALT_GRAIN, x, y) - 0.5) * 2 * wear.grain);
             let color = sample(palette, 0.5 + (n - 0.5) * p.stone.contrast * 2 + shift);
             if (worn < (inPanel ? p.panel.bevel : p.bevel.size)) {
-                color = shade(color, d === dl || d === dt ? p.bevel.light : p.bevel.dark);
+                color = shade(color, lit ? p.bevel.light : p.bevel.dark);
             }
             if (inPanel) {
                 color = shade(color, p.panel.shade);
@@ -970,6 +1223,10 @@ export function renderWall(p: AshlarParams, { width, height, seed }: RenderConte
     // first pixel row (or column) of a stone face: pixel centers at d >= 0
     const face = (edge: number) => Math.ceil(edge + mortarAfter - 0.5);
 
+    if (p.moss.coverage > 0) {
+        growMoss(texture, p.moss, ids, dist, tops, seed);
+    }
+
     // stains: streaks running down from the top of stones, over joints and the stones
     // below, fading along their length; the darkest streak wins where they overlap
     const stain = new Float32Array(width * height);
@@ -1007,21 +1264,7 @@ export function renderWall(p: AshlarParams, { width, height, seed }: RenderConte
         }
     }
 
-    texture.anchors = {
-        rows: layout.map((row) => ({ x: 0, y: face(row.y) })),
-        stones: layout.flatMap((row) =>
-            row.blocks.map((block) => ({ x: mod(face(block.x), width), y: face(row.y) })),
-        ),
-        panel: panel ? [{ x: mod(face(panel.x), width), y: mod(face(panel.y), height) }] : [],
-        panelCenter: panel
-            ? [
-                  {
-                      x: mod(Math.floor(panel.x + panel.w / 2), width),
-                      y: mod(Math.floor(panel.y + panel.h / 2), height),
-                  },
-              ]
-            : [],
-    };
+    texture.anchors = masonry.anchors();
     return texture;
 }
 
