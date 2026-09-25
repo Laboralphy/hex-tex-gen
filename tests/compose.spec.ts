@@ -166,13 +166,15 @@ describe('renderTexture', () => {
     });
 
     it('validates the definition', () => {
-        expect(() => renderTexture({ size: [0, 4], patches: [] }, loader)).toThrow(/"size"/);
+        expect(() => renderTexture({ size: [0, 4], patches: [] }, loader)).toThrow(
+            'texture: size[0]: Too small: expected number to be >0',
+        );
         expect(() => renderTexture({ size: [4, 4], patches: [], colour: 1 }, loader)).toThrow(
             /unknown key "colour"/,
         );
         expect(() =>
             renderTexture({ size: [4, 4], patches: [{ patch: base, opacity: 2 }] }, loader),
-        ).toThrow('texture: patches[0].opacity: expected a number in [0, 1], got 2');
+        ).toThrow('texture: patches[0].opacity: Too big: expected number to be <=1');
     });
 });
 

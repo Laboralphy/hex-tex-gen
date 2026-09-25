@@ -1,12 +1,42 @@
 {
-  "size": [256, 256],
+  "$schema": "../schemas/texture.schema.json",
+  "size": [128, 128],
   "seed": 1234,
   "patches": [
-    { "patch": "./patches/castle-stone.json", "width": 100, "height": 100 },
-    { "patch": "./patches/large-blocks.json", "y": 75, "width": 100, "height": 25, "seed": 7 },
-    { "patch": "./patches/moss.json", "y": 0.5, "width": 100, "height": 25, "seed": 11 },
-    { "patch": "./patches/moss.json", "y": 26.5, "width": 100, "height": 25, "seed": 12 },
-    { "patch": "./patches/moss.json", "y": 54, "width": 100, "height": 25, "seed": 13 },
-    { "patch": "./patches/moss.json", "y": 76, "width": 100, "height": 25, "seed": 14 }
+    {
+      "id": "wall",
+      "patch": "./patches/castle-stone.json",
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "base",
+      "patch": "./patches/large-blocks.json",
+      "y": 75,
+      "width": 100,
+      "height": 25,
+      "seed": 7
+    },
+    {
+      "patch": "./patches/moss.json",
+      "anchor": {
+        "to": "wall",
+        "at": "rows"
+      },
+      "width": 100,
+      "height": 25,
+      "seed": 11
+    },
+    {
+      "patch": "./patches/moss.json",
+      "anchor": {
+        "to": "base",
+        "at": "rows",
+        "only": [0]
+      },
+      "width": 100,
+      "height": 25,
+      "seed": 14
+    }
   ]
 }

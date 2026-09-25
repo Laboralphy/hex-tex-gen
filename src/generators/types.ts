@@ -1,8 +1,5 @@
+import type { z } from 'zod';
 import type { Texture } from '../core/Texture';
-
-export type DeepPartial<T> = {
-    [K in keyof T]?: T[K] extends unknown[] ? T[K] : T[K] extends object ? DeepPartial<T[K]> : T[K];
-};
 
 export type GeneratorOptions = {
     /** rendered width in pixels; defaults to the generator's own size */
@@ -18,10 +15,36 @@ export type BaseParams = {
     size: [number, number];
 };
 
-export interface TextureGenerator<T extends BaseParams = BaseParams> {
+/** schema of a generator's parameters: every property must have a default */
+export type ParamsSchema = z.ZodType<BaseParams>;
+
+/** what a generator renders at */
+export type RenderContext = {
+    width: number;
+    height: number;
+    seed: number;
+};
+
+export interface TextureGenerator<S extends ParamsSchema = ParamsSchema> {
     readonly name: string;
     readonly description: string;
-    /** default values for the generator-specific parameters */
-    readonly defaults: T;
-    generate(options: GeneratorOptions & DeepPartial<T>): Texture;
+    /** parameters: types, defaults, descriptions and validation */
+    readonly schema: S;
+    /** default parameters: the schema applied to an empty object */
+    readonly defaults: z.output<S>;
+    /**
+     * Transparent by design, meant to be laid over another patch: an overlay never hides
+     * the anchors of the patches under it.
+     */
+    readonly overlay?: boolean;
+    /**
+     * Names and descriptions of the anchors this generator reports. `generate` fills
+     * `texture.anchors[name]` with the points, in pixels at the rendered size.
+     */
+    readonly anchors?: Record<string, string>;
+    /**
+     * Validates the parameters, fills in the defaults and renders.
+     * @throws ValidationError on invalid parameters
+     */
+    generate(options: GeneratorOptions & z.input<S>): Texture;
 }

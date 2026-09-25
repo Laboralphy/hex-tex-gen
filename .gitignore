@@ -4,3 +4,4 @@ coverage
 *.log
 .vitest
 .idea
+examples/**/*.png

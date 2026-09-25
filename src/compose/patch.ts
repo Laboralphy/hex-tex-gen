@@ -1,8 +1,15 @@
 import { deepMerge } from '../core/object-fusion';
-import { checkKeys, isPlainObject } from '../core/params';
+import { isPlainObject } from '../core/params';
+import { parseWith, ValidationError } from '../core/schema';
 import type { Texture } from '../core/Texture';
 import { generators } from '../generators';
-import type { Loader, PatchDefinition, ResolvedPatch } from './types';
+import type { BaseParams } from '../generators';
+import {
+    patchDefinitionSchema,
+    type Loader,
+    type PatchDefinition,
+    type ResolvedPatch,
+} from './types';
 
 /**
  * Merges a patch definition over its `extends` chain.
@@ -19,12 +26,15 @@ function mergeExtends(
     if (!isPlainObject(def)) {
         throw new Error(`${where}: expected a JSON object`);
     }
-    const { extends: parent, ...own } = def;
-    if (parent === undefined) {
-        return own;
+    try {
+        parseWith(patchDefinitionSchema, def);
+    } catch (e) {
+        throw new Error(`${where}: ${(e as Error).message}`, { cause: e });
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { extends: parent, $schema, ...own } = def;
     if (typeof parent !== 'string') {
-        throw new Error(`${where}: "extends" must be a file path`);
+        return own;
     }
     const parentFile = loader.resolve(base, parent);
     if (chain.includes(parentFile)) {
@@ -34,17 +44,31 @@ function mergeExtends(
         ...chain,
         parentFile,
     ]);
+    if (
+        own.template !== undefined &&
+        parentDef.template !== undefined &&
+        own.template !== parentDef.template
+    ) {
+        throw new Error(
+            `${where}: template "${own.template}" differs from "${parentDef.template}" in ${parentFile}`,
+        );
+    }
     return deepMerge(parentDef, own);
 }
 
 /**
- * Checks template parameters against the template's defaults.
+ * Validates template parameters with the template's schema.
+ * @returns the parameters, defaults filled in
+ * @throws Error prefixed with `where`
  */
-export function checkPatchParams(patch: ResolvedPatch, where = patch.source): void {
+export function checkPatchParams(patch: ResolvedPatch, where = patch.source): BaseParams {
     try {
-        checkKeys(patch.params, generators[patch.template].defaults);
+        return parseWith(generators[patch.template].schema, patch.params, 'parameter');
     } catch (e) {
-        throw new Error(`${where}: ${(e as Error).message}`, { cause: e });
+        if (e instanceof ValidationError) {
+            throw new Error(`${where}: ${e.message}`, { cause: e });
+        }
+        throw e;
     }
 }
 
@@ -71,9 +95,6 @@ export function loadPatch(
         const names = Object.keys(generators).join(', ');
         throw new Error(`${where}: unknown template "${template}" (available: ${names})`);
     }
-    if (seed !== undefined && !Number.isInteger(seed)) {
-        throw new Error(`${where}: "seed" must be an integer`);
-    }
     const patch: ResolvedPatch = {
         template,
         seed: seed as number | undefined,
@@ -88,15 +109,7 @@ export function loadPatch(
  * Own size of a patch, in pixels.
  */
 export function patchSize(patch: ResolvedPatch): [number, number] {
-    const size = patch.params.size ?? generators[patch.template].defaults.size;
-    if (
-        !Array.isArray(size) ||
-        size.length !== 2 ||
-        !size.every((n) => Number.isInteger(n) && n > 0)
-    ) {
-        throw new Error(`${patch.source}: "size" must be [width, height] in pixels`);
-    }
-    return size as [number, number];
+    return checkPatchParams(patch).size;
 }
 
 /**

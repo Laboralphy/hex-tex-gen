@@ -3,55 +3,99 @@ import { Rainbow } from '@laboralphy/rainbow';
 import { Texture } from '../core/Texture';
 import { hash, hashRange } from '../core/hash';
 import { createGradient, sample } from '../core/palette';
-import { deepMerge } from '../core/object-fusion';
-import type { TextureGenerator } from './types';
+import { z } from 'zod';
+import { DETAIL, LAYOUT, palette, range, ratio, size } from '../core/schema';
+import { defineGenerator } from './define';
 
 /**
  * Parameters of the moss template. "Layout" values are expressed in pixels at the
  * patch's own `size` and scale with it; "detail" values are real pixels and never scale.
  */
-export type MossParams = {
-    /** own size of the patch, in pixels */
-    size: [number, number];
-    /** vines hanging from the top edge */
-    vines: {
-        /** layout: vines across the patch */
-        count: number;
-        /** layout: [min, max] vine length, clamped to the patch height */
-        length: [number, number];
-        /** layout: maximum horizontal wander of a vine */
-        sway: number;
-        /** detail: vine width at the top, in pixels; vines taper towards their tip */
-        thickness: number;
-    };
-    /** detail: leaves sprouting from the vines */
-    leaves: {
-        /** chance of a leaf at each pixel of a vine, in [0, 1] */
-        ratio: number;
-        /** [min, max] leaf length */
-        size: [number, number];
-    };
-    /** detail: moss cushion along the top edge */
-    ledge: {
-        /** maximum cushion thickness */
-        size: number;
-        /** ratio of the edge covered by the cushion, in [0, 1]; vines always grow a clump */
-        coverage: number;
-        /** half width of the clump at the top of each vine */
-        clump: number;
-    };
-    /** moss color */
-    moss: {
-        /** CSS colors, from darkest to lightest */
-        palette: string[];
-        /** alpha of the moss, in [0, 1] */
-        alpha: number;
-        /** alpha lost from the top of a vine to its tip, in [0, 1] */
-        fade: number;
-        /** detail: random brightness variation between pixels, in [0, 1] */
-        grain: number;
-    };
-};
+export const mossSchema = z.strictObject({
+    size: size()
+        .default([64, 16])
+        .describe('own size of the patch in pixels; layout values are expressed at this size'),
+    vines: z
+        .strictObject({
+            count: z
+                .number()
+                .int()
+                .min(0)
+                .default(9)
+                .describe('number of vines across the patch')
+                .meta(LAYOUT),
+            length: range(z.number().min(0))
+                .default([3, 16])
+                .describe('[min, max] vine length, clamped to the patch height')
+                .meta(LAYOUT),
+            sway: z
+                .number()
+                .min(0)
+                .default(1.5)
+                .describe('maximum horizontal wander of a vine')
+                .meta(LAYOUT),
+            thickness: z
+                .number()
+                .min(1)
+                .default(1)
+                .describe('vine width at the top, in pixels; vines taper towards their tip')
+                .meta(DETAIL),
+        })
+        .prefault({})
+        .describe('vines hanging from the top edge'),
+    leaves: z
+        .strictObject({
+            ratio: ratio()
+                .default(0.3)
+                .describe('chance of a leaf at each pixel of a vine, in [0, 1]'),
+            size: range(z.number().min(0))
+                .default([1, 2])
+                .describe('[min, max] leaf length, in pixels')
+                .meta(DETAIL),
+        })
+        .prefault({})
+        .describe('leaves sprouting from the vines'),
+    ledge: z
+        .strictObject({
+            size: z
+                .number()
+                .min(0)
+                .default(3)
+                .describe('maximum cushion thickness, in pixels')
+                .meta(DETAIL),
+            coverage: ratio()
+                .default(0.5)
+                .describe(
+                    'ratio of the edge covered by the cushion, in [0, 1]; vines always grow a clump',
+                ),
+            clump: z
+                .number()
+                .min(0)
+                .default(3)
+                .describe('half width of the clump at the top of each vine, in pixels')
+                .meta(DETAIL),
+        })
+        .prefault({})
+        .describe('moss cushion along the top edge'),
+    moss: z
+        .strictObject({
+            palette: palette()
+                .default(['#17230f', '#2f441b', '#4f6d2c', '#86a24a'])
+                .describe('moss colors, from darkest to lightest'),
+            alpha: ratio().default(0.9).describe('alpha of the moss, in [0, 1]'),
+            fade: ratio()
+                .default(0.6)
+                .describe('alpha lost from the top of a vine to its tip, in [0, 1]'),
+            grain: ratio()
+                .default(0.1)
+                .describe('random brightness variation between pixels, in [0, 1]')
+                .meta(DETAIL),
+        })
+        .prefault({})
+        .describe('moss color'),
+});
+
+export type MossParams = z.output<typeof mossSchema>;
 
 // each random decision draws from its own sequence
 const SALT_VINE = 1;
@@ -76,26 +120,12 @@ function mod(a: number, n: number): number {
  * patch is transparent elsewhere, and is meant to be laid over a wall, one patch per
  * row of stones.
  */
-export const moss: TextureGenerator<MossParams> = {
+export const moss = defineGenerator({
     name: 'moss',
     description: 'Transparent overlay of greenish vines hanging from the top edge',
-    defaults: {
-        size: [64, 16],
-        vines: { count: 9, length: [3, 16], sway: 1.5, thickness: 1 },
-        leaves: { ratio: 0.3, size: [1, 2] },
-        ledge: { size: 3, coverage: 0.5, clump: 3 },
-        moss: {
-            palette: ['#17230f', '#2f441b', '#4f6d2c', '#86a24a'],
-            alpha: 0.9,
-            fade: 0.6,
-            grain: 0.1,
-        },
-    },
-    generate(options) {
-        const p = deepMerge(this.defaults, options) as MossParams & typeof options;
-        const seed = p.seed;
-        const width = p.width ?? p.size[0];
-        const height = p.height ?? p.size[1];
+    schema: mossSchema,
+    overlay: true,
+    render(p, { width, height, seed }) {
         const sx = width / p.size[0];
         const sy = height / p.size[1];
         const palette = createGradient(p.moss.palette);
@@ -203,4 +233,4 @@ export const moss: TextureGenerator<MossParams> = {
         }
         return texture;
     },
-};
+});

@@ -3,40 +3,36 @@ import { Texture } from '../core/Texture';
 import { Random } from '../core/Random';
 import { createNoise } from '../core/noise';
 import { createGradient, sample, shade } from '../core/palette';
-import type { TextureGenerator } from './types';
+import { z } from 'zod';
+import { color, palette, ratio, size } from '../core/schema';
+import { defineGenerator } from './define';
 
-export type BricksParams = {
-    size: [number, number];
-    brickWidth: number;
-    brickHeight: number;
-    /** mortar thickness in pixels */
-    mortar: number;
-    mortarColor: string;
-    /** CSS colors, from darkest to lightest */
-    colors: string[];
-    /** random brightness variation between bricks, in [0, 1] */
-    variation: number;
-};
+export const bricksSchema = z.strictObject({
+    size: size().default([64, 64]).describe('own size of the patch, in pixels'),
+    brickWidth: z.number().int().min(1).default(32).describe('brick width, in pixels'),
+    brickHeight: z.number().int().min(1).default(16).describe('brick height, in pixels'),
+    mortar: z.number().int().min(0).default(2).describe('mortar thickness, in pixels'),
+    mortarColor: color().default('#2a2520').describe('mortar color'),
+    colors: palette()
+        .default(['#3b1f16', '#6e3a26', '#8f5236', '#a8694a'])
+        .describe('brick colors, from darkest to lightest'),
+    variation: ratio()
+        .default(0.25)
+        .describe('random brightness variation between bricks, in [0, 1]'),
+});
+
+export type BricksParams = z.output<typeof bricksSchema>;
 
 /**
  * Staggered brick wall with bevelled edges and per-brick shade variation.
  */
-export const bricks: TextureGenerator<BricksParams> = {
+export const bricks = defineGenerator({
     name: 'bricks',
     description: 'Staggered brick wall with mortar joints',
-    defaults: {
-        size: [64, 64],
-        brickWidth: 32,
-        brickHeight: 16,
-        mortar: 2,
-        mortarColor: '#2a2520',
-        colors: ['#3b1f16', '#6e3a26', '#8f5236', '#a8694a'],
-        variation: 0.25,
-    },
-    generate(options) {
-        const p = { ...this.defaults, ...options };
-        const { width = p.size[0], height = p.size[1], brickWidth, brickHeight, mortar } = p;
-        const random = new Random(p.seed);
+    schema: bricksSchema,
+    render(p, { width, height, seed }) {
+        const { brickWidth, brickHeight, mortar } = p;
+        const random = new Random(seed);
         const texture = new Texture(width, height);
         const palette = createGradient(p.colors);
         const mortarColor = Rainbow.parse(p.mortarColor);
@@ -76,4 +72,4 @@ export const bricks: TextureGenerator<BricksParams> = {
         }
         return texture;
     },
-};
+});

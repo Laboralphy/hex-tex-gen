@@ -1,6 +1,11 @@
 {
+  "$schema": "../../schemas/patch.schema.json",
   "template": "ashlar",
   "size": [64, 64],
-  "rows": { "count": 4 },
-  "blocks": { "width": [14, 30] }
+  "rows": {
+    "count": 4
+  },
+  "blocks": {
+    "width": [14, 30]
+  }
 }

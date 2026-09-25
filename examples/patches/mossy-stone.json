@@ -1,8 +1,0 @@
-{
-  "extends": "./castle-stone.json",
-  "cracks": { "ratio": 0.4 },
-  "stone": {
-    "palette": ["#2a2e22", "#4d5540", "#6f7a58", "#94a074"],
-    "paletteShift": 0.2
-  }
-}

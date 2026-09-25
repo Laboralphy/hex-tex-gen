@@ -1,4 +1,5 @@
 {
+  "$schema": "../../schemas/patch.schema.json",
   "template": "moss",
   "size": [64, 16]
 }

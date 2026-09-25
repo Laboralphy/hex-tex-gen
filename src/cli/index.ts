@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 import { basename, extname, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
+import { z } from 'zod';
 import { checkPatchParams, loadPatch, renderPatch, renderTextureFile } from '../compose';
 import { deepMerge } from '../core/object-fusion';
-import { checkKeys, expandPath, isPlainObject } from '../core/params';
+import { expandPath, isPlainObject } from '../core/params';
 import type { Texture } from '../core/Texture';
 import { generators } from '../generators';
 import { createNodeLoader } from './node-loader';
@@ -65,12 +66,42 @@ function outputName(input: string): string {
     return basename(input, extname(input)) + '.png';
 }
 
+type JsonProperty = {
+    description?: string;
+    default?: unknown;
+    scale?: string;
+    properties?: Record<string, JsonProperty>;
+};
+
+/**
+ * Prints the parameters of a JSON Schema object, nested objects as dotted paths.
+ */
+function printProperties(properties: Record<string, JsonProperty>, prefix: string): void {
+    for (const [key, property] of Object.entries(properties)) {
+        const path = prefix + key;
+        if (property.properties) {
+            printProperties(property.properties, `${path}.`);
+        } else {
+            const scale = property.scale ? `  [${property.scale}]` : '';
+            const value =
+                property.default === undefined ? '(from age)' : JSON.stringify(property.default);
+            console.log(`    ${path} = ${value}${scale}`);
+            if (property.description) {
+                console.log(`        ${property.description}`);
+            }
+        }
+    }
+}
+
 function listGenerators(): void {
     for (const g of Object.values(generators)) {
-        console.log(`${g.name} - ${g.description}`);
-        for (const [key, value] of Object.entries(g.defaults)) {
-            console.log(`    ${key} = ${JSON.stringify(value)}`);
+        console.log(`${g.name} - ${g.description}${g.overlay ? ' (overlay)' : ''}`);
+        const json = z.toJSONSchema(g.schema, { io: 'input' }) as JsonProperty;
+        printProperties(json.properties ?? {}, '');
+        for (const [name, description] of Object.entries(g.anchors ?? {})) {
+            console.log(`    anchor ${name}: ${description}`);
         }
+        console.log();
     }
 }
 
@@ -139,7 +170,6 @@ function main(argv: string[]): void {
             params = config;
         }
         params = applyParams(params, values.param);
-        checkKeys(params, generator.defaults);
         seed = seedOption ?? Date.now() >>> 0;
         texture = generator.generate({ ...params, width, height, seed });
         output = values.output ?? `${command}.png`;

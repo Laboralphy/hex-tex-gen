@@ -1,11 +1,21 @@
 import type { Color32 } from '@laboralphy/rainbow';
 
 /**
+ * A point of interest reported by a generator, in pixels of the texture it rendered.
+ */
+export type AnchorPoint = {
+    x: number;
+    y: number;
+};
+
+/**
  * A 2D RGBA bitmap. Pixels are stored row by row, 4 bytes each (r, g, b, a),
  * which is the layout expected by PNG encoders and `ImageData`.
  */
 export class Texture {
     public readonly data: Uint8ClampedArray;
+    /** named anchors reported by the generator, see {@link TextureGenerator.anchors} */
+    public anchors: Record<string, AnchorPoint[]> = {};
 
     constructor(
         public readonly width: number,
@@ -83,6 +93,12 @@ export class Texture {
     clone(): Texture {
         const t = new Texture(this.width, this.height);
         t.data.set(this.data);
+        t.anchors = Object.fromEntries(
+            Object.entries(this.anchors).map(([name, points]) => [
+                name,
+                points.map((p) => ({ ...p })),
+            ]),
+        );
         return t;
     }
 }

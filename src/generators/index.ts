@@ -5,16 +5,27 @@ import { stone } from './stone';
 import type { TextureGenerator } from './types';
 
 export { ashlar, bricks, moss, stone };
-export { computeAshlarLayout } from './ashlar';
-export type { AshlarBlock, AshlarParams, AshlarRow } from './ashlar';
+export { ashlarSchema, ashlarWear, computeAshlarLayout } from './ashlar';
+export { bricksSchema } from './bricks';
+export { mossSchema } from './moss';
+export { stoneSchema } from './stone';
+export type { AshlarBlock, AshlarParams, AshlarRow, AshlarWear } from './ashlar';
 export type { BricksParams } from './bricks';
 export type { MossParams } from './moss';
 export type { StoneParams } from './stone';
-export type { BaseParams, DeepPartial, GeneratorOptions, TextureGenerator } from './types';
+export { defineGenerator } from './define';
+export type { GeneratorDefinition } from './define';
+export type {
+    BaseParams,
+    GeneratorOptions,
+    ParamsSchema,
+    RenderContext,
+    TextureGenerator,
+} from './types';
 
 /**
  * All built-in generators, indexed by name.
  */
 export const generators: Record<string, TextureGenerator> = Object.fromEntries(
-    [ashlar, stone, bricks, moss].map((g) => [g.name, g as TextureGenerator]),
+    [ashlar, stone, bricks, moss].map((g) => [g.name, g as unknown as TextureGenerator]),
 );

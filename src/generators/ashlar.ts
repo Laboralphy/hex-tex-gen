@@ -3,83 +3,346 @@ import { Rainbow } from '@laboralphy/rainbow';
 import { Texture } from '../core/Texture';
 import { hash, hashRange } from '../core/hash';
 import { createGradient, sample, shade } from '../core/palette';
-import { deepMerge } from '../core/object-fusion';
-import type { TextureGenerator } from './types';
+import { z } from 'zod';
+import { color, DETAIL, LAYOUT, palette, range, ratio, size } from '../core/schema';
+import { defineGenerator } from './define';
+
+/** suffix of the descriptions of wear parameters */
+const AGE = ' when unset, derived from age';
 
 /**
  * Parameters of the ashlar template. "Layout" values are expressed in pixels at the
  * patch's own `size` and scale with it; "detail" values are real pixels and never scale.
  */
-export type AshlarParams = {
-    /** own size of the patch, in pixels */
-    size: [number, number];
-    /** layout: horizontal courses of stones */
-    rows: {
-        count: number;
-        /** random height variation between rows, in [0, 1) */
-        heightVariation: number;
-    };
-    /** layout: stones within a row */
-    blocks: {
-        /** [min, max] stone width */
-        width: [number, number];
-        /** minimum horizontal distance between a joint and the joints of adjacent rows */
-        minJointOffset: number;
-    };
-    /** detail: joints between stones */
-    mortar: {
-        size: number;
-        color: string;
-        /** brightness variation of the mortar, in [0, 1] */
-        noise: number;
-    };
-    /** detail: stone edges lit from the top-left */
-    bevel: {
-        size: number;
-        /** brightness factor of the top and left edges */
-        light: number;
-        /** brightness factor of the bottom and right edges */
-        dark: number;
-    };
-    /** detail: irregularity of stone outlines */
-    edges: {
-        /** maximum outline displacement, in pixels */
-        roughness: number;
-    };
-    /** detail: broken stone corners */
-    chips: {
-        /** ratio of chipped stones, in [0, 1] */
+export const ashlarSchema = z.strictObject({
+    size: size()
+        .default([64, 64])
+        .describe('own size of the patch in pixels; layout values are expressed at this size'),
+    rows: z
+        .strictObject({
+            count: z
+                .number()
+                .int()
+                .min(1)
+                .default(4)
+                .describe('number of horizontal courses of stones')
+                .meta(LAYOUT),
+            heightVariation: z
+                .number()
+                .min(0)
+                .lt(1)
+                .default(0.2)
+                .describe('random height variation between rows, in [0, 1)')
+                .meta(LAYOUT),
+        })
+        .prefault({})
+        .describe('horizontal courses of stones'),
+    blocks: z
+        .strictObject({
+            width: range(z.number().positive())
+                .default([14, 30])
+                .describe('[min, max] stone width')
+                .meta(LAYOUT),
+            minJointOffset: z
+                .number()
+                .min(0)
+                .default(5)
+                .describe(
+                    'minimum horizontal distance between a joint and the joints of adjacent rows',
+                )
+                .meta(LAYOUT),
+        })
+        .prefault({})
+        .describe('stones within a row'),
+    mortar: z
+        .strictObject({
+            size: z
+                .number()
+                .int()
+                .min(0)
+                .default(2)
+                .describe('joint thickness, in pixels')
+                .meta(DETAIL),
+            color: color().default('#24211d').describe('mortar color'),
+            noise: ratio()
+                .optional()
+                .describe(`brightness variation of the mortar, in [0, 1];${AGE}`),
+            erosion: ratio()
+                .optional()
+                .describe(
+                    `hollowed joints: darker, pitted mortar shadowed by the stones, in [0, 1];${AGE}`,
+                ),
+        })
+        .prefault({})
+        .describe('joints between stones'),
+    bevel: z
+        .strictObject({
+            size: z
+                .number()
+                .int()
+                .min(0)
+                .default(1)
+                .describe('bevel width, in pixels')
+                .meta(DETAIL),
+            light: z
+                .number()
+                .min(0)
+                .default(1.3)
+                .describe('brightness factor of the top and left edges'),
+            dark: z
+                .number()
+                .min(0)
+                .default(0.6)
+                .describe('brightness factor of the bottom and right edges'),
+        })
+        .prefault({})
+        .describe('stone edges lit from the top-left'),
+    edges: z
+        .strictObject({
+            roughness: z
+                .number()
+                .min(0)
+                .optional()
+                .describe(`maximum displacement of the stone outlines, in pixels;${AGE}`)
+                .meta(DETAIL),
+        })
+        .prefault({})
+        .describe('irregularity of stone outlines'),
+    chips: z
+        .strictObject({
+            ratio: ratio().optional().describe(`ratio of chipped stones, in [0, 1];${AGE}`),
+            size: range(z.number().min(0))
+                .optional()
+                .describe(`[min, max] chip size, in pixels;${AGE}`)
+                .meta(DETAIL),
+        })
+        .prefault({})
+        .describe('broken stone corners'),
+    cracks: z
+        .strictObject({
+            ratio: ratio().optional().describe(`ratio of cracked stones, in [0, 1];${AGE}`),
+            length: range(z.number().min(0))
+                .optional()
+                .describe(`[min, max] crack length, in pixels;${AGE}`)
+                .meta(DETAIL),
+        })
+        .prefault({})
+        .describe('cracks running across stones'),
+    erosion: z
+        .strictObject({
+            corners: z
+                .number()
+                .min(0)
+                .optional()
+                .describe(`radius of the rounded stone corners, in pixels;${AGE}`)
+                .meta(DETAIL),
+            edges: z
+                .number()
+                .min(0)
+                .optional()
+                .describe(`maximum depth worn into the stone edges, in pixels;${AGE}`)
+                .meta(DETAIL),
+        })
+        .prefault({})
+        .describe('stones worn down by time: rounded corners, uneven edges'),
+    stains: z
+        .strictObject({
+            ratio: ratio()
+                .optional()
+                .describe(`chance of a streak running down from the top of each stone;${AGE}`),
+            length: range(z.number().min(0))
+                .optional()
+                .describe(`[min, max] streak length;${AGE}`)
+                .meta(LAYOUT),
+            width: z
+                .number()
+                .min(1)
+                .optional()
+                .describe(`streak width, in pixels;${AGE}`)
+                .meta(DETAIL),
+            darkness: ratio()
+                .optional()
+                .describe(`darkening at the top of a streak, in [0, 1];${AGE}`),
+            grime: ratio()
+                .optional()
+                .describe(`blotchy darkening of the whole wall, in [0, 1];${AGE}`),
+        })
+        .prefault({})
+        .describe('dirt: streaks of rainwater and soot, grime'),
+    spalling: z
+        .strictObject({
+            ratio: ratio()
+                .optional()
+                .describe(`ratio of stones with a flaked, recessed patch, in [0, 1];${AGE}`),
+            size: range(z.number().min(0))
+                .optional()
+                .describe(`[min, max] patch radius, in pixels;${AGE}`)
+                .meta(DETAIL),
+            depth: ratio().optional().describe(`darkening of the flaked patches, in [0, 1];${AGE}`),
+        })
+        .prefault({})
+        .describe('flaked stone faces'),
+    age: ratio()
+        .default(0.3)
+        .describe(
+            'overall weathering, from 0 (new) to 1 (ruined): sets every wear parameter left unset',
+        ),
+    stone: z
+        .strictObject({
+            palette: palette()
+                .default(['#34322e', '#5a5751', '#7e7a72', '#a39e94'])
+                .describe('stone colors, from darkest to lightest'),
+            contrast: z
+                .number()
+                .min(0)
+                .default(0.9)
+                .describe('spread of the surface noise over the palette'),
+            shadeVariation: ratio()
+                .optional()
+                .describe(`random brightness variation between stones, in [0, 1];${AGE}`),
+            paletteShift: ratio()
+                .default(0.1)
+                .describe('random shift of each stone along the palette, in [0, 1]'),
+            grain: ratio()
+                .optional()
+                .describe(`random brightness variation between pixels, in [0, 1];${AGE}`)
+                .meta(DETAIL),
+            noise: z
+                .strictObject({
+                    period: z
+                        .number()
+                        .int()
+                        .min(1)
+                        .default(8)
+                        .describe('noise cells across the patch at the first octave')
+                        .meta(LAYOUT),
+                    octaves: z
+                        .number()
+                        .int()
+                        .min(1)
+                        .max(16)
+                        .default(4)
+                        .describe('number of noise octaves, each one twice as fine'),
+                    persistence: z
+                        .number()
+                        .gt(0)
+                        .max(1)
+                        .default(0.6)
+                        .describe('weight ratio between an octave and the previous one'),
+                })
+                .prefault({})
+                .describe('surface noise'),
+        })
+        .prefault({})
+        .describe('stone surface'),
+});
+
+export type AshlarParams = z.output<typeof ashlarSchema>;
+
+/**
+ * Wear values of an ashlar wall, every one resolved.
+ */
+export type AshlarWear = {
+    chips: { ratio: number; size: [number, number] };
+    cracks: { ratio: number; length: [number, number] };
+    roughness: number;
+    grain: number;
+    shadeVariation: number;
+    mortar: { noise: number; erosion: number };
+    erosion: { corners: number; edges: number };
+    stains: {
         ratio: number;
-        /** [min, max] chip size */
-        size: [number, number];
-    };
-    /** detail: cracks running across stones */
-    cracks: {
-        /** ratio of cracked stones, in [0, 1] */
-        ratio: number;
-        /** [min, max] crack length */
         length: [number, number];
+        width: number;
+        darkness: number;
+        grime: number;
     };
-    /** stone surface */
-    stone: {
-        /** CSS colors, from darkest to lightest */
-        palette: string[];
-        /** spread of the surface noise over the palette */
-        contrast: number;
-        /** random brightness variation between stones, in [0, 1] */
-        shadeVariation: number;
-        /** random shift of each stone along the palette, in [0, 1] */
-        paletteShift: number;
-        /** detail: random brightness variation between pixels, in [0, 1] */
-        grain: number;
-        noise: {
-            /** noise cells across the patch at the first octave */
-            period: number;
-            octaves: number;
-            persistence: number;
-        };
-    };
+    spalling: { ratio: number; size: [number, number]; depth: number };
 };
+
+/** a wear value at age 0 (new), 0.3 (the default) and 1 (ruined) */
+type Curve = [number, number, number];
+type RangeCurve = [[number, number], [number, number], [number, number]];
+
+const AGE_REFERENCE = 0.3;
+
+function atAge(age: number, [young, reference, old]: Curve): number {
+    return age <= AGE_REFERENCE
+        ? young + (reference - young) * (age / AGE_REFERENCE)
+        : reference + (old - reference) * ((age - AGE_REFERENCE) / (1 - AGE_REFERENCE));
+}
+
+function rangeAtAge(age: number, curve: RangeCurve): [number, number] {
+    return [
+        atAge(age, [curve[0][0], curve[1][0], curve[2][0]]),
+        atAge(age, [curve[0][1], curve[1][1], curve[2][1]]),
+    ];
+}
+
+/**
+ * Resolves the wear values of an ashlar wall: values set in the parameters win, the
+ * others are derived from `age`.
+ */
+export function ashlarWear(p: AshlarParams): AshlarWear {
+    const a = p.age;
+    return {
+        chips: {
+            ratio: p.chips.ratio ?? atAge(a, [0, 0.25, 0.8]),
+            size:
+                p.chips.size ??
+                rangeAtAge(a, [
+                    [1, 2],
+                    [2, 4],
+                    [3, 8],
+                ]),
+        },
+        cracks: {
+            ratio: p.cracks.ratio ?? atAge(a, [0, 0.2, 0.75]),
+            length:
+                p.cracks.length ??
+                rangeAtAge(a, [
+                    [3, 6],
+                    [5, 12],
+                    [10, 26],
+                ]),
+        },
+        roughness: p.edges.roughness ?? atAge(a, [0.3, 0.8, 1.4]),
+        grain: p.stone.grain ?? atAge(a, [0.03, 0.06, 0.14]),
+        shadeVariation: p.stone.shadeVariation ?? atAge(a, [0.05, 0.1, 0.22]),
+        mortar: {
+            noise: p.mortar.noise ?? atAge(a, [0.1, 0.25, 0.55]),
+            erosion: p.mortar.erosion ?? atAge(a, [0, 0.2, 0.8]),
+        },
+        erosion: {
+            corners: p.erosion.corners ?? atAge(a, [0, 1, 4]),
+            edges: p.erosion.edges ?? atAge(a, [0, 0.5, 2.5]),
+        },
+        stains: {
+            ratio: p.stains.ratio ?? atAge(a, [0, 0.15, 0.7]),
+            length:
+                p.stains.length ??
+                rangeAtAge(a, [
+                    [4, 10],
+                    [6, 16],
+                    [12, 40],
+                ]),
+            width: p.stains.width ?? atAge(a, [1, 2, 3]),
+            darkness: p.stains.darkness ?? atAge(a, [0.15, 0.25, 0.5]),
+            grime: p.stains.grime ?? atAge(a, [0, 0.1, 0.4]),
+        },
+        spalling: {
+            ratio: p.spalling.ratio ?? atAge(a, [0, 0.08, 0.5]),
+            size:
+                p.spalling.size ??
+                rangeAtAge(a, [
+                    [2, 3],
+                    [2, 5],
+                    [4, 10],
+                ]),
+            depth: p.spalling.depth ?? atAge(a, [0.2, 0.25, 0.45]),
+        },
+    };
+}
 
 export type AshlarBlock = {
     /** left edge in pixels, in [0, width); a block may wrap around the right edge */
@@ -102,6 +365,8 @@ const SALT_CHIP = 5;
 const SALT_CRACK = 6;
 const SALT_NOISE = 7;
 const SALT_GRAIN = 8;
+const SALT_SPALL = 9;
+const SALT_STAIN = 10;
 
 const JOINT_ATTEMPTS = 16;
 
@@ -235,32 +500,15 @@ export function computeAshlarLayout(
  * Dressed stone wall: rows of rectangular stones of random width, like the castle walls
  * of Hexen.
  */
-export const ashlar: TextureGenerator<AshlarParams> = {
+export const ashlar = defineGenerator({
     name: 'ashlar',
     description: 'Dressed stone wall: rows of stones of random width',
-    defaults: {
-        size: [64, 64],
-        rows: { count: 4, heightVariation: 0.2 },
-        blocks: { width: [14, 30], minJointOffset: 5 },
-        mortar: { size: 2, color: '#24211d', noise: 0.25 },
-        bevel: { size: 1, light: 1.3, dark: 0.6 },
-        edges: { roughness: 0.8 },
-        chips: { ratio: 0.25, size: [2, 4] },
-        cracks: { ratio: 0.2, length: [5, 12] },
-        stone: {
-            palette: ['#34322e', '#5a5751', '#7e7a72', '#a39e94'],
-            contrast: 0.9,
-            shadeVariation: 0.1,
-            paletteShift: 0.1,
-            grain: 0.06,
-            noise: { period: 8, octaves: 4, persistence: 0.6 },
-        },
+    schema: ashlarSchema,
+    anchors: {
+        rows: 'left edge and top of the stone faces of each row, just below the mortar',
+        stones: 'top-left corner of the face of each stone, row by row',
     },
-    generate(options) {
-        const p = deepMerge(this.defaults, options) as AshlarParams & typeof options;
-        const seed = p.seed;
-        const width = p.width ?? p.size[0];
-        const height = p.height ?? p.size[1];
+    render(p, { width, height, seed }) {
         const scale = Math.min(width / p.size[0], height / p.size[1]);
         const layout = computeAshlarLayout(p, seed, width, height);
 
@@ -293,6 +541,26 @@ export const ashlar: TextureGenerator<AshlarParams> = {
             octaves: 1,
         });
 
+        const wear = ashlarWear(p);
+        const sy = height / p.size[1];
+        // wear noises: fixed grain in real pixels, except grime which scales like the stones
+        const edgeWear = new FractalNoise({
+            seed: noiseSeed(seed, 4),
+            period: [grain(width / 6), grain(height / 6)],
+            octaves: 2,
+        });
+        const mortarHoles = new FractalNoise({
+            seed: noiseSeed(seed, 5),
+            period: [grain(width / 3), grain(height / 3)],
+            octaves: 2,
+        });
+        const spallNoise = new FractalNoise({
+            seed: noiseSeed(seed, 6),
+            period: [grain(width / 3), grain(height / 3)],
+            octaves: 2,
+        });
+        const grimeNoise = new FractalNoise({ seed: noiseSeed(seed, 7), period: 3, octaves: 3 });
+
         // stone index of each pixel, -1 for mortar
         const ids = new Int32Array(width * height).fill(-1);
         const stones: { row: number; block: number }[] = [];
@@ -300,8 +568,25 @@ export const ashlar: TextureGenerator<AshlarParams> = {
             row.blocks.map((_, i) => stones.push({ row: r, block: i }) - 1),
         );
 
-        const half = p.mortar.size / 2;
-        const roughness = p.edges.roughness;
+        // flaked patches, in the stone's own coordinates
+        const spalls = stones.map(({ row: r, block: i }) => {
+            if (hash(seed, SALT_SPALL, r, i, 0) >= wear.spalling.ratio) {
+                return undefined;
+            }
+            const [min, max] = wear.spalling.size;
+            return {
+                x: layout[r].blocks[i].width * hashRange(0.25, 0.75, seed, SALT_SPALL, r, i, 1),
+                y: layout[r].height * hashRange(0.25, 0.75, seed, SALT_SPALL, r, i, 2),
+                radius: hashRange(min, max, seed, SALT_SPALL, r, i, 3),
+            };
+        });
+
+        // a joint of n pixels: the stone after it (below, right) takes the larger half, so
+        // that odd sizes keep all their pixels when tested at pixel centers
+        const mortarAfter = Math.ceil(p.mortar.size / 2);
+        const mortarBefore = Math.floor(p.mortar.size / 2);
+        const roughness = wear.roughness;
+        const radius = wear.erosion.corners;
         for (let y = 0; y < height; ++y) {
             for (let x = 0; x < width; ++x) {
                 const u = x / width;
@@ -313,54 +598,83 @@ export const ashlar: TextureGenerator<AshlarParams> = {
                 const row = layout[r];
                 const i = row.blocks.findIndex((b) => mod(wx - b.x, width) < b.width);
                 const block = row.blocks[i];
+                const id = stoneIndex[r][i];
                 const lx = mod(wx - block.x, width);
                 const ly = wy - row.y;
 
                 // distance to each edge of the stone, mortar excluded
-                const dl = lx - half;
-                const dr = block.width - lx - half;
-                const dt = ly - half;
-                const db = row.height - ly - half;
+                const dl = lx - mortarAfter;
+                const dr = block.width - lx - mortarBefore;
+                const dt = ly - mortarAfter;
+                const db = row.height - ly - mortarBefore;
                 const d = Math.min(dl, dr, dt, db);
+                // edges worn down in smooth waves
+                const worn = d - wear.erosion.edges * edgeWear.sample(u, v);
+                const corners = [
+                    [dl, dt],
+                    [dr, dt],
+                    [dr, db],
+                    [dl, db],
+                ];
 
-                let isMortar = d < 0;
-                if (!isMortar && hash(seed, SALT_CHIP, r, i, 0) < p.chips.ratio) {
-                    const chip = hashRange(
-                        p.chips.size[0],
-                        p.chips.size[1],
-                        seed,
-                        SALT_CHIP,
-                        r,
-                        i,
-                        1,
+                let isMortar = worn < 0;
+                // rounded corners
+                if (!isMortar && radius > 0) {
+                    isMortar = corners.some(
+                        ([cx, cy]) =>
+                            cx < radius &&
+                            cy < radius &&
+                            (radius - cx) ** 2 + (radius - cy) ** 2 > radius ** 2,
                     );
-                    const corner = Math.floor(hash(seed, SALT_CHIP, r, i, 2) * 4);
-                    const [cx, cy] = [
-                        [dl, dt],
-                        [dr, dt],
-                        [dr, db],
-                        [dl, db],
-                    ][corner];
+                }
+                if (!isMortar && hash(seed, SALT_CHIP, r, i, 0) < wear.chips.ratio) {
+                    const [min, max] = wear.chips.size;
+                    const chip = hashRange(min, max, seed, SALT_CHIP, r, i, 1);
+                    const [cx, cy] = corners[Math.floor(hash(seed, SALT_CHIP, r, i, 2) * 4)];
                     isMortar = cx + cy < chip;
                 }
 
                 if (isMortar) {
                     const n = mortarNoise.sample(u, v);
-                    texture.setPixel(x, y, shade(mortarColor, 1 + (n - 0.5) * 2 * p.mortar.noise));
+                    let brightness = 1 + (n - 0.5) * 2 * wear.mortar.noise;
+                    const erosion = wear.mortar.erosion;
+                    if (erosion > 0) {
+                        // hollowed joints: pitted, and in the shadow of the stone above or
+                        // on the left, the light coming from the top-left
+                        brightness *= 1 - erosion * (0.2 + 0.4 * mortarHoles.sample(u, v));
+                        if (d === db || d === dr) {
+                            brightness *= 1 - erosion * 0.35;
+                        }
+                    }
+                    texture.setPixel(x, y, shade(mortarColor, brightness));
                     continue;
                 }
 
-                ids[y * width + x] = stoneIndex[r][i];
+                ids[y * width + x] = id;
                 const ox = hash(seed, SALT_STONE, r, i, 0);
                 const oy = hash(seed, SALT_STONE, r, i, 1);
                 const n = stoneNoise.sample(u + ox, v + oy);
                 const shift = (hash(seed, SALT_STONE, r, i, 2) - 0.5) * 2 * p.stone.paletteShift;
                 const brightness =
-                    (1 + (hash(seed, SALT_STONE, r, i, 3) - 0.5) * 2 * p.stone.shadeVariation) *
-                    (1 + (hash(seed, SALT_GRAIN, x, y) - 0.5) * 2 * p.stone.grain);
+                    (1 + (hash(seed, SALT_STONE, r, i, 3) - 0.5) * 2 * wear.shadeVariation) *
+                    (1 + (hash(seed, SALT_GRAIN, x, y) - 0.5) * 2 * wear.grain);
                 let color = sample(palette, 0.5 + (n - 0.5) * p.stone.contrast * 2 + shift);
-                if (d < p.bevel.size) {
+                if (worn < p.bevel.size) {
                     color = shade(color, d === dl || d === dt ? p.bevel.light : p.bevel.dark);
+                }
+                const spall = spalls[id];
+                if (spall) {
+                    const sx = lx - spall.x;
+                    const sy = ly - spall.y;
+                    const f =
+                        Math.hypot(sx, sy) / (spall.radius * (0.7 + 0.6 * spallNoise.sample(u, v)));
+                    if (f < 1) {
+                        // recessed patch: its top-left rim in shadow, its bottom-right rim lit
+                        color = shade(color, 1 - wear.spalling.depth);
+                        if (f > 0.7) {
+                            color = shade(color, sx + sy < 0 ? 0.75 : 1.25);
+                        }
+                    }
                 }
                 texture.setPixel(x, y, shade(color, brightness));
             }
@@ -369,7 +683,7 @@ export const ashlar: TextureGenerator<AshlarParams> = {
         // cracks: random walks drawn inside their stone, with a highlight below-right
         const cracked = new Uint8Array(width * height);
         stones.forEach(({ row: r, block: i }, id) => {
-            if (hash(seed, SALT_CRACK, r, i, 0) >= p.cracks.ratio) {
+            if (hash(seed, SALT_CRACK, r, i, 0) >= wear.cracks.ratio) {
                 return;
             }
             const row = layout[r];
@@ -377,15 +691,8 @@ export const ashlar: TextureGenerator<AshlarParams> = {
             let cx = block.x + block.width * hashRange(0.3, 0.7, seed, SALT_CRACK, r, i, 1);
             let cy = row.y + row.height * hashRange(0.3, 0.7, seed, SALT_CRACK, r, i, 2);
             let angle = hash(seed, SALT_CRACK, r, i, 3) * 2 * Math.PI;
-            let remaining = hashRange(
-                p.cracks.length[0],
-                p.cracks.length[1],
-                seed,
-                SALT_CRACK,
-                r,
-                i,
-                4,
-            );
+            const [min, max] = wear.cracks.length;
+            let remaining = hashRange(min, max, seed, SALT_CRACK, r, i, 4);
             for (let step = 0; remaining > 0; ++step) {
                 const segment = Math.min(
                     remaining,
@@ -431,6 +738,58 @@ export const ashlar: TextureGenerator<AshlarParams> = {
                 }
             }
         }
+
+        // first pixel row (or column) of a stone face: pixel centers at d >= 0
+        const face = (edge: number) => Math.ceil(edge + mortarAfter - 0.5);
+
+        // stains: streaks running down from the top of stones, over joints and the stones
+        // below, fading along their length; the darkest streak wins where they overlap
+        const stain = new Float32Array(width * height);
+        const halfWidth = wear.stains.width / 2;
+        stones.forEach(({ row: r, block: i }) => {
+            if (hash(seed, SALT_STAIN, r, i, 0) >= wear.stains.ratio) {
+                return;
+            }
+            const row = layout[r];
+            const block = row.blocks[i];
+            const x0 = block.x + block.width * hashRange(0.1, 0.9, seed, SALT_STAIN, r, i, 1);
+            const y0 = face(row.y);
+            const [min, max] = wear.stains.length;
+            const length = hashRange(min, max, seed, SALT_STAIN, r, i, 2) * sy;
+            const phase = hash(seed, SALT_STAIN, r, i, 3) * 2 * Math.PI;
+            for (let t = 0; t < length; ++t) {
+                const xc = x0 + Math.sin(phase + t / 5) * 0.7;
+                const darkness = wear.stains.darkness * (1 - t / length);
+                for (let px = Math.floor(xc - halfWidth); px <= Math.ceil(xc + halfWidth); ++px) {
+                    const cover = Math.min(
+                        1,
+                        Math.max(0, halfWidth + 0.5 - Math.abs(px + 0.5 - xc)),
+                    );
+                    const k = mod(y0 + t, height) * width + mod(px, width);
+                    stain[k] = Math.max(stain[k], darkness * cover);
+                }
+            }
+        });
+        const grime = wear.stains.grime;
+        for (let y = 0; y < height; ++y) {
+            for (let x = 0; x < width; ++x) {
+                const g =
+                    grime > 0
+                        ? Math.max(0, (grimeNoise.sample(x / width, y / height) - 0.35) / 0.65)
+                        : 0;
+                const darkening = 1 - (1 - stain[y * width + x]) * (1 - grime * g);
+                if (darkening > 0) {
+                    texture.setPixel(x, y, shade(texture.getPixel(x, y), 1 - darkening));
+                }
+            }
+        }
+
+        texture.anchors = {
+            rows: layout.map((row) => ({ x: 0, y: face(row.y) })),
+            stones: layout.flatMap((row) =>
+                row.blocks.map((block) => ({ x: mod(face(block.x), width), y: face(row.y) })),
+            ),
+        };
         return texture;
     },
-};
+});
