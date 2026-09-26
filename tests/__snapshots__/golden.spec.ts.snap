@@ -228,6 +228,18 @@ exports[`golden examples > shield-variants/5-hall-of-arms.json 1`] = `"128x48 0a
 
 exports[`golden examples > shield-variants/6-battered.json 1`] = `"48x48 26c3906b948ca57f6d2a04ccc61c75844fcf8686bbadfcb3d38e90ae7e5be38d"`;
 
+exports[`golden examples > slot-variants/1-metal-wall.json 1`] = `"64x64 5315b71020c5ecd4ccdeaed082a66da660ea85cd6e8e24e1ef829458b1b5db24"`;
+
+exports[`golden examples > slot-variants/2-beside-sliding-door.json 1`] = `"64x128 70b342c1169d4d72fa23d2400828c0a5b40350ca904856c4432e4a67c1bb10b0"`;
+
+exports[`golden examples > slot-variants/3-double-sliding-door.json 1`] = `"128x128 dcb5cd02b01c3f7139c123f24c84afb1c37fb34036425e0683b883a6e0802a52"`;
+
+exports[`golden examples > slot-variants/4-lift-door.json 1`] = `"64x128 1bf1a444f1619acfe557aefb0772163ebafd0ab96ce3980470902c0d86b60ce7"`;
+
+exports[`golden examples > slot-variants/5-bricks.json 1`] = `"64x64 56f4650eb94c3385b8816af78d235a02548875a5157ec4e5d9556c85def2d3aa"`;
+
+exports[`golden examples > slot-variants/6-rusted.json 1`] = `"64x64 b53dc4a7a6c7354394140ff979ab66b25662ccce11d0c123604f174885e02077"`;
+
 exports[`golden examples > tapestry-variants/1-lozenge.json 1`] = `"64x64 24c31b05522a276a42d2f903d70e25ec48e99e584fdb0403dadf19195fd72fef"`;
 
 exports[`golden examples > tapestry-variants/2-checky.json 1`] = `"64x64 db52b1988401eaea7c687d22c44262b57e091d16083eb71453fb43faaaa59ee0"`;
@@ -293,6 +305,8 @@ exports[`golden templates > parchment 1`] = `"32x40 6d12559cad41ae7e8a008b20e14c
 exports[`golden templates > planks 1`] = `"64x64 d890a3523bda7ef2826e787c5867173202ff92fc7f2a06b17c3090bed7dd35c5"`;
 
 exports[`golden templates > shield 1`] = `"24x32 79ad3a6690dd294b36cd32f065434e8a6b94fc0d9d9aba7d7db8a8cb93117e07"`;
+
+exports[`golden templates > slot 1`] = `"10x64 7a88847c0e209ba47696fc87d33b8df43fa4dcadb421c69982fb2427f362d1e1"`;
 
 exports[`golden templates > tapestry 1`] = `"64x40 670bec81d066c223f1e8c048568a80c11ce224afa3adf91358862fbf35372ac3"`;
 

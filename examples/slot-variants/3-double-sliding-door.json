@@ -1,0 +1,45 @@
+{
+  "size": [128, 128],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "metal",
+        "size": [128, 128]
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "slot",
+        "size": [10, 128]
+      },
+      "x": 20.3,
+      "y": 0,
+      "width": 7.8,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "door",
+        "kind": "double",
+        "material": "metal",
+        "size": [64, 128]
+      },
+      "x": 28.1,
+      "width": 43.8,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "slot",
+        "size": [10, 128]
+      },
+      "x": 71.9,
+      "y": 0,
+      "width": 7.8,
+      "height": 100
+    }
+  ]
+}

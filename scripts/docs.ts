@@ -17,6 +17,8 @@ import {
     type EntablatureWear,
     shieldWear,
     type ShieldWear,
+    slotWear,
+    type SlotWear,
     chainWear,
     type ChainWear,
     bookshelfWear,
@@ -388,6 +390,15 @@ const WEAR_ROWS: Record<string, WearRow[]> = {
             ['dents.size', (w: ShieldWear) => w.dents.size],
         ],
         shieldWear,
+    ),
+    slot: rows(
+        [
+            ['rust.coverage', (w: SlotWear) => w.rust.coverage],
+            ['rust.streaks', (w: SlotWear) => w.rust.streaks],
+            ['rust.length', (w: SlotWear) => w.rust.length],
+            ['tarnish', (w: SlotWear) => w.tarnish],
+        ],
+        slotWear,
     ),
 };
 
@@ -792,6 +803,32 @@ shield, the swords crossed behind it if any, and its shadow.
 - A metal rim runs around it, \`boss\` adds a round boss in its middle, and \`swords\`
   crosses two swords behind it, points up: the shield then shrinks to leave them room.
 - As it ages, its paint fades and flakes off down to the wood, and it gets dented.`,
+    slot: `## Usage
+
+\`slot\` is an overlay: the recess a sliding door disappears into as it opens, a dark gap
+running from end to end between two riveted metal strips. The whole patch is the slot:
+its width gives the width of the gap, the strips keeping theirs. Place it beside a
+doorway, or on both sides of a double door:
+
+\`\`\`json
+{
+  "size": [64, 128],
+  "patches": [
+    { "patch": { "template": "metal", "size": [64, 128] } },
+    { "patch": { "template": "door", "material": "metal" }, "x": 12.5, "width": 50, "height": 100 },
+    { "patch": { "template": "slot", "size": [10, 128] }, "x": 62.5, "width": 15.6, "height": 100 }
+  ]
+}
+\`\`\`
+
+- \`direction\`: \`vertical\` for doors sliding sideways into the wall, \`horizontal\` for
+  doors lifting into the ceiling; a horizontal slot is a vertical one transposed, its
+  lighting kept top-left: give it a \`[length, width]\` size.
+- The light comes from the top-left: the inner edge of the left strip is in shadow, and
+  the far side of the gap catches some light (\`inside.light\`), so that the slot looks deep.
+- Rivets run along each strip every \`strips.rivets\` pixels, adjusted so that the slot
+  tiles along its length: it can run across the whole height of a texture.
+- As it ages, the strips rust, streaks running down from the rivets, and tarnish.`,
     chain: `## Usage
 
 \`chain\` is an overlay: one iron chain, hanging from a plate bolted to the wall at the

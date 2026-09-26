@@ -313,6 +313,27 @@ function tapestryWall(age?: number): Texture {
     return renderTexture({ size: [64, 64], seed: SEED, patches }, createMemoryLoader({}));
 }
 
+/** a slot beside a sliding metal door */
+function slotWall(age?: number): Texture {
+    const aged = age === undefined ? {} : { age };
+    const patches: Placement[] = [
+        { patch: { template: 'metal', size: [64, 128] } },
+        {
+            patch: { template: 'door', material: 'metal', ...aged },
+            x: 12.5,
+            width: 50,
+            height: 100,
+        },
+        {
+            patch: { template: 'slot', size: [10, 128], ...aged },
+            x: 62.5,
+            width: 15.6,
+            height: 100,
+        },
+    ];
+    return renderTexture({ size: [64, 128], seed: SEED, patches }, createMemoryLoader({}));
+}
+
 const images: Record<string, Texture> = {
     'layout-detail.png': strip([
         enlarge(ashlar.generate({ seed: SEED }), 4),
@@ -360,6 +381,9 @@ for (const g of Object.values(generators)) {
                 if (g.name === 'tapestry') {
                     return enlarge(tapestryWall(age), 3);
                 }
+                if (g.name === 'slot') {
+                    return enlarge(slotWall(age), 2);
+                }
                 // only templates having an age get here
                 const options = { seed: SEED, age };
                 return enlarge(g.generate(options), 3);
@@ -395,7 +419,9 @@ for (const g of Object.values(generators)) {
                                     ? enlarge(shieldWall(), 5)
                                     : g.name === 'tapestry'
                                       ? enlarge(tapestryWall(), 4)
-                                      : enlarge(g.generate({ seed: SEED }), 4);
+                                      : g.name === 'slot'
+                                        ? enlarge(slotWall(), 3)
+                                        : enlarge(g.generate({ seed: SEED }), 4);
 }
 
 const pages = await renderDocs();

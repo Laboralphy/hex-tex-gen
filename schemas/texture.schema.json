@@ -4294,6 +4294,182 @@
               "type": "string"
             },
             "template": {
+              "const": "slot",
+              "description": "Door slot: a dark recess between metal strips, where a sliding door disappears"
+            },
+            "seed": {
+              "description": "seed of this patch, unless the placement sets one",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "size": {
+              "default": [10, 64],
+              "description": "own size of the slot: [width, length] for a vertical slot, [length, width] for a horizontal one",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "direction": {
+              "default": "vertical",
+              "description": "vertical, for doors sliding sideways into the wall; horizontal, for doors lifting into the ceiling",
+              "type": "string",
+              "enum": ["vertical", "horizontal"]
+            },
+            "strips": {
+              "description": "metal strips lining both sides of the slot, lit from the top-left",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "width": {
+                  "default": 3,
+                  "description": "width of each metal strip, in pixels: the gap takes the rest (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "palette": {
+                  "default": ["#2b2f33", "#474d53", "#687077", "#8f979e"],
+                  "description": "metal colors, from darkest to lightest",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "kind": "color"
+                  }
+                },
+                "brushed": {
+                  "default": 0.12,
+                  "description": "streaks along the strips, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "rivets": {
+                  "default": 8,
+                  "description": "distance between rivets along each strip, in pixels, adjusted so that the slot tiles; 0 for none (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              },
+              "additionalProperties": false
+            },
+            "inside": {
+              "description": "the dark inside of the slot, where the door disappears",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "color": {
+                  "default": "#15130f",
+                  "description": "color of the inside of the slot",
+                  "type": "string",
+                  "kind": "color"
+                },
+                "light": {
+                  "default": 0.35,
+                  "description": "light caught by the far side of the slot, facing the light, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "age": {
+              "default": 0.3,
+              "description": "overall weathering, from 0 (new) to 1 (ruined): sets every wear parameter left unset",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "rust": {
+              "description": "rust",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "coverage": {
+                  "description": "share of the strips rusted; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "palette": {
+                  "default": ["#3a1c0c", "#6b3314", "#9a4e1e", "#bf6e2e"],
+                  "description": "rust colors, from darkest to lightest",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "kind": "color"
+                  }
+                },
+                "streaks": {
+                  "description": "ratio of rivets with a rust streak running down; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "length": {
+                  "description": "[min, max] length of the rust streaks, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              },
+              "additionalProperties": false
+            },
+            "tarnish": {
+              "description": "dulled, darkened metal, in [0, 1]; when unset, derived from age",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false,
+          "title": "slot",
+          "description": "Door slot: a dark recess between metal strips, where a sliding door disappears",
+          "required": ["template"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "$schema": {
+              "description": "JSON Schema of this file, for editors",
+              "type": "string"
+            },
+            "extends": {
+              "description": "parent patch file, relative to this file, deep-merged under this one",
+              "type": "string"
+            },
+            "template": {
               "const": "bars",
               "description": "Vertical metal bars held by rails: prison windows and grates, rusting and breaking with age"
             },

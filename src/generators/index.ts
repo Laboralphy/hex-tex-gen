@@ -17,6 +17,7 @@ import { panel } from './panel';
 import { parchment } from './parchment';
 import { planks } from './planks';
 import { shield } from './shield';
+import { slot } from './slot';
 import { tapestry } from './tapestry';
 import { glassWindow } from './window';
 import type { TextureGenerator } from './types';
@@ -41,6 +42,7 @@ export {
     parchment,
     planks,
     shield,
+    slot,
     tapestry,
     glassWindow,
 };
@@ -76,6 +78,7 @@ export { panelSchema } from './panel';
 export { parchmentSchema, parchmentWear } from './parchment';
 export { computePlanksLayout, planksSchema, planksWear } from './planks';
 export { shieldSchema, shieldWear } from './shield';
+export { slotSchema, slotWear } from './slot';
 export { tapestrySchema } from './tapestry';
 export { windowSchema, windowWear } from './window';
 export type {
@@ -108,6 +111,7 @@ export type { PanelParams } from './panel';
 export type { ParchmentParams, ParchmentWear } from './parchment';
 export type { Plank, PlankColumn, PlanksParams, PlanksWear } from './planks';
 export type { ShieldParams, ShieldWear } from './shield';
+export type { SlotParams, SlotWear } from './slot';
 export type { TapestryParams } from './tapestry';
 export type { WindowParams, WindowWear } from './window';
 export { defineGenerator } from './define';
@@ -139,6 +143,7 @@ export const generators: Record<string, TextureGenerator> = Object.fromEntries(
         opening,
         column,
         entablature,
+        slot,
         bars,
         chain,
         glassWindow,
