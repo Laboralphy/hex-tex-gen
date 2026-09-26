@@ -1,4 +1,4 @@
-import { Rainbow, type Color32 } from '@laboralphy/rainbow';
+import { Rainbow, type Color32, type ColorRGBAStruct } from '@laboralphy/rainbow';
 import { clamp } from './math';
 
 /**
@@ -27,9 +27,30 @@ export function sample(palette: Color32[], t: number): Color32 {
 }
 
 /**
+ * Blends a color towards another one, channels in [0, 1]; the alpha of `from` is kept.
+ * @param t in [0, 1]: 0 gives `from`, 1 the color of `to`
+ */
+export function mixRGBA(from: ColorRGBAStruct, to: ColorRGBAStruct, t: number): ColorRGBAStruct {
+    return {
+        r: from.r + (to.r - from.r) * t,
+        g: from.g + (to.g - from.g) * t,
+        b: from.b + (to.b - from.b) * t,
+        a: from.a,
+    };
+}
+
+/**
  * Darkens (factor < 1) or lightens (factor > 1) a color, alpha is preserved.
  */
 export function shade(color: Color32, factor: number): Color32 {
     const { r, g, b, a } = Rainbow.convertToRGBA(color);
     return Rainbow.fromRGBA({ r: r * factor, g: g * factor, b: b * factor, a });
+}
+
+/**
+ * {@link shade} for a color with channels in [0, 1], made opaque: channels are clamped and
+ * quantized like a pixel's.
+ */
+export function shadeRGBA(rgba: ColorRGBAStruct, factor: number): ColorRGBAStruct {
+    return Rainbow.convertToRGBA(shade(Rainbow.fromRGBA({ ...rgba, a: 1 }), factor));
 }

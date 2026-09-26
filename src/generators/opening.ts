@@ -3,7 +3,7 @@ import { Rainbow } from '@laboralphy/rainbow';
 import { z } from 'zod';
 import { hashSeed } from '../core/hash';
 import { color, DETAIL, ratio, size } from '../core/schema';
-import { Texture } from '../core/Texture';
+import { Texture, type AnchorPoint } from '../core/Texture';
 import { defineGenerator } from './define';
 
 /** shading of a reveal: negative darkens, positive lightens */
@@ -42,6 +42,25 @@ export const openingSchema = z.strictObject({
         .describe(
             'sides without a reveal, the opening running to the edge of the patch: ["bottom"] for a doorway',
         ),
+    arch: z
+        .strictObject({
+            shape: z
+                .enum(['flat', 'round', 'pointed'])
+                .default('flat')
+                .describe(
+                    'top of the opening: flat, a rectangle; round, a semicircular or elliptical arch; pointed, a gothic arch of two arcs meeting at its apex',
+                ),
+            rise: z
+                .number()
+                .positive()
+                .max(2)
+                .optional()
+                .describe(
+                    'height of the arch above its springing line, as a share of the width of the opening; 0.5 for round arches, 0.8 for pointed ones by default',
+                ),
+        })
+        .prefault({})
+        .describe('arch closing the top of the opening; ignored when the top is open'),
     back: z
         .strictObject({
             mode: z
@@ -72,6 +91,46 @@ export type OpeningParams = z.output<typeof openingSchema>;
 
 const SALT_NOISE = 1;
 
+/** default rise of each arch, as a share of the width */
+const RISE = { round: 0.5, pointed: 0.8 };
+
+/**
+ * Distance from a point to the curve of an arch, positive inside, and the direction the
+ * curve faces there: its outward normal, from the opening towards the wall.
+ * @param spring y of the springing line, where the arch starts
+ * @returns undefined below the springing line, where the sides go on
+ */
+function archDistance(
+    shape: 'round' | 'pointed',
+    width: number,
+    spring: number,
+    x: number,
+    y: number,
+): { d: number; nx: number; ny: number } | undefined {
+    if (y >= spring) {
+        return undefined;
+    }
+    const half = width / 2;
+    if (shape === 'round') {
+        // an ellipse through both springers and the crown
+        const ex = (x - half) / half;
+        const ey = (y - spring) / spring;
+        const r = Math.hypot(ex, ey);
+        const n = Math.hypot(ex / half, ey / spring) || 1;
+        return { d: (1 - r) * Math.min(half, spring), nx: ex / half / n, ny: ey / spring / n };
+    }
+    // two arcs, each centered beyond the axis, meeting at the apex
+    const c = Math.max(0, (spring * spring - half * half) / width);
+    const radius = half + c;
+    const arcs = [half + c, half - c].map((cx) => {
+        const dx = x - cx;
+        const dy = y - spring;
+        const r = Math.hypot(dx, dy) || 1;
+        return { d: radius - r, nx: dx / r, ny: dy / r };
+    });
+    return arcs[0].d < arcs[1].d ? arcs[0] : arcs[1];
+}
+
 /**
  * A rectangular opening dug into the wall below: shaded reveals, and a back that is cut
  * out, darkened or filled. Windows, bars or fences placed afterwards on its anchors fill
@@ -80,11 +139,15 @@ const SALT_NOISE = 1;
 export const opening = defineGenerator({
     name: 'opening',
     description: 'Rectangular opening dug into the wall below, for windows, bars or arches',
+    category: 'architecture',
     schema: openingSchema,
     overlay: true,
     anchors: {
         opening: 'top-left corner of the back of the opening, inside the reveals',
         openingCenter: 'center of the opening',
+        corners:
+            'corners of the back of the opening, inside the reveals: top-left, top-right, bottom-left, bottom-right; only the bottom ones under an arch',
+        spring: 'left end of the springing line, where the arch starts, inside the reveals: the top-left of the rectangle below the arch; the top-left of the back without arch',
     },
     render(p, { width, height, seed }) {
         const texture = new Texture(width, height);
@@ -110,6 +173,10 @@ export const opening = defineGenerator({
                 ? { r: 0, g: 0, b: 0, a: Math.min(1, -value) }
                 : { r: 1, g: 1, b: 1, a: Math.min(1, value) };
 
+        // an arch: the springing line lies its rise below the top
+        const shape = p.open.includes('top') ? 'flat' : p.arch.shape;
+        const spring =
+            shape === 'flat' ? 0 : Math.min(height, (p.arch.rise ?? RISE[shape]) * width);
         for (let y = 0; y < height; ++y) {
             for (let x = 0; x < width; ++x) {
                 const u = x / width;
@@ -126,6 +193,11 @@ export const opening = defineGenerator({
                 for (const side of p.open) {
                     sides[side] = Infinity;
                 }
+                const arch =
+                    shape === 'flat' ? undefined : archDistance(shape, width, spring, wx, wy);
+                if (shape !== 'flat') {
+                    sides.top = arch ? arch.d : Infinity;
+                }
                 const d = Math.min(sides.top, sides.left, sides.right, sides.bottom);
                 if (d < 0) {
                     continue;
@@ -140,25 +212,47 @@ export const opening = defineGenerator({
                     }
                     continue;
                 }
-                // reveals meet at mitred corners: the nearest edge gives the face
+                // reveals meet at mitred corners: the nearest edge gives the face; along an
+                // arch, the faces blend with the direction the curve faces
                 const side = (Object.keys(sides) as (keyof typeof sides)[]).find(
                     (key) => sides[key] === d,
                 )!;
-                const value = p.reveals[side] - p.reveals.falloff * (d / Math.max(1, depth));
+                let face: number = p.reveals[side];
+                if (arch && side === 'top') {
+                    const up = Math.max(0, -arch.ny);
+                    const across = Math.abs(arch.nx);
+                    const beside = arch.nx < 0 ? p.reveals.left : p.reveals.right;
+                    face = (up * p.reveals.top + across * beside) / Math.max(0.001, up + across);
+                }
+                const value = face - p.reveals.falloff * (d / Math.max(1, depth));
                 texture.setPixel(x, y, Rainbow.fromRGBA(shadeWith(value)));
             }
         }
         if (back.mode === 'cut') {
             texture.cut = cut;
         }
+        // the back of the opening, inside the reveals
+        const left = p.open.includes('left') ? 0 : depth;
+        const top = p.open.includes('top') ? 0 : depth;
+        const right = width - 1 - (p.open.includes('right') ? 0 : depth);
+        const bottom = height - 1 - (p.open.includes('bottom') ? 0 : depth);
+        // an arch has no top corners
+        const topCorners: AnchorPoint[] =
+            shape === 'flat'
+                ? [
+                      { x: left, y: top, corner: 'top-left' },
+                      { x: right, y: top, corner: 'top-right' },
+                  ]
+                : [];
         texture.anchors = {
-            opening: [
-                {
-                    x: p.open.includes('left') ? 0 : depth,
-                    y: p.open.includes('top') ? 0 : depth,
-                },
-            ],
+            opening: [{ x: left, y: top }],
             openingCenter: [{ x: Math.floor(width / 2), y: Math.floor(height / 2) }],
+            corners: [
+                ...topCorners,
+                { x: left, y: bottom, corner: 'bottom-left' },
+                { x: right, y: bottom, corner: 'bottom-right' },
+            ],
+            spring: [{ x: left, y: shape === 'flat' ? top : Math.ceil(spring) }],
         };
         return texture;
     },

@@ -1,0 +1,30 @@
+{
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "ashlar"
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "tapestry",
+        "fabric": {
+          "color": "#c9b27a"
+        },
+        "pattern": {
+          "kind": "checky",
+          "colors": ["#1c2a4a", "#000000"],
+          "period": 6
+        }
+      },
+      "x": 6,
+      "y": 8,
+      "width": 88,
+      "height": 62.5
+    }
+  ]
+}

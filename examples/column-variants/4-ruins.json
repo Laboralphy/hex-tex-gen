@@ -1,0 +1,49 @@
+{
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "fieldstone",
+        "age": 0.8
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "column",
+        "age": 1,
+        "broken": 1
+      },
+      "x": 2,
+      "y": 0,
+      "width": 25,
+      "height": 100,
+      "seed": 1
+    },
+    {
+      "patch": {
+        "template": "column",
+        "age": 0.8
+      },
+      "x": 37,
+      "y": 0,
+      "width": 25,
+      "height": 100,
+      "seed": 2
+    },
+    {
+      "patch": {
+        "template": "column",
+        "age": 1,
+        "broken": 1
+      },
+      "x": 72,
+      "y": 0,
+      "width": 25,
+      "height": 100,
+      "seed": 3
+    }
+  ]
+}

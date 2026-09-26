@@ -173,6 +173,146 @@ function barsWindow(age?: number): Texture {
     return renderTexture({ size: [64, 64], seed: SEED, patches }, createMemoryLoader({}));
 }
 
+/** a window in a stone wall, with cobwebs in its corners */
+function cobwebWindow(age?: number): Texture {
+    const patches: Placement[] = [
+        { patch: { template: 'ashlar' }, width: 100, height: 100 },
+        {
+            id: 'window',
+            patch: { template: 'opening', depth: 3 },
+            x: 18.75,
+            y: 18.75,
+            width: 62.5,
+            height: 62.5,
+        },
+        {
+            patch: { template: 'cobweb', ...(age === undefined ? {} : { age }) },
+            anchor: { to: 'window', at: 'corners', mirror: true },
+            width: 25,
+            height: 25,
+        },
+    ];
+    return renderTexture({ size: [64, 64], seed: SEED, patches }, createMemoryLoader({}));
+}
+
+/** a window in a stone wall, over a dark room so that the glass shows */
+function windowWall(age?: number): Texture {
+    const patches: Placement[] = [
+        { patch: { template: 'ashlar' }, width: 100, height: 100 },
+        {
+            id: 'hole',
+            patch: { template: 'opening', depth: 3, back: { mode: 'color', color: '#151a20' } },
+            x: 25,
+            y: 18.75,
+            width: 50,
+            height: 56.25,
+        },
+        {
+            patch: { template: 'window', size: [26, 30], ...(age === undefined ? {} : { age }) },
+            anchor: { to: 'hole', at: 'opening' },
+            width: 40.6,
+            height: 46.9,
+        },
+    ];
+    return renderTexture({ size: [64, 64], seed: SEED, patches }, createMemoryLoader({}));
+}
+
+/** a bookcase over a stone wall */
+function bookshelfWall(age?: number): Texture {
+    const patches: Placement[] = [
+        { patch: { template: 'ashlar' }, width: 100, height: 100 },
+        {
+            patch: { template: 'bookshelf', ...(age === undefined ? {} : { age }) },
+            width: 100,
+            height: 100,
+        },
+    ];
+    return renderTexture({ size: [64, 64], seed: SEED, patches }, createMemoryLoader({}));
+}
+
+/** chains hanging on a stone wall */
+function chainWall(age?: number): Texture {
+    const aged = age === undefined ? {} : { age };
+    const patches: Placement[] = [
+        { patch: { template: 'ashlar' }, width: 100, height: 100 },
+        ...[10, 40, 70].map((x, i): Placement => ({
+            patch: { template: 'chain', ...aged },
+            x,
+            y: 8,
+            width: 18.75,
+            height: 75,
+            seed: i + 1,
+        })),
+    ];
+    return renderTexture({ size: [64, 64], seed: SEED, patches }, createMemoryLoader({}));
+}
+
+/** two columns on a stone wall */
+function columnWall(age?: number): Texture {
+    const aged = age === undefined ? {} : { age };
+    const patches: Placement[] = [
+        { patch: { template: 'ashlar' }, width: 100, height: 100 },
+        { patch: { template: 'column', ...aged }, x: 8, width: 25, height: 100, seed: 1 },
+        {
+            patch: { template: 'column', order: 'ionic', ...aged },
+            x: 60,
+            width: 25,
+            height: 100,
+            seed: 2,
+        },
+    ];
+    return renderTexture({ size: [64, 64], seed: SEED, patches }, createMemoryLoader({}));
+}
+
+/** a portico: an entablature over two columns */
+function portico(age?: number): Texture {
+    const aged = age === undefined ? {} : { age };
+    const patches: Placement[] = [
+        { patch: { template: 'ashlar' }, width: 100, height: 100 },
+        { patch: { template: 'entablature', ...aged }, y: 6, width: 100, height: 25 },
+        { patch: { template: 'column', ...aged }, x: 6, y: 31, width: 22, height: 69, seed: 1 },
+        { patch: { template: 'column', ...aged }, x: 72, y: 31, width: 22, height: 69, seed: 2 },
+    ];
+    return renderTexture({ size: [64, 64], seed: SEED, patches }, createMemoryLoader({}));
+}
+
+/** a shield over crossed swords, on a stone wall */
+function shieldWall(age?: number): Texture {
+    const patches: Placement[] = [
+        { patch: { template: 'ashlar', size: [48, 48], rows: { count: 3 } } },
+        {
+            patch: {
+                template: 'shield',
+                size: [32, 40],
+                swords: true,
+                field: { division: 'pale' },
+                charge: { ordinary: 'saltire' },
+                ...(age === undefined ? {} : { age }),
+            },
+            x: 16.7,
+            y: 8.3,
+            width: 66.7,
+            height: 83.3,
+        },
+    ];
+    return renderTexture({ size: [48, 48], seed: SEED, patches }, createMemoryLoader({}));
+}
+
+/** a tapestry on a stone wall */
+function tapestryWall(age?: number): Texture {
+    const patches: Placement[] = [
+        { patch: { template: 'ashlar' }, width: 100, height: 100 },
+        {
+            patch: { template: 'tapestry', ...(age === undefined ? {} : { age }) },
+            x: 6,
+            y: 8,
+            width: 88,
+            height: 62.5,
+        },
+    ];
+    return renderTexture({ size: [64, 64], seed: SEED, patches }, createMemoryLoader({}));
+}
+
 const images: Record<string, Texture> = {
     'layout-detail.png': strip([
         enlarge(ashlar.generate({ seed: SEED }), 4),
@@ -196,6 +336,30 @@ for (const g of Object.values(generators)) {
                 if (g.name === 'bars') {
                     return enlarge(barsWindow(age), 3);
                 }
+                if (g.name === 'cobweb') {
+                    return enlarge(cobwebWindow(age), 3);
+                }
+                if (g.name === 'window') {
+                    return enlarge(windowWall(age), 3);
+                }
+                if (g.name === 'bookshelf') {
+                    return enlarge(bookshelfWall(age), 3);
+                }
+                if (g.name === 'chain') {
+                    return enlarge(chainWall(age), 3);
+                }
+                if (g.name === 'column') {
+                    return enlarge(columnWall(age), 3);
+                }
+                if (g.name === 'entablature') {
+                    return enlarge(portico(age), 3);
+                }
+                if (g.name === 'shield') {
+                    return enlarge(shieldWall(age), 4);
+                }
+                if (g.name === 'tapestry') {
+                    return enlarge(tapestryWall(age), 3);
+                }
                 // only templates having an age get here
                 const options = { seed: SEED, age };
                 return enlarge(g.generate(options), 3);
@@ -215,7 +379,23 @@ for (const g of Object.values(generators)) {
                     ? enlarge(beamAlcove(), 3)
                     : g.name === 'bars'
                       ? enlarge(barsWindow(), 4)
-                      : enlarge(g.generate({ seed: SEED }), 4);
+                      : g.name === 'cobweb'
+                        ? enlarge(cobwebWindow(), 4)
+                        : g.name === 'window'
+                          ? enlarge(windowWall(), 4)
+                          : g.name === 'bookshelf'
+                            ? enlarge(bookshelfWall(), 4)
+                            : g.name === 'chain'
+                              ? enlarge(chainWall(), 4)
+                              : g.name === 'column'
+                                ? enlarge(columnWall(), 4)
+                                : g.name === 'entablature'
+                                  ? enlarge(portico(), 4)
+                                  : g.name === 'shield'
+                                    ? enlarge(shieldWall(), 5)
+                                    : g.name === 'tapestry'
+                                      ? enlarge(tapestryWall(), 4)
+                                      : enlarge(g.generate({ seed: SEED }), 4);
 }
 
 const pages = await renderDocs();

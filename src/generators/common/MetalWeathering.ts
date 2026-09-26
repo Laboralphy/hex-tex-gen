@@ -2,7 +2,7 @@ import type { FractalNoise } from '@laboralphy/algorithms';
 import { Rainbow, type Color32 } from '@laboralphy/rainbow';
 import { hash, hashRange } from '../../core/hash';
 import { clamp } from '../../core/math';
-import { createGradient, sample } from '../../core/palette';
+import { createGradient, mixRGBA, sample } from '../../core/palette';
 import type { MetalWearBase } from './metal-wear';
 
 /**
@@ -70,12 +70,7 @@ export class MetalWeathering {
         amount = Math.max(amount, this.streaks[y * this.width + x]);
         if (amount > 0) {
             const r = Rainbow.convertToRGBA(sample(this.rust, n + 0.1));
-            rgba = {
-                r: rgba.r + (r.r - rgba.r) * amount,
-                g: rgba.g + (r.g - rgba.g) * amount,
-                b: rgba.b + (r.b - rgba.b) * amount,
-                a: 1,
-            };
+            rgba = { ...mixRGBA(rgba, r, amount), a: 1 };
         }
         const tarnish = this.wear.tarnish;
         if (tarnish > 0) {

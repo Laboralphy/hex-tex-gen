@@ -6,19 +6,22 @@ Banner of fabric hanging from a rod, with a shaped lower end and bordering strip
 
 ![banner](../images/banner.png)
 
+Category: [civilized](../catalog.md#civilized).
+
 Own size: 24 × 56 pixels. Parameters marked **layout** are expressed at this size and scale with the patch; **detail** parameters are real pixels and never scale. See [Layout and detail](../concepts.md#layout-and-detail).
 
 ## Parameters
 
 ### General
 
-| Parameter | Type                            | Default    | Scale | Description                                                                       |
-| --------- | ------------------------------- | ---------- | ----- | --------------------------------------------------------------------------------- |
-| `size`    | [width, height] of integers > 0 | `[24, 56]` | —     | own size of the banner, its rod and its shadow included                           |
-| `age`     | number in [0, 1]                | `0.3`      | —     | overall aging, from 0 (new) to 1 (tattered): sets every wear parameter left unset |
-| `fading`  | number in [0, 1]                | from `age` | —     | colors faded by light, in [0, 1]                                                  |
-| `stains`  | number in [0, 1]                | from `age` | —     | coverage of the stains, in [0, 1]                                                 |
-| `holes`   | number ≥ 0                      | from `age` | —     | moth holes per 32 × 32 pixels                                                     |
+| Parameter | Type                            | Default    | Scale  | Description                                                                       |
+| --------- | ------------------------------- | ---------- | ------ | --------------------------------------------------------------------------------- |
+| `size`    | [width, height] of integers > 0 | `[24, 56]` | —      | own size of the banner, its rod and its shadow included                           |
+| `fringe`  | integer ≥ 0                     | `0`        | detail | length of the fringe hanging from a flat lower end, in pixels; 0 for none         |
+| `age`     | number in [0, 1]                | `0.3`      | —      | overall aging, from 0 (new) to 1 (tattered): sets every wear parameter left unset |
+| `fading`  | number in [0, 1]                | from `age` | —      | colors faded by light, in [0, 1]                                                  |
+| `stains`  | number in [0, 1]                | from `age` | —      | coverage of the stains, in [0, 1]                                                 |
+| `holes`   | number ≥ 0                      | from `age` | —      | moth holes per 32 × 32 pixels                                                     |
 
 ### `shape`
 
@@ -47,6 +50,16 @@ Stripes bordering the banner.
 | ---------------- | --------------- | ---------------------------------- | ------ | ---------------------------------------------------------------- |
 | `border.inset`   | integer ≥ 0     | `1`                                | detail | distance of the first stripe from the edge, in pixels            |
 | `border.stripes` | array of object | `[{"color":"#d4a53a", "width":2}]` | —      | stripes along the sides and the lower end, from the edge inwards |
+
+### `pattern`
+
+Pattern woven into the field, inside the border.
+
+| Parameter        | Type                          | Default                  | Scale  | Description                                                                                                                                                 |
+| ---------------- | ----------------------------- | ------------------------ | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pattern.kind`   | string                        | `"none"`                 | —      | woven into the field: none; lozenge, a lattice of diamonds; checky, a checkerboard; semy, small crosses strewn on a staggered grid; stripes, vertical bands |
+| `pattern.colors` | [width, height] of CSS colors | `["#d4a53a", "#1c1c3a"]` | —      | colors of the pattern: its lines, squares or motifs, and their dots                                                                                         |
+| `pattern.period` | number > 0                    | `8`                      | layout | size of one repeat of the pattern, in pixels at own size                                                                                                    |
 
 ### `folds`
 
@@ -132,6 +145,8 @@ rod and its shadow:
   `shape.depth` is its height, in fraction of the banner height.
 - `border.stripes` lists the stripes along the sides and the lower end, from the edge
   inwards; they follow the intact outline, so that tears cut through them.
+- `pattern` weaves a pattern into the field, and `fringe` hangs a fringe from a flat
+  lower end: see [`tapestry`](tapestry.md), a banner with other defaults.
 - As it ages, the fabric fades, gets stains, rips (notches torn into its edges), a frayed
   outline and moth holes, through which the wall shows.
 - The `emblem` anchor, at the center of the field, and `field`, its top-left corner

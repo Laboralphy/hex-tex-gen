@@ -62,6 +62,12 @@ export const placementAnchorSchema = z
             .tuple([z.number().int(), z.number().int()])
             .optional()
             .describe('[dx, dy] shift from each anchor point, in pixels; defaults to [0, 0]'),
+        mirror: z
+            .boolean()
+            .optional()
+            .describe(
+                'on corner points, such as the corners of an opening, mirrors each copy so that its top-left corner lies on the corner and the copy extends into the area; the offset is mirrored too, pointing inwards; defaults to false',
+            ),
     })
     .describe(
         'repeats the patch on the anchor points of a previous placement; points hidden by a later opaque placement are skipped',

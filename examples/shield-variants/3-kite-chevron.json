@@ -1,0 +1,34 @@
+{
+  "size": [48, 48],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "ashlar",
+        "size": [48, 48],
+        "rows": {
+          "count": 3
+        }
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "shield",
+        "size": [32, 40],
+        "shape": "kite",
+        "charge": {
+          "ordinary": "chevron"
+        },
+        "field": {
+          "tinctures": ["#1e5a2a", "#d6d6d0"]
+        }
+      },
+      "x": 16.7,
+      "y": 8.3,
+      "width": 66.7,
+      "height": 83.3
+    }
+  ]
+}

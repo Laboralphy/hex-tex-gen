@@ -1,0 +1,31 @@
+{
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "ashlar",
+        "stone": {
+          "palette": ["#1a1816", "#2e2a26", "#443f38", "#5a544b"]
+        }
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "column",
+        "marble": {
+          "palette": ["#101010", "#2a2a30", "#4a4a55", "#6a6a78"],
+          "veins": 4,
+          "contrast": 0.3
+        }
+      },
+      "x": 37.5,
+      "y": 0,
+      "width": 25,
+      "height": 100,
+      "seed": 1
+    }
+  ]
+}

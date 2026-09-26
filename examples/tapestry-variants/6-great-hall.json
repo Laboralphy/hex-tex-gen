@@ -1,0 +1,50 @@
+{
+  "size": [128, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "ashlar",
+        "size": [128, 64]
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "tapestry",
+        "size": [96, 48]
+      },
+      "x": 12.5,
+      "y": 8,
+      "width": 75,
+      "height": 78
+    },
+    {
+      "patch": {
+        "template": "shield",
+        "size": [32, 40],
+        "charge": {
+          "ordinary": "cross"
+        }
+      },
+      "x": 1.5,
+      "y": 30,
+      "width": 10,
+      "height": 30
+    },
+    {
+      "patch": {
+        "template": "shield",
+        "size": [32, 40],
+        "charge": {
+          "ordinary": "cross"
+        }
+      },
+      "x": 88.5,
+      "y": 30,
+      "width": 10,
+      "height": 30
+    }
+  ]
+}

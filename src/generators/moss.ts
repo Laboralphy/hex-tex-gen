@@ -121,6 +121,7 @@ const TONE_BEVEL = 0.15;
 export const moss = defineGenerator({
     name: 'moss',
     description: 'Transparent overlay of greenish vines hanging from the top edge',
+    category: 'natural',
     schema: mossSchema,
     overlay: true,
     render(p, { width, height, seed }) {

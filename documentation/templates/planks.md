@@ -6,6 +6,8 @@ Wall of vertical wooden planks of variable length.
 
 ![planks](../images/planks.png)
 
+Category: [surfaces](../catalog.md#surfaces).
+
 Own size: 64 × 64 pixels. Parameters marked **layout** are expressed at this size and scale with the patch; **detail** parameters are real pixels and never scale. See [Layout and detail](../concepts.md#layout-and-detail).
 
 ## Parameters

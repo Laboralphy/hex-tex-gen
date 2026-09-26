@@ -15,6 +15,15 @@ export type BaseParams = {
     size: [number, number];
 };
 
+/**
+ * Categories of templates: base surfaces, which suit any ambiance, and decorative patches
+ * grouped by the ambiance they belong to.
+ */
+export const CATEGORIES = ['surface', 'natural', 'civilized', 'dungeon', 'architecture'] as const;
+
+/** the category of a template, see {@link CATEGORIES} */
+export type Category = (typeof CATEGORIES)[number];
+
 /** schema of a generator's parameters: every property must have a default */
 export type ParamsSchema = z.ZodType<BaseParams>;
 
@@ -28,6 +37,8 @@ export type RenderContext = {
 export interface TextureGenerator<S extends ParamsSchema = ParamsSchema> {
     readonly name: string;
     readonly description: string;
+    /** what the template is: a base surface, or a decoration and its ambiance */
+    readonly category: Category;
     /** parameters: types, defaults, descriptions and validation */
     readonly schema: S;
     /** default parameters: the schema applied to an empty object */

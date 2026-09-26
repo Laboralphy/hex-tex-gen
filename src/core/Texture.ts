@@ -1,13 +1,37 @@
 import type { Color32 } from '@laboralphy/rainbow';
 import { mod } from './math';
 
+/** a corner of a rectangular area */
+export type Corner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+
 /**
  * A point of interest reported by a generator, in pixels of the texture it rendered.
  */
 export type AnchorPoint = {
     x: number;
     y: number;
+    /**
+     * the point is this corner of an area, such as the top-right corner of an opening:
+     * the area extends from it to the left and downwards
+     */
+    corner?: Corner;
 };
+
+/** the corner a corner becomes once the axes are swapped */
+const TRANSPOSED_CORNERS: Record<Corner, Corner> = {
+    'top-left': 'top-left',
+    'top-right': 'bottom-left',
+    'bottom-left': 'top-right',
+    'bottom-right': 'bottom-right',
+};
+
+/** the corner a corner becomes once mirrored */
+function mirrorCorner(corner: Corner, horizontal: boolean, vertical: boolean): Corner {
+    const [v, h] = corner.split('-');
+    const vv = vertical ? (v === 'top' ? 'bottom' : 'top') : v;
+    const hh = horizontal ? (h === 'left' ? 'right' : 'left') : h;
+    return `${vv}-${hh}` as Corner;
+}
 
 /**
  * A 2D RGBA bitmap. Pixels are stored row by row, 4 bytes each (r, g, b, a),
@@ -119,7 +143,49 @@ export class Texture {
         t.anchors = Object.fromEntries(
             Object.entries(this.anchors).map(([name, points]) => [
                 name,
-                points.map(({ x, y }) => ({ x: y, y: x })),
+                points.map(({ x, y, corner }) => ({
+                    x: y,
+                    y: x,
+                    ...(corner ? { corner: TRANSPOSED_CORNERS[corner] } : {}),
+                })),
+            ]),
+        );
+        return t;
+    }
+
+    /**
+     * A mirrored copy, anchors and cut mask included. Mirroring also mirrors the light:
+     * meant for evenly lit textures, such as cobwebs.
+     * @param horizontal flips left and right
+     * @param vertical flips top and bottom
+     */
+    mirrored(horizontal: boolean, vertical: boolean): Texture {
+        const { width, height } = this;
+        const mx = (x: number) => (horizontal ? width - 1 - x : x);
+        const my = (y: number) => (vertical ? height - 1 - y : y);
+        const t = new Texture(width, height);
+        for (let y = 0; y < height; ++y) {
+            for (let x = 0; x < width; ++x) {
+                t.setPixel(mx(x), my(y), this.getPixel(x, y));
+            }
+        }
+        if (this.cut) {
+            const cut = new Uint8Array(this.cut.length);
+            for (let y = 0; y < height; ++y) {
+                for (let x = 0; x < width; ++x) {
+                    cut[my(y) * width + mx(x)] = this.cut[y * width + x];
+                }
+            }
+            t.cut = cut;
+        }
+        t.anchors = Object.fromEntries(
+            Object.entries(this.anchors).map(([name, points]) => [
+                name,
+                points.map(({ x, y, corner }) => ({
+                    x: mx(x),
+                    y: my(y),
+                    ...(corner ? { corner: mirrorCorner(corner, horizontal, vertical) } : {}),
+                })),
             ]),
         );
         return t;

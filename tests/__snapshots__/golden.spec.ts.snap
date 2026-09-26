@@ -1,5 +1,15 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`golden examples > arch-variants/1-round-niche.json 1`] = `"64x64 f9db2399e5f9be659e305f55235d59bf00affbb37015dd0f9e3588549d3b5fb6"`;
+
+exports[`golden examples > arch-variants/2-pointed-doorway.json 1`] = `"64x128 937d22a0236116ebcebed17842d211838bcfac3e744832b89dfa7f3531c71944"`;
+
+exports[`golden examples > arch-variants/3-barred-round-window.json 1`] = `"64x64 2b7a7d57aa3de44d737d9f999d056d03739e69c3e24f1c24f57276e6cc98ed5b"`;
+
+exports[`golden examples > arch-variants/4-gothic-window.json 1`] = `"64x128 8ab99a001d575a26cf8744e40e0ca991ded03ca84320ac8254227c2f7faae8ed"`;
+
+exports[`golden examples > arch-variants/5-cobwebbed-arch.json 1`] = `"64x64 f1825654c55552d3b462ccc3654fd5437ad18a076087dafc5ecd1772288f0687"`;
+
 exports[`golden examples > banners/1-flat.json 1`] = `"64x128 f7769e1848908dfe1cf079724357b9a1720419b48782bd16150f8ed3ed285a14"`;
 
 exports[`golden examples > banners/2-point.json 1`] = `"64x128 fd653b360dc35f0e983ab9aa9af6a7ca84d442acfe62231b9dc9ad517118bd1d"`;
@@ -29,6 +39,22 @@ exports[`golden examples > bars-variants/5-square-grate.json 1`] = `"64x64 38158
 exports[`golden examples > bars-variants/6-cell-door.json 1`] = `"64x128 4c029896c855544a7e4deb733b5c6e5b4675b96998e94181ff55075d070de4e9"`;
 
 exports[`golden examples > bars-variants/7-masked-fence.json 1`] = `"64x64 c9bce4e9a05145bbbbaae3527c12cae72fe3cbe8a3b7c189c7e3beed7dff4edd"`;
+
+exports[`golden examples > bookshelf-variants/1-default.json 1`] = `"64x64 85dd572b77fcba72bc5d7a4da5ddce2801e5f9c20098ca4575d5eac96f0d8908"`;
+
+exports[`golden examples > bookshelf-variants/2-empty.json 1`] = `"64x64 ec541e3a06a0b9bd3c27d710d186ac53952ab9795b3c6b262393b073ce4a8775"`;
+
+exports[`golden examples > bookshelf-variants/3-half-empty.json 1`] = `"64x64 602c5d0c349d596f771b7a904312394046ce2ed7c58cae9f9857109988f9b637"`;
+
+exports[`golden examples > bookshelf-variants/4-packed.json 1`] = `"64x64 e5f81340c1adf0ab99e4122ac6b1ae8ab643fe79ece09357dfd34705c0788b5f"`;
+
+exports[`golden examples > bookshelf-variants/5-abandoned.json 1`] = `"64x64 fa8dd392b4029611668502017f86e85b2ea3ab79a3810c63b6ddd934b9efc216"`;
+
+exports[`golden examples > bookshelf-variants/6-library-wall.json 1`] = `"128x64 6681a2a011d6bed14dac21929e1f491ec7ba11db30f1ab32e0cb186aaa54cb5b"`;
+
+exports[`golden examples > bookshelf-variants/7-tall-dark-wood.json 1`] = `"64x128 2d24df982a6934e14bc1ab8f33dba0eb41c3a5f274e739b5fefc0f581055ae4c"`;
+
+exports[`golden examples > bookshelf-variants/8-blue-and-red.json 1`] = `"64x64 b14a45ba39db1ccf9ad679ba0a30dae1f219a145c8172037203308f7f65df4af"`;
 
 exports[`golden examples > brick-anchor-ratio/ratio-0.5.json 1`] = `"64x64 8e2a415b7768bdfa97f6a960ec5f9bbd04313116de89367bd36f4d08cac29d08"`;
 
@@ -63,6 +89,58 @@ exports[`golden examples > brick-variants/11-mossy-ruin.json 1`] = `"64x64 c9728
 exports[`golden examples > brick-variants/12-mossy-sparse.json 1`] = `"64x64 6d0849d8488813c71313610731a99d2b75a780d9cad75ce0e2a2f95086b2c5f6"`;
 
 exports[`golden examples > castle-wall.json 1`] = `"128x128 437e2280d1682c99fce2110e119eb2445c82fbbe0e24dc9955501ea1c3316cb2"`;
+
+exports[`golden examples > chain-variants/1-single.json 1`] = `"64x64 9217311d4eff8d6194c8210b2328ece8d51068f1ec9b7479e22d743f9019e696"`;
+
+exports[`golden examples > chain-variants/2-row-of-chains.json 1`] = `"64x64 56454b3d99cee57c570b722a7a9a4a71388ae844a54eacde76426574603c6260"`;
+
+exports[`golden examples > chain-variants/3-shackles.json 1`] = `"64x64 d8fe7cbc3fa1f8ad463b8e79145df8de59cfe8e7733cda5dfd18d7fc4e518576"`;
+
+exports[`golden examples > chain-variants/4-rusted.json 1`] = `"64x64 15c7c739512f18565b738beb9438b8f555ac5e7b12fc29d96f37b84c9da20b14"`;
+
+exports[`golden examples > chain-variants/5-prison-cell.json 1`] = `"64x64 96ee9652a2c5557e204055f0d1b9127898a9a63f6b7b26f71c0d0bed4820df00"`;
+
+exports[`golden examples > chain-variants/6-long-chains.json 1`] = `"64x128 51380f43e644f05aba6b361c4a9b6a68174c618a0d0c6a1fd80a9af8fdff23c5"`;
+
+exports[`golden examples > chain-variants/7-heavy-on-metal.json 1`] = `"64x64 ca5a8bae6d2f17d6190fef3aaa8142a503e2c8218f578f085950047eceb1bbb6"`;
+
+exports[`golden examples > cobweb-variants/1-four-corners.json 1`] = `"64x64 32333249c09cfbc78a231c8c31f9e61bd34b99e1c2a106b85ec15a9dda730870"`;
+
+exports[`golden examples > cobweb-variants/2-top-corners.json 1`] = `"64x64 2e39a85eb092d304fb27bcd0dfc7c1c38d596489fb24be9432cd639c8f2f7a5f"`;
+
+exports[`golden examples > cobweb-variants/3-abandoned.json 1`] = `"64x64 80ab5e1195964aeb10fd243598299fedd7e5209a720c53e9c5c04599882571ef"`;
+
+exports[`golden examples > cobweb-variants/4-behind-bars.json 1`] = `"64x64 d9359d7ac2ce95d792e0bc99acae90556ddf47e42d34be2ecbe4b56a578dc694"`;
+
+exports[`golden examples > cobweb-variants/5-doorway.json 1`] = `"64x128 19546ff5d0b802eb7892bc655b1113460321860c03d5a0b23e709a92827fb1b5"`;
+
+exports[`golden examples > cobweb-variants/6-translucent.json 1`] = `"64x64 72904b6696bee7090c7290a3c27edb55b5fb3b93e373c23432b1a4123178a4f0"`;
+
+exports[`golden examples > cobweb-variants/7-large-web.json 1`] = `"64x64 4fb4ffe6487cec639c071f6104907710e6871d8fd9121a9b425647bc2a2a3ae3"`;
+
+exports[`golden examples > column-variants/1-doric-pair.json 1`] = `"64x64 f1b47ec625026201df5ac4f46f25d298322aeffed80a1ca35f81423eb250f247"`;
+
+exports[`golden examples > column-variants/2-ionic-pair.json 1`] = `"64x64 08fea4060f8498cc7bce3ede6f454a216cce242b84d0222f4c4e3a9be783a684"`;
+
+exports[`golden examples > column-variants/3-tuscan-plain.json 1`] = `"64x64 dd323f78cec2d9635da4db02b91cc2cc3f738e02b9888cfcf25479fc891ba6a7"`;
+
+exports[`golden examples > column-variants/4-ruins.json 1`] = `"64x64 ac33f5e40ea89ef5a9dcdfd7dc9f52ff869ff945d2c3f57ff344668538315a32"`;
+
+exports[`golden examples > column-variants/5-portico-doorway.json 1`] = `"64x128 56c5aefe4c727070af8e2afebea71da501dcf3f4ef1b0b76621db0588ae0c00f"`;
+
+exports[`golden examples > column-variants/6-dark-marble.json 1`] = `"64x64 3e39e4c0d3538a9081c25878d5fd718511fddf4948467c148eacd5467d82f7d4"`;
+
+exports[`golden examples > entablature-variants/1-meander-portico.json 1`] = `"64x64 2174d3333b43e81458d76240e2f8eb115ee97974c97d630abde2f44171e18a78"`;
+
+exports[`golden examples > entablature-variants/2-doric-triglyphs.json 1`] = `"64x64 f09fb766ed5a06dab879e5a388436d5dff4a435e3fdb5d1fd367446c0441db37"`;
+
+exports[`golden examples > entablature-variants/3-cornice-band.json 1`] = `"64x64 a71cdf144ca13716bd653bd48cb0ffe5b86182230f6dbefa2c5e3bf3769902b5"`;
+
+exports[`golden examples > entablature-variants/4-ruined-temple.json 1`] = `"64x64 5c921a3be909f1f06d5f11fc34de083145afbfd22176ceffad3d7a3ae5463b22"`;
+
+exports[`golden examples > entablature-variants/5-temple-front.json 1`] = `"128x64 a58f327bf05630e1d5bff3dd5a93a662642e89de7090dbb664e3d47aa5d9dd22"`;
+
+exports[`golden examples > entablature-variants/6-ionic-meander.json 1`] = `"64x64 b47cf38145392405a34fb235db3b65823fddabdc0535c4af2f0d239e626b26c4"`;
 
 exports[`golden examples > fieldstone-variants/01-default.json 1`] = `"64x64 c2ae854eeec519e1e6473c053ee74a25e2fb12e7135aeeeb911e4048e968c014"`;
 
@@ -138,6 +216,46 @@ exports[`golden examples > plank-variants/13-mossy-rows.json 1`] = `"64x64 23a32
 
 exports[`golden examples > plank-variants/14-old-barn.json 1`] = `"64x64 6be7fbcd612035e7ecfc836b9b3e5150b9d50334592e3d3cd7718e2bc832fd93"`;
 
+exports[`golden examples > shield-variants/1-heater-cross.json 1`] = `"48x48 4b943d2f5ae6dfe43f879ed3b729f93f4e5f07dabf61761b7cd4bfcfa016328b"`;
+
+exports[`golden examples > shield-variants/2-round-boss.json 1`] = `"48x48 45270c5bd661b6c51e94a274ec7683e1cda20b1268aaf440ee781714f989ee3c"`;
+
+exports[`golden examples > shield-variants/3-kite-chevron.json 1`] = `"48x48 02099f7324735d0e9b41cacce170b0c4cb6662735d7a1d186e354eb33c66242e"`;
+
+exports[`golden examples > shield-variants/4-trophy.json 1`] = `"48x48 e5e6824a7cd7de1ae773c13230c572cfa8f5c76423eb50e37376d2cd8f08324d"`;
+
+exports[`golden examples > shield-variants/5-hall-of-arms.json 1`] = `"128x48 0a7ae1eaa4aa2e00ef81ae9c0ec15d83d1b56cdd0be8c6c8ee549a8aa873d140"`;
+
+exports[`golden examples > shield-variants/6-battered.json 1`] = `"48x48 26c3906b948ca57f6d2a04ccc61c75844fcf8686bbadfcb3d38e90ae7e5be38d"`;
+
+exports[`golden examples > tapestry-variants/1-lozenge.json 1`] = `"64x64 24c31b05522a276a42d2f903d70e25ec48e99e584fdb0403dadf19195fd72fef"`;
+
+exports[`golden examples > tapestry-variants/2-checky.json 1`] = `"64x64 db52b1988401eaea7c687d22c44262b57e091d16083eb71453fb43faaaa59ee0"`;
+
+exports[`golden examples > tapestry-variants/3-semy-blue.json 1`] = `"64x64 7a47ecf52fba8f4f0643c81e73a2be7f8b70c7d7038d6b3985ffa1f0b86f7227"`;
+
+exports[`golden examples > tapestry-variants/4-green-stripes.json 1`] = `"64x64 467fb71fb9348557b2a1f10f8516d3bf2da4b4dd4c7877260509ce4689af9f16"`;
+
+exports[`golden examples > tapestry-variants/5-moth-eaten.json 1`] = `"64x64 0b0da5aaffd11593557539d94c02acb3b6ccaaec95b5ca5fcbd29d2fb11fd217"`;
+
+exports[`golden examples > tapestry-variants/6-great-hall.json 1`] = `"128x64 d749c2a9775798f0b971ef95dd0a6fbf807d56090ab4dcb4be6fa49bcbdcdc8a"`;
+
+exports[`golden examples > window-variants/1-cut-opening.json 1`] = `"64x64 d117e29472036b48e81d9ab48de003d6ec00d767c52edba6203a30a4cbc58f56"`;
+
+exports[`golden examples > window-variants/2-dark-room.json 1`] = `"64x64 fe7328cb8557e1de0842980daa3a6b500dbd2558831f16d17b5a2c5b8a4d86a4"`;
+
+exports[`golden examples > window-variants/3-new.json 1`] = `"64x64 ba3696fc53f5f282037931ed972bcd39aa7c8426972e05ad11d5a29a679471dd"`;
+
+exports[`golden examples > window-variants/4-abandoned.json 1`] = `"64x64 231bcdcbb266c868e2d5b85968163894f34e3ab1e9383ec90659d8a9b4fd9e1c"`;
+
+exports[`golden examples > window-variants/5-broken-panes.json 1`] = `"64x64 e2917605341293e6b185052d67b9929d7dd30fa50f2e39a43818bd3ed695ad36"`;
+
+exports[`golden examples > window-variants/6-metal-grid.json 1`] = `"64x64 077fbde989b982793a477402178daf2af0e2184d118c262acaf572457f7dc556"`;
+
+exports[`golden examples > window-variants/7-cobwebbed.json 1`] = `"64x64 750ba0e5311121c40520df3e3d4fe7d93103e46cc8ae1f96074791331a662cec"`;
+
+exports[`golden examples > window-variants/8-tall-lit-room.json 1`] = `"64x128 9f90a78a3706a42dedf7a203843ed05ac3cbedacd0b7d3c6ec70f431d15dee42"`;
+
 exports[`golden templates > ashlar 1`] = `"64x64 892bbd7e63dabb13bf78b83918a2c34ad6f060485da908ae927a1fd8e577a85c"`;
 
 exports[`golden templates > banner 1`] = `"24x56 f178f07188b97018f8c9b2f84f07b781807325f2c7d0196132195cc46b96e729"`;
@@ -146,9 +264,19 @@ exports[`golden templates > bars 1`] = `"32x48 a48474ea48916bd422efafefbdbe4d8e5
 
 exports[`golden templates > beam 1`] = `"64x9 2c7421ec2505ad5659cf9d50a3213da66f68c564f8b089002bccdd0ddef4e3b3"`;
 
+exports[`golden templates > bookshelf 1`] = `"64x64 8a977660c78afed3d1ce22c88d3dc430bf3c049955c9b560e1b187860f2e31f0"`;
+
 exports[`golden templates > bricks 1`] = `"64x64 9cfeb86f23c82c0359744b56af2fb4a5661ec6652df2a89e60dcdfd18f2ce3d4"`;
 
+exports[`golden templates > chain 1`] = `"12x48 b0d6eeb00acbbed9f51f7da38967483a6d8abd91b1aa690bb98ee868b1a76329"`;
+
+exports[`golden templates > cobweb 1`] = `"16x16 f955149fe3dc5750c4850d84a556098eb6830f0c792d6088aeb5cdd9e1a7d221"`;
+
+exports[`golden templates > column 1`] = `"16x64 d924258705531c3d81dfc3b1b815bb351a2d9f279cc6620fbf33fd22ec7bd810"`;
+
 exports[`golden templates > door 1`] = `"64x128 1a8bbc845d660a3d6c7ee7add8a430cf4098e3b19644232f9dddc2e393af7237"`;
+
+exports[`golden templates > entablature 1`] = `"64x16 8e8ae74937807cac7d05017d261cebab2855dba5d5d7e638a68937cce35b0489"`;
 
 exports[`golden templates > fieldstone 1`] = `"64x64 266a1cc49c5d62a4328fd351165844d9d3c5acd16062d65a0c08ccc42a5daeab"`;
 
@@ -163,3 +291,9 @@ exports[`golden templates > panel 1`] = `"64x64 8a8d0a7ebc0c498f7c6c9a48d0724879
 exports[`golden templates > parchment 1`] = `"32x40 6d12559cad41ae7e8a008b20e14c3253528eee7f28fd46ecab328c7f8c4a140b"`;
 
 exports[`golden templates > planks 1`] = `"64x64 d890a3523bda7ef2826e787c5867173202ff92fc7f2a06b17c3090bed7dd35c5"`;
+
+exports[`golden templates > shield 1`] = `"24x32 79ad3a6690dd294b36cd32f065434e8a6b94fc0d9d9aba7d7db8a8cb93117e07"`;
+
+exports[`golden templates > tapestry 1`] = `"64x40 670bec81d066c223f1e8c048568a80c11ce224afa3adf91358862fbf35372ac3"`;
+
+exports[`golden templates > window 1`] = `"32x40 0ea0580c4d2c8d3b33f8c9551d6c1da1a5757c5763e5341cc08d4bf6733a8314"`;

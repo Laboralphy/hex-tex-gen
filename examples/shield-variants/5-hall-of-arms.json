@@ -1,0 +1,69 @@
+{
+  "size": [128, 48],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "bricks",
+        "size": [128, 48]
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "shield",
+        "size": [32, 40],
+        "charge": {
+          "ordinary": "fess",
+          "color": "#e8e4d8"
+        },
+        "field": {
+          "tinctures": ["#1e3c7a", "#1e3c7a"]
+        }
+      },
+      "x": 6,
+      "y": 12.5,
+      "width": 23,
+      "height": 75
+    },
+    {
+      "patch": {
+        "template": "shield",
+        "size": [32, 40],
+        "swords": true,
+        "shape": "round",
+        "boss": true,
+        "charge": {
+          "ordinary": "none"
+        },
+        "field": {
+          "division": "bend",
+          "tinctures": ["#8c1c1c", "#d6b04a"]
+        }
+      },
+      "x": 36,
+      "y": 8,
+      "width": 28,
+      "height": 84
+    },
+    {
+      "patch": {
+        "template": "shield",
+        "size": [32, 40],
+        "charge": {
+          "ordinary": "pale",
+          "color": "#101010"
+        },
+        "field": {
+          "division": "fess",
+          "tinctures": ["#d6b04a", "#1e5a2a"]
+        }
+      },
+      "x": 71,
+      "y": 12.5,
+      "width": 23,
+      "height": 75
+    }
+  ]
+}

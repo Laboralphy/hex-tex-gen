@@ -1,0 +1,50 @@
+{
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "ashlar",
+        "stone": {
+          "palette": ["#3a3226", "#5e5242", "#857560", "#a8977e"]
+        }
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "entablature",
+        "marble": {
+          "veins": 5
+        }
+      },
+      "x": 0,
+      "y": 6,
+      "width": 100,
+      "height": 25
+    },
+    {
+      "patch": {
+        "template": "column",
+        "order": "ionic"
+      },
+      "x": 6,
+      "y": 31,
+      "width": 22,
+      "height": 69,
+      "seed": 1
+    },
+    {
+      "patch": {
+        "template": "column",
+        "order": "ionic"
+      },
+      "x": 72,
+      "y": 31,
+      "width": 22,
+      "height": 69,
+      "seed": 2
+    }
+  ]
+}

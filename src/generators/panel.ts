@@ -29,6 +29,7 @@ export type PanelParams = z.output<typeof panelSchema>;
 export const panel = defineGenerator({
     name: 'panel',
     description: 'Ashlar wall with a large stone slab, room for an inscription or a switch',
+    category: 'surface',
     schema: panelSchema,
     anchors: WALL_ANCHORS,
     render: renderWall,

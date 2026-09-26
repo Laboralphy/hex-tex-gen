@@ -1,0 +1,71 @@
+{
+  "size": [128, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "ashlar",
+        "size": [128, 64]
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "entablature",
+        "size": [128, 16],
+        "frieze": {
+          "pattern": "triglyph"
+        }
+      },
+      "x": 0,
+      "y": 4,
+      "width": 100,
+      "height": 25
+    },
+    {
+      "patch": {
+        "template": "column",
+        "order": "doric"
+      },
+      "x": 4,
+      "y": 29,
+      "width": 11,
+      "height": 71,
+      "seed": 1
+    },
+    {
+      "patch": {
+        "template": "column",
+        "order": "doric"
+      },
+      "x": 30,
+      "y": 29,
+      "width": 11,
+      "height": 71,
+      "seed": 2
+    },
+    {
+      "patch": {
+        "template": "column",
+        "order": "doric"
+      },
+      "x": 59,
+      "y": 29,
+      "width": 11,
+      "height": 71,
+      "seed": 3
+    },
+    {
+      "patch": {
+        "template": "column",
+        "order": "doric"
+      },
+      "x": 85,
+      "y": 29,
+      "width": 11,
+      "height": 71,
+      "seed": 4
+    }
+  ]
+}

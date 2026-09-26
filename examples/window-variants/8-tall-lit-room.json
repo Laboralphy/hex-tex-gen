@@ -1,0 +1,55 @@
+{
+  "size": [64, 128],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "bricks",
+        "size": [64, 128],
+        "rows": {
+          "count": 16
+        }
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "hole",
+      "patch": {
+        "template": "opening",
+        "depth": 3,
+        "size": [36, 60],
+        "back": {
+          "mode": "color",
+          "color": "#e0b060"
+        }
+      },
+      "x": 21.875,
+      "y": 15.625,
+      "width": 56.25,
+      "height": 46.875
+    },
+    {
+      "patch": {
+        "template": "window",
+        "size": [30, 54],
+        "panes": {
+          "rows": 3
+        },
+        "glass": {
+          "alpha": 0.3,
+          "streaks": {
+            "angle": 30,
+            "width": 4
+          }
+        }
+      },
+      "anchor": {
+        "to": "hole",
+        "at": "opening"
+      },
+      "width": 46.9,
+      "height": 42.2
+    }
+  ]
+}

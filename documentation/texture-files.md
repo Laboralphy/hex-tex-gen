@@ -125,6 +125,7 @@ of the wall: anchors follow the patch they belong to.
 | `only`     | indices of the points to use, from 0; all of them by default                    |
 | `ratio`    | share of the visible points to use, from 0 to 1, picked at random; 1 by default |
 | `offset`   | `[dx, dy]` shift from each point, in **pixels**; `[0, 0]` by default            |
+| `mirror`   | on corner points, mirrors each copy to grow into the corner; `false` by default |
 
 Rules:
 
@@ -140,6 +141,24 @@ Rules:
   count: with 8 visible rows, `"ratio": 0.5` gives 4 of them. Raising the ratio only adds
   points, lowering it only removes some, so the amount can be tuned without the rest
   moving; change the `seed` of the placement to pick another subset;
+- **corner points** mark a corner of an area, such as the `corners` of an
+  [`opening`](templates/opening.md#anchors). With `"mirror": true`, each copy is mirrored
+  so that its own top-left corner lies on the point and the copy grows into the area: to
+  the left and downwards from a top-right corner, upwards from a bottom one. The `offset`
+  is mirrored too, so that it points inwards. One placement then fills any corner, such as
+  [`cobweb`](templates/cobweb.md) webs in random corners of a window:
+
+  ```json
+  {
+    "patch": { "template": "cobweb" },
+    "anchor": { "to": "window", "at": "corners", "ratio": 0.5, "mirror": true },
+    "width": 25,
+    "height": 25
+  }
+  ```
+
+  Mirroring mirrors the light too: it suits evenly lit patches, such as cobwebs;
+
 - an anchored placement cannot set `x` or `y`: use `offset`;
 - `width` and `height` still size each copy, in percent of the texture.
 

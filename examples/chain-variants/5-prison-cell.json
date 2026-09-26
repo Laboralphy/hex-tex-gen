@@ -1,0 +1,69 @@
+{
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "bricks",
+        "age": 0.6
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "hole",
+      "patch": {
+        "template": "opening",
+        "depth": 3
+      },
+      "x": 31.25,
+      "y": 12.5,
+      "width": 37.5,
+      "height": 31.25
+    },
+    {
+      "patch": {
+        "template": "bars",
+        "size": [18, 16],
+        "bars": {
+          "count": 3
+        },
+        "age": 0.6
+      },
+      "anchor": {
+        "to": "hole",
+        "at": "opening"
+      },
+      "width": 28.1,
+      "height": 25
+    },
+    {
+      "patch": {
+        "template": "chain",
+        "cuff": 1,
+        "broken": 0,
+        "length": [0.6, 0.7],
+        "age": 0.6
+      },
+      "x": 4,
+      "y": 40,
+      "width": 18.75,
+      "height": 56,
+      "seed": 7
+    },
+    {
+      "patch": {
+        "template": "chain",
+        "cuff": 1,
+        "broken": 0,
+        "length": [0.5, 0.6],
+        "age": 0.6
+      },
+      "x": 77,
+      "y": 40,
+      "width": 18.75,
+      "height": 56,
+      "seed": 8
+    }
+  ]
+}

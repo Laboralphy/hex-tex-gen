@@ -104,6 +104,7 @@ import { defineGenerator, DETAIL, LAYOUT, palette, size, Texture } from '@labora
 export const pillar = defineGenerator({
   name: 'pillar',
   description: 'Round stone pillar',
+  category: 'architecture',
   schema: z.strictObject({
     size: size().default([32, 64]).describe('own size of the patch, in pixels'),
     rings: z.number().int().min(0).default(3).describe('number of rings').meta(LAYOUT),
@@ -125,6 +126,9 @@ export const pillar = defineGenerator({
 
 Rules:
 
+- `category` files the template in the [catalog](catalog.md): `surface` for base
+  textures suiting any ambiance, or the ambiance of a decoration: `natural`, `civilized`,
+  `dungeon` or `architecture`;
 - the schema is a `z.strictObject`, so that unknown keys are reported;
 - every parameter has a `.default()` and a `.describe()`, and `size` is required: the
   descriptions feed `--list`, the JSON Schemas and the documentation;

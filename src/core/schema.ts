@@ -74,17 +74,28 @@ export const ageParam = ({
  * @param subject what casts the shadow
  * @param opacity default darkness of the shadow
  * @param offset default offset of the shadow, in pixels; 0 for none
+ * @param scaled the offset is a layout value, expressed at the own size of the patch and
+ * scaling with it, instead of real pixels
  */
-export const shadowGroup = (subject: string, opacity = 0.45, offset = 1) =>
+export const shadowGroup = (subject: string, opacity = 0.45, offset = 1, scaled = false) =>
     z
         .strictObject({
-            offset: z
-                .number()
-                .int()
-                .min(0)
-                .default(offset)
-                .describe('shadow cast on the wall, to the bottom-right, in pixels')
-                .meta(DETAIL),
+            offset: scaled
+                ? z
+                      .number()
+                      .min(0)
+                      .default(offset)
+                      .describe(
+                          'shadow cast on the wall, to the bottom-right, in pixels at own size: it scales with the patch; 0 for none',
+                      )
+                      .meta(LAYOUT)
+                : z
+                      .number()
+                      .int()
+                      .min(0)
+                      .default(offset)
+                      .describe('shadow cast on the wall, to the bottom-right, in pixels')
+                      .meta(DETAIL),
             opacity: ratio().default(opacity).describe('darkness of the shadow, in [0, 1]'),
         })
         .prefault({})

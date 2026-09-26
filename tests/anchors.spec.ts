@@ -20,6 +20,7 @@ const BLACK = 0x000000ff;
 const target = defineGenerator({
     name: 'test-target',
     description: 'test',
+    category: 'surface',
     schema: z.strictObject({ size: size().default([16, 16]) }),
     anchors: { corners: 'test points' },
     render(_, { width, height }) {
@@ -39,6 +40,7 @@ const target = defineGenerator({
 const dot = defineGenerator({
     name: 'test-dot',
     description: 'test',
+    category: 'surface',
     schema: z.strictObject({ size: size().default([1, 1]) }),
     overlay: true,
     render: (_, { width, height }) => new Texture(width, height).fill(RED),
@@ -48,11 +50,49 @@ const dot = defineGenerator({
 const row = defineGenerator({
     name: 'test-row',
     description: 'test',
+    category: 'surface',
     schema: z.strictObject({ size: size().default([32, 4]) }),
     anchors: { points: 'test points' },
     render(_, { width, height }) {
         const t = new Texture(width, height).fill(BLACK);
         t.anchors = { points: Array.from({ length: 10 }, (_, i) => ({ x: i * 3, y: 0 })) };
+        return t;
+    },
+}) as unknown as TextureGenerator;
+
+const BLUE = 0x0000ffff;
+
+// a 16 x 16 block reporting the corners of its 12 x 12 middle as corner points
+const frame = defineGenerator({
+    name: 'test-frame',
+    description: 'test',
+    category: 'surface',
+    schema: z.strictObject({ size: size().default([16, 16]) }),
+    anchors: { corners: 'test corners' },
+    render(_, { width, height }) {
+        const t = new Texture(width, height).fill(BLACK);
+        t.anchors = {
+            corners: [
+                { x: 2, y: 2, corner: 'top-left' },
+                { x: 13, y: 2, corner: 'top-right' },
+                { x: 2, y: 13, corner: 'bottom-left' },
+                { x: 13, y: 13, corner: 'bottom-right' },
+            ],
+        };
+        return t;
+    },
+}) as unknown as TextureGenerator;
+
+// a 3 x 3 blue overlay, red at its top-left corner
+const mark = defineGenerator({
+    name: 'test-mark',
+    description: 'test',
+    category: 'surface',
+    schema: z.strictObject({ size: size().default([3, 3]) }),
+    overlay: true,
+    render(_, { width, height }) {
+        const t = new Texture(width, height).fill(BLUE);
+        t.setPixel(0, 0, RED);
         return t;
     },
 }) as unknown as TextureGenerator;
@@ -75,11 +115,15 @@ describe('anchored placements', () => {
         generators[target.name] = target;
         generators[dot.name] = dot;
         generators[row.name] = row;
+        generators[frame.name] = frame;
+        generators[mark.name] = mark;
     });
     afterAll(() => {
         delete generators[target.name];
         delete generators[dot.name];
         delete generators[row.name];
+        delete generators[frame.name];
+        delete generators[mark.name];
     });
 
     const render = (patches: object[]) =>
@@ -200,6 +244,54 @@ describe('anchored placements', () => {
             const kept = renderRow({ ratio: 0.4 }, 3, [cover]);
             expect(kept).toHaveLength(2);
             kept.forEach((i) => expect(i).toBeLessThan(5));
+        });
+    });
+
+    describe('mirror', () => {
+        const marks = (anchor: object) =>
+            renderTexture(
+                {
+                    size: [16, 16],
+                    patches: [
+                        { id: 'frame', patch: { template: 'test-frame' } },
+                        {
+                            patch: { template: 'test-mark' },
+                            anchor: { to: 'frame', at: 'corners', ...anchor },
+                        },
+                    ],
+                },
+                loader,
+            );
+
+        it('puts the top-left corner of each copy on its corner, the copy growing inwards', () => {
+            const t = marks({ mirror: true });
+            expect(redPixels(t)).toEqual([
+                [2, 2],
+                [13, 2],
+                [2, 13],
+                [13, 13],
+            ]);
+            // the copy on the top-right corner extends to the left and downwards
+            expect(t.getPixel(11, 4)).toBe(BLUE);
+            expect(t.getPixel(14, 3)).toBe(BLACK);
+            // the one on the bottom-right corner, to the left and upwards
+            expect(t.getPixel(11, 11)).toBe(BLUE);
+            expect(t.getPixel(13, 14)).toBe(BLACK);
+        });
+
+        it('mirrors the offset, pointing inwards', () => {
+            expect(redPixels(marks({ mirror: true, offset: [1, 1] }))).toEqual([
+                [3, 3],
+                [12, 3],
+                [3, 12],
+                [12, 12],
+            ]);
+        });
+
+        it('leaves copies unmirrored without it', () => {
+            const t = marks({});
+            expect(t.getPixel(14, 3)).toBe(BLUE);
+            expect(t.getPixel(15, 15)).toBe(BLUE);
         });
     });
 

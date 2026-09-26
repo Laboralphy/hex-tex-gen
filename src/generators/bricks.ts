@@ -29,6 +29,7 @@ export type BricksParams = z.output<typeof bricksSchema>;
 export const bricks = defineGenerator({
     name: 'bricks',
     description: 'Brick wall: equal bricks in running bond, with every ashlar parameter',
+    category: 'surface',
     schema: bricksSchema,
     anchors: WALL_ANCHORS,
     render: renderWall,

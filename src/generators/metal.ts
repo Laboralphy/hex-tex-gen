@@ -208,6 +208,7 @@ const SALT_STREAK = 6;
 export const metal = defineGenerator({
     name: 'metal',
     description: 'Metal wall of riveted plates, rusting and dented with age',
+    category: 'surface',
     schema: metalSchema,
     anchors: {
         rows: 'left edge and top of the plate faces of each row, just below the seam',

@@ -6,6 +6,8 @@ Sheet of parchment pinned on a wall, blank or aged, room for decals. This templa
 
 ![parchment](../images/parchment.png)
 
+Category: [civilized](../catalog.md#civilized).
+
 Own size: 32 × 40 pixels. Parameters marked **layout** are expressed at this size and scale with the patch; **detail** parameters are real pixels and never scale. See [Layout and detail](../concepts.md#layout-and-detail).
 
 ## Parameters

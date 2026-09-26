@@ -1,5 +1,4 @@
 import { FractalNoise } from '@laboralphy/algorithms';
-import { Rainbow } from '@laboralphy/rainbow';
 import { z } from 'zod';
 import { atAge, rangeAtAge } from '../core/age';
 import { hash, hashRange, hashSeed } from '../core/hash';
@@ -20,6 +19,7 @@ import { Texture, type AnchorPoint } from '../core/Texture';
 import { dentsGroup, drawDents, type DentsWear } from './common/dents';
 import { metalWearBase, rustGroup, tarnishParam, type MetalWearBase } from './common/metal-wear';
 import { MetalWeathering } from './common/MetalWeathering';
+import { dropShadow } from './common/drop-shadow';
 import { METAL_PALETTE } from './common/palettes';
 import { defineGenerator } from './define';
 
@@ -215,6 +215,7 @@ export const bars = defineGenerator({
     name: 'bars',
     description:
         'Vertical metal bars held by rails: prison windows and grates, rusting and breaking with age',
+    category: 'dungeon',
     schema: barsSchema,
     overlay: true,
     anchors: {
@@ -408,21 +409,7 @@ export const bars = defineGenerator({
         }
 
         // the shadow on the back, then the body over it
-        const texture = new Texture(width, height);
-        const offset = p.shadow.offset;
-        if (offset > 0) {
-            const shadowColor = Rainbow.fromRGBA({ r: 0, g: 0, b: 0, a: p.shadow.opacity });
-            for (let y = 0; y < height; ++y) {
-                for (let x = 0; x < width; ++x) {
-                    const sx = mod(x + offset, width);
-                    const sy = y + offset;
-                    if (ids[y * width + x] >= 0 && sy < height && ids[sy * width + sx] < 0) {
-                        texture.setPixel(sx, sy, shadowColor);
-                    }
-                }
-            }
-        }
-        texture.draw(body, 0, 0);
+        const texture = dropShadow(body, (i) => ids[i] >= 0, p.shadow.offset, p.shadow.opacity);
 
         texture.anchors = {
             bars: barLefts.map((x) => ({ x, y: 0 })),

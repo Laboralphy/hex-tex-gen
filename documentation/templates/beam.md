@@ -6,6 +6,8 @@ Metal support beam, horizontal or vertical: a riveted girder or strap. This temp
 
 ![beam](../images/beam.png)
 
+Category: [architecture](../catalog.md#architecture).
+
 Own size: 64 × 9 pixels. Parameters marked **layout** are expressed at this size and scale with the patch; **detail** parameters are real pixels and never scale. See [Layout and detail](../concepts.md#layout-and-detail).
 
 ## Parameters

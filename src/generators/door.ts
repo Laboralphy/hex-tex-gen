@@ -4,7 +4,7 @@ import { hash, hashSeed } from '../core/hash';
 import { createGradient, sample, shade } from '../core/palette';
 import { ageParam, color, DETAIL, palette, ratio, size } from '../core/schema';
 import { Texture, type AnchorPoint } from '../core/Texture';
-import { METAL_PALETTE, RUST_PALETTE } from './common/palettes';
+import { METAL_PALETTE, RUST_PALETTE, WOOD_PALETTE } from './common/palettes';
 import { defineGenerator } from './define';
 import { metal } from './metal';
 import { planks } from './planks';
@@ -41,7 +41,7 @@ export const doorSchema = z.strictObject({
     wood: z
         .strictObject({
             palette: palette()
-                .default(['#3a2412', '#5e3b1f', '#7d5230', '#9c6b40'])
+                .default(WOOD_PALETTE)
                 .describe('wood colors, from darkest to lightest'),
         })
         .prefault({})
@@ -327,6 +327,7 @@ function drawHandle(
 export const door = defineGenerator({
     name: 'door',
     description: 'Door: single, double or lifting; wooden or metal, with iron bands and a handle',
+    category: 'civilized',
     schema: doorSchema,
     anchors: {
         leaves: 'top-left corner of each leaf',

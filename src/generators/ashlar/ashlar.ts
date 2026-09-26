@@ -43,6 +43,7 @@ export function renderWall(p: AshlarParams, context: RenderContext): Texture {
 export const ashlar = defineGenerator({
     name: 'ashlar',
     description: 'Dressed stone wall: rows of stones of random width',
+    category: 'surface',
     schema: ashlarSchema,
     anchors: WALL_ANCHORS,
     render: renderWall,

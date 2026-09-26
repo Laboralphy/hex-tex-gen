@@ -6,6 +6,8 @@ Vertical metal bars held by rails: prison windows and grates, rusting and breaki
 
 ![bars](../images/bars.png)
 
+Category: [dungeon](../catalog.md#dungeon).
+
 Own size: 32 × 48 pixels. Parameters marked **layout** are expressed at this size and scale with the patch; **detail** parameters are real pixels and never scale. See [Layout and detail](../concepts.md#layout-and-detail).
 
 ## Parameters

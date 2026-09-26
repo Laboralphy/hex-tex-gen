@@ -17,6 +17,8 @@ import {
     size,
 } from '../core/schema';
 import { Texture } from '../core/Texture';
+import { WOOD_PALETTE } from './common/palettes';
+import { weatherWood } from './common/wood';
 import { defineGenerator } from './define';
 import type { RenderContext } from './types';
 
@@ -109,7 +111,7 @@ export const planksSchema = z.strictObject({
     wood: z
         .strictObject({
             palette: palette()
-                .default(['#3a2412', '#5e3b1f', '#7d5230', '#9c6b40'])
+                .default(WOOD_PALETTE)
                 .describe('wood colors, from darkest to lightest'),
             contrast: z
                 .number()
@@ -336,6 +338,7 @@ export function computePlanksLayout(
 export const planks = defineGenerator({
     name: 'planks',
     description: 'Wall of vertical wooden planks of variable length',
+    category: 'surface',
     schema: planksSchema,
     anchors: {
         lines: 'start of each line of plank faces: top of each column of vertical planks, left of each row of horizontal ones',
@@ -573,15 +576,7 @@ function renderVertical(p: PlanksParams, { width, height, seed }: RenderContext)
         for (let x = 0; x < width; ++x) {
             let rgba = Rainbow.convertToRGBA(texture.getPixel(x, y));
             if (weathering > 0) {
-                // silver-grey, slightly blue, a bit lighter than the wood
-                const l = 0.3 * rgba.r + 0.59 * rgba.g + 0.11 * rgba.b;
-                const grey = { r: l * 1.05, g: l * 1.08, b: l * 1.12 };
-                rgba = {
-                    r: rgba.r + (grey.r - rgba.r) * weathering,
-                    g: rgba.g + (grey.g - rgba.g) * weathering,
-                    b: rgba.b + (grey.b - rgba.b) * weathering,
-                    a: rgba.a,
-                };
+                rgba = weatherWood(rgba, weathering);
             }
             if (grime > 0) {
                 const n = grimeNoise.sample(x / width, y / height);

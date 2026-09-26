@@ -6,6 +6,8 @@ Door: single, double or lifting; wooden or metal, with iron bands and a handle.
 
 ![door](../images/door.png)
 
+Category: [civilized](../catalog.md#civilized).
+
 Own size: 64 × 128 pixels. Parameters marked **layout** are expressed at this size and scale with the patch; **detail** parameters are real pixels and never scale. See [Layout and detail](../concepts.md#layout-and-detail).
 
 ## Parameters

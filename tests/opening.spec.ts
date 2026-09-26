@@ -86,7 +86,72 @@ describe('opening', () => {
         const t = opening.generate({ seed: 1 });
         expect(t.anchors.opening).toEqual([{ x: 4, y: 4 }]);
         expect(t.anchors.openingCenter).toEqual([{ x: 16, y: 16 }]);
+        expect(t.anchors.corners).toEqual([
+            { x: 4, y: 4, corner: 'top-left' },
+            { x: 27, y: 4, corner: 'top-right' },
+            { x: 4, y: 27, corner: 'bottom-left' },
+            { x: 27, y: 27, corner: 'bottom-right' },
+        ]);
         const door = opening.generate({ seed: 1, open: ['left', 'top'] });
         expect(door.anchors.opening).toEqual([{ x: 0, y: 0 }]);
+        expect(door.anchors.corners[1]).toEqual({ x: 27, y: 0, corner: 'top-right' });
+    });
+});
+
+describe('arched opening', () => {
+    /** the cut mask of an opening 32 wide and 48 high, reveals 4 pixels deep */
+    const cutOf = (arch: object) => opening.generate({ seed: 1, size: [32, 48], arch }).cut!;
+    const isCut = (cut: Uint8Array, x: number, y: number) => cut[y * 32 + x] === 1;
+
+    it('closes its top with a round arch', () => {
+        const cut = cutOf({ shape: 'round' });
+        // springing line 16 pixels down: above it, the corners are wall, the axis open
+        expect(isCut(cut, 5, 6)).toBe(false);
+        expect(isCut(cut, 16, 6)).toBe(true);
+        expect(isCut(cut, 5, 20)).toBe(true);
+        // the crown, under the reveal of the arch
+        expect(isCut(cut, 16, 3)).toBe(false);
+        expect(isCut(cut, 16, 5)).toBe(true);
+    });
+
+    it('narrows to an apex with a pointed arch', () => {
+        const width = (cut: Uint8Array, y: number) =>
+            Array.from({ length: 32 }, (_, x) => x).filter((x) => isCut(cut, x, y)).length;
+        const round = cutOf({ shape: 'round', rise: 0.8 });
+        const pointed = cutOf({ shape: 'pointed', rise: 0.8 });
+        expect(width(pointed, 12)).toBeLessThan(width(round, 12));
+        expect(width(pointed, 30)).toBe(width(round, 30));
+    });
+
+    it('reports the springing line, and no top corners', () => {
+        const t = opening.generate({ seed: 1, size: [32, 48], arch: { shape: 'round' } });
+        expect(t.anchors.spring).toEqual([{ x: 4, y: 16 }]);
+        expect(t.anchors.corners.map(({ corner }) => corner)).toEqual([
+            'bottom-left',
+            'bottom-right',
+        ]);
+        const flat = opening.generate({ seed: 1, size: [32, 48] });
+        expect(flat.anchors.spring).toEqual([{ x: 4, y: 4 }]);
+        expect(flat.anchors.corners).toHaveLength(4);
+    });
+
+    it('shades its reveals without a seam at the springing line', () => {
+        const t = opening.generate({ seed: 1, size: [32, 48], arch: { shape: 'round' } });
+        // the left reveal just below and just above the springing line
+        const a = alpha(t, 1, 17);
+        const b = alpha(t, 1, 15);
+        expect(Math.abs(a - b)).toBeLessThan(20);
+    });
+
+    it('keeps a flat top without an arch, or with an open top', () => {
+        const flat = cutOf({});
+        expect(isCut(flat, 5, 6)).toBe(true);
+        const open = opening.generate({
+            seed: 1,
+            size: [32, 48],
+            open: ['top'],
+            arch: { shape: 'round' },
+        }).cut!;
+        expect(isCut(open, 5, 0)).toBe(true);
     });
 });

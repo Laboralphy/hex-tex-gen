@@ -169,7 +169,11 @@ export function renderTexture(
         const [dx, dy] = anchor.offset ?? [0, 0];
         // candidates: the points selected by `only`, and visible
         const candidates = points
-            .map((point, i) => ({ i, at: { x: target.x! + point.x, y: target.y! + point.y } }))
+            .map((point, i) => ({
+                i,
+                at: { x: target.x! + point.x, y: target.y! + point.y },
+                corner: point.corner,
+            }))
             .filter(({ i }) => !anchor.only || anchor.only.includes(i))
             .filter(({ at }) => !isHidden(target, at));
         // ratio: keep the candidates of lowest random rank, an exact share of them; a
@@ -179,11 +183,19 @@ export function renderTexture(
             .sort((a, b) => rank(a.i) - rank(b.i))
             .slice(0, Math.round((anchor.ratio ?? 1) * candidates.length))
             .sort((a, b) => a.i - b.i);
-        for (const { i, at } of kept) {
+        for (const { i, at, corner } of kept) {
             // each copy gets its own seed, stable whatever points are skipped
             const seed = hashSeed(p.seed, i);
             const image = renderPatch(p.patch, seed, p.width, p.height);
-            texture.draw(image, at.x + dx, at.y + dy, opacity);
+            // mirrored copies: their top-left corner on the corner point, growing inwards
+            const flipX = anchor.mirror === true && corner?.endsWith('right') === true;
+            const flipY = anchor.mirror === true && corner?.startsWith('bottom') === true;
+            texture.draw(
+                flipX || flipY ? image.mirrored(flipX, flipY) : image,
+                flipX ? at.x - p.width + 1 - dx : at.x + dx,
+                flipY ? at.y - p.height + 1 - dy : at.y + dy,
+                opacity,
+            );
         }
     }
     return texture;

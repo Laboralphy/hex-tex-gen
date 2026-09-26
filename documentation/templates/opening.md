@@ -6,6 +6,8 @@ Rectangular opening dug into the wall below, for windows, bars or arches. This t
 
 ![opening](../images/opening.png)
 
+Category: [architecture](../catalog.md#architecture).
+
 Own size: 32 × 32 pixels. Parameters marked **layout** are expressed at this size and scale with the patch; **detail** parameters are real pixels and never scale. See [Layout and detail](../concepts.md#layout-and-detail).
 
 ## Parameters
@@ -30,6 +32,15 @@ Inner faces of the cut: the wall below, shaded; from -1 (black) to 1 (white), th
 | `reveals.bottom`  | number in [-1, 1] | `0.3`   | —     | shading of the bottom reveal (the sill), lit              |
 | `reveals.falloff` | number in [0, 1]  | `0.2`   | —     | extra darkness of the reveals towards the back, in [0, 1] |
 
+### `arch`
+
+Arch closing the top of the opening; ignored when the top is open.
+
+| Parameter    | Type             | Default  | Scale | Description                                                                                                                                |
+| ------------ | ---------------- | -------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `arch.shape` | string           | `"flat"` | —     | top of the opening: flat, a rectangle; round, a semicircular or elliptical arch; pointed, a gothic arch of two arcs meeting at its apex    |
+| `arch.rise`  | number in (0, 2] | —        | —     | height of the arch above its springing line, as a share of the width of the opening; 0.5 for round arches, 0.8 for pointed ones by default |
+
 ### `back`
 
 Back of the opening.
@@ -50,10 +61,12 @@ Irregularity of the outline.
 
 ## Anchors
 
-| Anchor          | Points                                                         |
-| --------------- | -------------------------------------------------------------- |
-| `opening`       | top-left corner of the back of the opening, inside the reveals |
-| `openingCenter` | center of the opening                                          |
+| Anchor          | Points                                                                                                                                                         |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `opening`       | top-left corner of the back of the opening, inside the reveals                                                                                                 |
+| `openingCenter` | center of the opening                                                                                                                                          |
+| `corners`       | corners of the back of the opening, inside the reveals: top-left, top-right, bottom-left, bottom-right; only the bottom ones under an arch                     |
+| `spring`        | left end of the springing line, where the arch starts, inside the reveals: the top-left of the rectangle below the arch; the top-left of the back without arch |
 
 ## Usage
 
@@ -71,8 +84,18 @@ sized like any patch, or anchored, on a `panel` slab for instance. It draws:
 `open` lists the sides without a reveal, where the opening runs to the edge of the patch:
 `["bottom"]` for a doorway or an arch reaching the floor.
 
+`arch.shape` closes the top with an arch: `round`, a semicircle, or an ellipse when
+`arch.rise` is not 0.5; `pointed`, a gothic arch of two arcs meeting at an apex. The
+reveals follow the curve, their shading turning from the top reveal to the side ones.
+Under an arch, `corners` holds the bottom corners only, and `spring` marks the left end
+of the springing line, where the arch starts: anchor rectangular overlays, such as
+[`bars`](bars.md) or a [`window`](window.md), on it to fill the opening below the
+arch.
+
 Patches drawn afterwards fill the hole: windows, bars, fences... Anchor them to
-`opening` (top-left of the back) or `openingCenter`:
+`opening` (top-left of the back) or `openingCenter`. The `corners` of the back are
+corner points: with `"mirror": true`, a [`cobweb`](cobweb.md) anchored on them grows
+into each corner, see [Anchors](../texture-files.md#anchors):
 
 ```json
 {

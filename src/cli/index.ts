@@ -95,7 +95,7 @@ function printProperties(properties: Record<string, JsonProperty>, prefix: strin
 
 function listGenerators(): void {
     for (const g of Object.values(generators)) {
-        console.log(`${g.name} - ${g.description}${g.overlay ? ' (overlay)' : ''}`);
+        console.log(`${g.name} - ${g.description} [${g.category}${g.overlay ? ', overlay' : ''}]`);
         const json = z.toJSONSchema(g.schema, { io: 'input' }) as JsonProperty;
         printProperties(json.properties ?? {}, '');
         for (const [name, description] of Object.entries(g.anchors ?? {})) {

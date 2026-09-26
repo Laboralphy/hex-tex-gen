@@ -6,6 +6,8 @@ Transparent overlay of greenish vines hanging from the top edge. This template i
 
 ![moss](../images/moss.png)
 
+Category: [natural](../catalog.md#natural).
+
 Own size: 64 × 16 pixels. Parameters marked **layout** are expressed at this size and scale with the patch; **detail** parameters are real pixels and never scale. See [Layout and detail](../concepts.md#layout-and-detail).
 
 ## Parameters

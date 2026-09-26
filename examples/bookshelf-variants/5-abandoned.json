@@ -1,0 +1,40 @@
+{
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "ashlar"
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "shelf",
+      "patch": {
+        "template": "bookshelf",
+        "age": 1,
+        "books": {
+          "fill": 0.5
+        }
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "cobweb",
+        "size": [10, 10],
+        "age": 1
+      },
+      "anchor": {
+        "to": "shelf",
+        "at": "corners",
+        "ratio": 0.3,
+        "mirror": true
+      },
+      "width": 15.6,
+      "height": 15.6
+    }
+  ]
+}

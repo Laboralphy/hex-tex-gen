@@ -199,6 +199,7 @@ function renderBody(p: BeamParams, length: number, thickness: number, seed: numb
 export const beam = defineGenerator({
     name: 'beam',
     description: 'Metal support beam, horizontal or vertical: a riveted girder or strap',
+    category: 'architecture',
     schema: beamSchema,
     overlay: true,
     anchors: {

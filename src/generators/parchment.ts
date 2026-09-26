@@ -158,6 +158,7 @@ const YELLOWED = Rainbow.convertToRGBA(Rainbow.parse('#9a7440'));
 export const parchment = defineGenerator({
     name: 'parchment',
     description: 'Sheet of parchment pinned on a wall, blank or aged, room for decals',
+    category: 'civilized',
     schema: parchmentSchema,
     overlay: true,
     anchors: {

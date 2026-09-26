@@ -1,0 +1,36 @@
+{
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "ashlar"
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "hole",
+      "patch": {
+        "template": "opening",
+        "depth": 3
+      },
+      "x": 25,
+      "y": 18.75,
+      "width": 50,
+      "height": 56.25
+    },
+    {
+      "patch": {
+        "template": "window",
+        "size": [26, 30]
+      },
+      "anchor": {
+        "to": "hole",
+        "at": "opening"
+      },
+      "width": 40.6,
+      "height": 46.9
+    }
+  ]
+}

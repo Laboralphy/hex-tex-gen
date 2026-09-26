@@ -35,6 +35,7 @@ match the code.
 
 | Page                                          | What it covers                                           |
 | --------------------------------------------- | -------------------------------------------------------- |
+| [Catalog](catalog.md)                         | every template by category, its examples, ideas to make  |
 | [Templates](templates/README.md)              | every template and every parameter: type, default, range |
 | [File reference](reference/file-reference.md) | every key of texture files, placements, anchors, patches |
 

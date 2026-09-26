@@ -1,0 +1,50 @@
+{
+  "size": [64, 128],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "fieldstone",
+        "size": [64, 128]
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "hole",
+      "patch": {
+        "template": "opening",
+        "size": [32, 80],
+        "depth": 4,
+        "arch": {
+          "shape": "pointed",
+          "rise": 1
+        },
+        "back": {
+          "mode": "color",
+          "color": "#151a20"
+        }
+      },
+      "x": 25,
+      "y": 12.5,
+      "width": 50,
+      "height": 62.5
+    },
+    {
+      "patch": {
+        "template": "window",
+        "size": [24, 45],
+        "panes": {
+          "columns": 2,
+          "rows": 3
+        }
+      },
+      "anchor": {
+        "to": "hole",
+        "at": "spring"
+      },
+      "width": 37.5,
+      "height": 35.2
+    }
+  ]
+}

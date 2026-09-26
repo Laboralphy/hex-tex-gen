@@ -267,6 +267,7 @@ export function voronoiMasonry(
 export const fieldstone = defineGenerator({
     name: 'fieldstone',
     description: 'Natural stone wall: irregular stones laid as the cells of a Voronoi diagram',
+    category: 'surface',
     schema: fieldstoneSchema,
     anchors: {
         stones: 'top-left corner of the face of each stone, its bounding box',
