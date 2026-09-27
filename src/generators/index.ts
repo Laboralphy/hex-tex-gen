@@ -8,15 +8,19 @@ import { cavewall } from './cavewall';
 import { chain } from './chain';
 import { cobweb } from './cobweb';
 import { column } from './column';
+import { dirt } from './dirt';
 import { door } from './door';
 import { entablature } from './entablature';
 import { fieldstone } from './fieldstone';
+import { grass } from './grass';
+import { gravel } from './gravel';
 import { metal } from './metal';
 import { moss } from './moss';
 import { opening } from './opening';
 import { panel } from './panel';
 import { parchment } from './parchment';
 import { planks } from './planks';
+import { sand } from './sand';
 import { shield } from './shield';
 import { slot } from './slot';
 import { tapestry } from './tapestry';
@@ -34,15 +38,19 @@ export {
     chain,
     cobweb,
     column,
+    dirt,
     door,
     entablature,
     fieldstone,
+    grass,
+    gravel,
     metal,
     moss,
     opening,
     panel,
     parchment,
     planks,
+    sand,
     shield,
     slot,
     tapestry,
@@ -71,6 +79,7 @@ export { cavewallSchema } from './cavewall';
 export { chainSchema, chainWear } from './chain';
 export { cobwebSchema, cobwebWear } from './cobweb';
 export { columnSchema, columnWear } from './column';
+export { dirtSchema } from './dirt';
 export { doorSchema } from './door';
 export { entablatureSchema, entablatureWear } from './entablature';
 export {
@@ -80,12 +89,15 @@ export {
     stoneFieldSchema,
     voronoiMasonry,
 } from './fieldstone';
+export { grassSchema, grassWear } from './grass';
+export { gravelSchema } from './gravel';
 export { metalSchema, metalWear } from './metal';
 export { mossSchema } from './moss';
 export { openingSchema } from './opening';
 export { panelSchema } from './panel';
 export { parchmentSchema, parchmentWear } from './parchment';
 export { computePlanksLayout, planksSchema, planksWear } from './planks';
+export { sandSchema } from './sand';
 export { shieldSchema, shieldWear } from './shield';
 export { slotSchema, slotWear } from './slot';
 export { tapestrySchema } from './tapestry';
@@ -111,15 +123,19 @@ export type { CavewallParams } from './cavewall';
 export type { ChainParams, ChainWear } from './chain';
 export type { CobwebParams, CobwebWear } from './cobweb';
 export type { ColumnParams, ColumnWear } from './column';
+export type { DirtTemplateParams } from './dirt';
 export type { DoorParams } from './door';
 export type { EntablatureParams, EntablatureWear } from './entablature';
 export type { FieldstoneParams } from './fieldstone';
+export type { GrassParams, GrassWear } from './grass';
+export type { GravelParams } from './gravel';
 export type { MetalParams, MetalWear } from './metal';
 export type { MossParams } from './moss';
 export type { OpeningParams } from './opening';
 export type { PanelParams } from './panel';
 export type { ParchmentParams, ParchmentWear } from './parchment';
 export type { Plank, PlankColumn, PlanksParams, PlanksWear } from './planks';
+export type { SandParams } from './sand';
 export type { ShieldParams, ShieldWear } from './shield';
 export type { SlotParams, SlotWear } from './slot';
 export type { TapestryParams } from './tapestry';
@@ -146,6 +162,10 @@ export const generators: Record<string, TextureGenerator> = Object.fromEntries(
         panel,
         fieldstone,
         cavewall,
+        dirt,
+        grass,
+        sand,
+        gravel,
         metal,
         planks,
         door,

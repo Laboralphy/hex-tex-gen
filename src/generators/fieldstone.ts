@@ -1,6 +1,6 @@
 import { Voronoi } from '@laboralphy/algorithms';
 import { z } from 'zod';
-import { clamp, firstPixel, mod, wrapOffset } from '../core/math';
+import { firstPixel, mod, wrapOffset } from '../core/math';
 import { DETAIL, LAYOUT, ratio } from '../core/schema';
 import { Texture } from '../core/Texture';
 import {
@@ -17,6 +17,7 @@ import {
     type WallDefaults,
 } from './ashlar';
 import { PowerDiagram, type PowerSample } from './common/PowerDiagram';
+import { domeLight, roundCorner } from './common/relief';
 import { defineGenerator } from './define';
 import type { RenderContext } from './types';
 
@@ -198,19 +199,14 @@ export function voronoiMasonry(
         d: number,
         stone: StoneBox,
         amount: number,
-    ) => {
-        const ox = wrapOffset(wx, cx, width);
-        const oy = wrapOffset(wy, cy, height);
-        const r = Math.hypot(ox, oy) || 1;
-        const radius = Math.max(1, Math.min(stone.w, stone.h) / 2);
-        const edge = clamp(1 - d / radius);
-        const slope = Math.min(0.95, edge ** 1.5);
-        const [nx, ny, nz] = [(ox / r) * slope, (oy / r) * slope, Math.sqrt(1 - slope * slope)];
-        const lambert = Math.max(0, -0.55 * nx - 0.55 * ny + 0.63 * nz);
-        const shaded = (0.3 + lambert) / 0.93;
-        const occlusion = 1 - 0.4 * edge ** 3;
-        return 1 + (shaded * occlusion - 1) * amount;
-    };
+    ) =>
+        domeLight(
+            wrapOffset(wx, cx, width),
+            wrapOffset(wy, cy, height),
+            d,
+            Math.max(1, Math.min(stone.w, stone.h) / 2),
+            amount,
+        );
     const mortarAfter = Math.ceil(half);
     const mortarBefore = Math.floor(half);
 
@@ -329,10 +325,7 @@ export function voronoiMasonry(
             let d = s.border - half;
             if (relief > 0 && s.border2 !== undefined) {
                 const radius = relief * 0.35 * Math.max(1, Math.min(stone.w, stone.h) / 2);
-                const d2 = s.border2 - half;
-                if (d < radius && d2 < radius) {
-                    d = radius - Math.hypot(radius - d, radius - d2);
-                }
+                d = roundCorner(d, s.border2 - half, radius);
             }
             return {
                 id: s.cell,

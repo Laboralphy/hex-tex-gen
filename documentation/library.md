@@ -126,9 +126,9 @@ export const pillar = defineGenerator({
 
 Rules:
 
-- `category` files the template in the [catalog](catalog.md): `surface` for base
-  textures suiting any ambiance, or the ambiance of a decoration: `natural`, `civilized`,
-  `dungeon` or `architecture`;
+- `category` files the template in the [catalog](catalog.md): `surface` for wall
+  textures suiting any ambiance, `ground` for floor and ceiling materials, or the ambiance
+  of a decoration: `natural`, `civilized`, `dungeon` or `architecture`;
 - the schema is a `z.strictObject`, so that unknown keys are reported;
 - every parameter has a `.default()` and a `.describe()`, and `size` is required: the
   descriptions feed `--list`, the JSON Schemas and the documentation;

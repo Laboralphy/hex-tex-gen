@@ -16,10 +16,17 @@ export type BaseParams = {
 };
 
 /**
- * Categories of templates: base surfaces, which suit any ambiance, and decorative patches
- * grouped by the ambiance they belong to.
+ * Categories of templates: base surfaces for walls, which suit any ambiance, grounds for
+ * floors and ceilings, and decorative patches grouped by the ambiance they belong to.
  */
-export const CATEGORIES = ['surface', 'natural', 'civilized', 'dungeon', 'architecture'] as const;
+export const CATEGORIES = [
+    'surface',
+    'ground',
+    'natural',
+    'civilized',
+    'dungeon',
+    'architecture',
+] as const;
 
 /** the category of a template, see {@link CATEGORIES} */
 export type Category = (typeof CATEGORIES)[number];

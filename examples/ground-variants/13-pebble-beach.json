@@ -1,0 +1,23 @@
+{
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "gravel",
+        "stones": {
+          "count": 60,
+          "palette": ["#5a5248", "#7e7568", "#a39987", "#c8bda9"],
+          "gap": 1.5
+        },
+        "dirt": {
+          "palette": ["#8a744e", "#ab9266", "#c7ae80", "#ddc79a"],
+          "pebbles": 0,
+          "clods": 0
+        }
+      },
+      "width": 100,
+      "height": 100
+    }
+  ]
+}

@@ -186,6 +186,32 @@ exports[`golden examples > fieldstone-variants/13-mossy-cobbles.json 1`] = `"64x
 
 exports[`golden examples > fieldstone-variants/14-lichen.json 1`] = `"64x64 4bcc6754cb1d161c2cceda43b63c5bb79de350da0828e16de3c607477bb489a5"`;
 
+exports[`golden examples > ground-variants/01-dirt.json 1`] = `"64x64 a9cb2a2d851e89d738c4a98f8450fb3a794d416f6920f7ff3e98c4ee926c69d5"`;
+
+exports[`golden examples > ground-variants/02-mud.json 1`] = `"64x64 e5a8c433fe383506b0d03af64e4b70822154e8d5e09f095d43e44e9d742fbff0"`;
+
+exports[`golden examples > ground-variants/03-cave-floor.json 1`] = `"64x64 b1e88663a219c45576a88711751c6b8bf1ae302796e01eec1938201d9fa3d0bf"`;
+
+exports[`golden examples > ground-variants/04-lush-grass.json 1`] = `"64x64 4ac5ad3d5d528fdfb9a8c1d1aa5697913df16d8c7a2a3eaa312389b345f2fea8"`;
+
+exports[`golden examples > ground-variants/05-grass-and-dirt.json 1`] = `"64x64 6bb37fe3373b4173027287ae9eb218b411642dbe1cc879d321cae388e636ae48"`;
+
+exports[`golden examples > ground-variants/06-trampled.json 1`] = `"64x64 7c8dbafdade239accbdd9350859bcc6c05f915516ba3e85ca8503bf59ed98ae2"`;
+
+exports[`golden examples > ground-variants/07-meadow.json 1`] = `"64x64 29355297de2ce24b8657e1eecc9fcd227acff48ed04e3f5d7784971358d50c39"`;
+
+exports[`golden examples > ground-variants/08-dry-steppe.json 1`] = `"64x64 0d86a1109789484b62b255f2c5f2fa89f4d05b5e029c8d6f9cfccc221ed4a121"`;
+
+exports[`golden examples > ground-variants/09-dunes.json 1`] = `"64x64 df7664f444c3c6ad73c0e7696763ab2ea794b453fd92a8bc5c9b97c204a4e127"`;
+
+exports[`golden examples > ground-variants/10-wet-beach.json 1`] = `"64x64 b632a933d6df9110195979585cdbb7857c12fff82b417f4b4c27dad3cb7a1cb4"`;
+
+exports[`golden examples > ground-variants/11-gravel.json 1`] = `"64x64 093c349645436442418ed037efb599b274878412c9a112a535e78d05f1250add"`;
+
+exports[`golden examples > ground-variants/12-coarse-gravel.json 1`] = `"64x64 19d42febb5fbb8558ef6df58460aac1fdb43716c93e456cd8bb459c6ecdf1df1"`;
+
+exports[`golden examples > ground-variants/13-pebble-beach.json 1`] = `"64x64 daa20018b47327b62cc3154b25b109f6a5b01118772c6b3b4ac00351055fab90"`;
+
 exports[`golden examples > moss-variants/1-default.json 1`] = `"64x96 0c35c4aeb95dee15a93da1e57f36dea26f230d980c28008d16db5bbf30d3f2ce"`;
 
 exports[`golden examples > moss-variants/2-sparse-wisps.json 1`] = `"64x96 3cffe830082da43b7149ff6a78ffab230ee5b85f06fcc1e0a3518c752f7a73d9"`;
@@ -304,11 +330,17 @@ exports[`golden templates > cobweb 1`] = `"16x16 f955149fe3dc5750c4850d84a556098
 
 exports[`golden templates > column 1`] = `"16x64 d924258705531c3d81dfc3b1b815bb351a2d9f279cc6620fbf33fd22ec7bd810"`;
 
+exports[`golden templates > dirt 1`] = `"64x64 34500732a9a942d19e1a9b903f2771d91465bbbf89df3805283116f553c808d8"`;
+
 exports[`golden templates > door 1`] = `"64x128 1a8bbc845d660a3d6c7ee7add8a430cf4098e3b19644232f9dddc2e393af7237"`;
 
 exports[`golden templates > entablature 1`] = `"64x16 8e8ae74937807cac7d05017d261cebab2855dba5d5d7e638a68937cce35b0489"`;
 
 exports[`golden templates > fieldstone 1`] = `"64x64 266a1cc49c5d62a4328fd351165844d9d3c5acd16062d65a0c08ccc42a5daeab"`;
+
+exports[`golden templates > grass 1`] = `"64x64 b2fe50e3f931e8f897c9039528df4fe60009d8bd7c74468426835174f13c30e9"`;
+
+exports[`golden templates > gravel 1`] = `"64x64 9d51fcd4f14a1a084a2f4186126bd9bc094df04e53841622f156a9a5cb662f46"`;
 
 exports[`golden templates > metal 1`] = `"64x64 fb72d16d6ad2cf607d4180ec3d3aef5da1d31b515fb8c2ac3c01bc6bafe555bf"`;
 
@@ -321,6 +353,8 @@ exports[`golden templates > panel 1`] = `"64x64 8a8d0a7ebc0c498f7c6c9a48d0724879
 exports[`golden templates > parchment 1`] = `"32x40 6d12559cad41ae7e8a008b20e14c3253528eee7f28fd46ecab328c7f8c4a140b"`;
 
 exports[`golden templates > planks 1`] = `"64x64 d890a3523bda7ef2826e787c5867173202ff92fc7f2a06b17c3090bed7dd35c5"`;
+
+exports[`golden templates > sand 1`] = `"64x64 803105e6fc005eb8a565c7d83098ac8a1d47153300b636c37ba260b72379461f"`;
 
 exports[`golden templates > shield 1`] = `"24x32 79ad3a6690dd294b36cd32f065434e8a6b94fc0d9d9aba7d7db8a8cb93117e07"`;
 

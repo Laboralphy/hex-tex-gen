@@ -1,0 +1,18 @@
+{
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "sand",
+        "ripples": {
+          "count": 3,
+          "slant": 1,
+          "depth": 0.5
+        }
+      },
+      "width": 100,
+      "height": 100
+    }
+  ]
+}

@@ -2,13 +2,14 @@
 
 # Catalog
 
-Every template, by category, with the example textures using it, and ideas of patches still to make. Decorations come first, grouped by the ambiance they belong to; the surfaces they are laid over come last, as they suit any ambiance.
+Every template, by category, with the example textures using it, and ideas of patches still to make. Decorations come first, grouped by the ambiance they belong to; then the wall surfaces they are laid over, which suit any ambiance; then the grounds, for floors and ceilings.
 
 - [Natural](#natural)
 - [Civilized](#civilized)
 - [Dungeon](#dungeon)
 - [Architecture](#architecture)
 - [Surfaces](#surfaces)
+- [Grounds](#grounds)
 
 ## Natural
 
@@ -76,4 +77,17 @@ Base textures, the walls every decoration above is laid over. They suit any ambi
 | [`metal`](templates/metal.md)           | <img src="images/metal.png" width="96" alt="metal">           | Metal wall of riveted plates, rusting and dented with age                   | [chain-variants/7-heavy-on-metal](../examples/chain-variants/7-heavy-on-metal.json), [slot-variants/1-metal-wall](../examples/slot-variants/1-metal-wall.json), [slot-variants/2-beside-sliding-door](../examples/slot-variants/2-beside-sliding-door.json), [slot-variants/3-double-sliding-door](../examples/slot-variants/3-double-sliding-door.json), [slot-variants/4-lift-door](../examples/slot-variants/4-lift-door.json), [slot-variants/6-rusted](../examples/slot-variants/6-rusted.json)                                  |
 | [`planks`](templates/planks.md)         | <img src="images/planks.png" width="96" alt="planks">         | Wall of vertical wooden planks of variable length                           | [banners/8-planks](../examples/banners/8-planks.json), [plank-variants/01-default](../examples/plank-variants/01-default.json), [plank-variants/02-full-height](../examples/plank-variants/02-full-height.json), [plank-variants/03-short-planks](../examples/plank-variants/03-short-planks.json), [plank-variants/04-wide-planks](../examples/plank-variants/04-wide-planks.json), [plank-variants/05-new](../examples/plank-variants/05-new.json), and 9 more                                                                      |
 
-**Ideas, not made yet:** cobblestone floors, plaster over stone, wattle and daub, marble slabs, mosaics.
+**Ideas, not made yet:** plaster over stone, wattle and daub, marble slabs, mosaics.
+
+## Grounds
+
+Floor and ceiling materials, seen from above: no bevel, no mortar, no light direction but for small stones. They tile in both directions.
+
+| Template                        | Preview                                               | Description                                                              | Example textures                                                                                                                                                                                                                                                                                                                                                                                                |
+| ------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`dirt`](templates/dirt.md)     | <img src="images/dirt.png" width="96" alt="dirt">     | Bare earth for floors and ceilings: blotches of soil, clods and pebbles  | [ground-variants/01-dirt](../examples/ground-variants/01-dirt.json), [ground-variants/02-mud](../examples/ground-variants/02-mud.json), [ground-variants/03-cave-floor](../examples/ground-variants/03-cave-floor.json)                                                                                                                                                                                         |
+| [`grass`](templates/grass.md)   | <img src="images/grass.png" width="96" alt="grass">   | Grass for floors: blades over a dark ground, worn to bare earth with age | [ground-variants/04-lush-grass](../examples/ground-variants/04-lush-grass.json), [ground-variants/05-grass-and-dirt](../examples/ground-variants/05-grass-and-dirt.json), [ground-variants/06-trampled](../examples/ground-variants/06-trampled.json), [ground-variants/07-meadow](../examples/ground-variants/07-meadow.json), [ground-variants/08-dry-steppe](../examples/ground-variants/08-dry-steppe.json) |
+| [`sand`](templates/sand.md)     | <img src="images/sand.png" width="96" alt="sand">     | Sand for floors: fine grains rippled by the wind                         | [ground-variants/09-dunes](../examples/ground-variants/09-dunes.json), [ground-variants/10-wet-beach](../examples/ground-variants/10-wet-beach.json)                                                                                                                                                                                                                                                            |
+| [`gravel`](templates/gravel.md) | <img src="images/gravel.png" width="96" alt="gravel"> | Gravel for floors: small rounded stones packed on earth                  | [ground-variants/11-gravel](../examples/ground-variants/11-gravel.json), [ground-variants/12-coarse-gravel](../examples/ground-variants/12-coarse-gravel.json), [ground-variants/13-pebble-beach](../examples/ground-variants/13-pebble-beach.json)                                                                                                                                                             |
+
+**Ideas, not made yet:** mud and puddles, snow, straw, wooden floorboards, flagstone floors, ice, lava, water.
