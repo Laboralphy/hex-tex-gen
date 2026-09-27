@@ -4,6 +4,7 @@ import { bars } from './bars';
 import { beam } from './beam';
 import { bookshelf } from './bookshelf';
 import { bricks } from './bricks';
+import { cavewall } from './cavewall';
 import { chain } from './chain';
 import { cobweb } from './cobweb';
 import { column } from './column';
@@ -29,6 +30,7 @@ export {
     beam,
     bookshelf,
     bricks,
+    cavewall,
     chain,
     cobweb,
     column,
@@ -65,12 +67,19 @@ export { barsSchema, barsWear } from './bars';
 export { beamSchema, beamWear } from './beam';
 export { bookshelfSchema, bookshelfWear } from './bookshelf';
 export { bricksSchema } from './bricks';
+export { cavewallSchema } from './cavewall';
 export { chainSchema, chainWear } from './chain';
 export { cobwebSchema, cobwebWear } from './cobweb';
 export { columnSchema, columnWear } from './column';
 export { doorSchema } from './door';
 export { entablatureSchema, entablatureWear } from './entablature';
-export { fieldstoneSchema, fieldstoneWear, voronoiMasonry } from './fieldstone';
+export {
+    fieldstoneSchema,
+    fieldstoneWear,
+    renderStoneField,
+    stoneFieldSchema,
+    voronoiMasonry,
+} from './fieldstone';
 export { metalSchema, metalWear } from './metal';
 export { mossSchema } from './moss';
 export { openingSchema } from './opening';
@@ -98,6 +107,7 @@ export type { BarsParams, BarsWear } from './bars';
 export type { BeamParams, BeamWear } from './beam';
 export type { BookshelfParams, BookshelfWear } from './bookshelf';
 export type { BricksParams } from './bricks';
+export type { CavewallParams } from './cavewall';
 export type { ChainParams, ChainWear } from './chain';
 export type { CobwebParams, CobwebWear } from './cobweb';
 export type { ColumnParams, ColumnWear } from './column';
@@ -135,6 +145,7 @@ export const generators: Record<string, TextureGenerator> = Object.fromEntries(
         bricks,
         panel,
         fieldstone,
+        cavewall,
         metal,
         planks,
         door,

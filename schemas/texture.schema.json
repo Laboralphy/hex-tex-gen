@@ -1905,7 +1905,7 @@
               "properties": {
                 "cells": {
                   "default": [4, 4],
-                  "description": "number of stones across the patch: [columns, rows] (layout: scales with the patch)",
+                  "description": "number of stones across the patch: [columns, rows]; a heap scatters columns × rows stones (layout: scales with the patch)",
                   "scale": "layout",
                   "type": "array",
                   "prefixItems": [
@@ -1924,16 +1924,36 @@
                   "minItems": 2,
                   "maxItems": 2
                 },
+                "layout": {
+                  "default": "grid",
+                  "description": "grid: one stone per cell of a jittered grid, all of a similar size; heap: stones scattered at random, of every size, like boulders in a heap",
+                  "type": "string",
+                  "enum": ["grid", "heap"]
+                },
+                "variation": {
+                  "default": 0.7,
+                  "description": "heap only: spread of the stone sizes, in [0, 1]; 0 gives stones of a similar size",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "relief": {
+                  "default": 0,
+                  "description": "roundness of the stones, in [0, 1]: 0 for flat faces, 1 for domes lit from the top-left and shadowed towards their crevices",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
                 "jitter": {
                   "default": 0.85,
-                  "description": "irregularity of the stones, in [0, 1]: 0 lays them on a regular grid, 1 gives the most irregular shapes",
+                  "description": "grid only: irregularity of the stones, in [0, 1]: 0 lays them on a regular grid, 1 gives the most irregular shapes",
                   "type": "number",
                   "minimum": 0,
                   "maximum": 1
                 },
                 "stagger": {
                   "default": 0,
-                  "description": "shift of every other row, in fraction of a stone; 0.5 with no jitter gives hexagons; needs an even number of rows",
+                  "description": "grid only: shift of every other row, in fraction of a stone; 0.5 with no jitter gives hexagons; needs an even number of rows",
                   "type": "number",
                   "minimum": 0,
                   "exclusiveMaximum": 1
@@ -2359,6 +2379,530 @@
           "additionalProperties": false,
           "title": "fieldstone",
           "description": "Natural stone wall: irregular stones laid as the cells of a Voronoi diagram",
+          "required": ["template"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "$schema": {
+              "description": "JSON Schema of this file, for editors",
+              "type": "string"
+            },
+            "extends": {
+              "description": "parent patch file, relative to this file, deep-merged under this one",
+              "type": "string"
+            },
+            "template": {
+              "const": "cavewall",
+              "description": "Cave wall: a chaotic heap of rounded boulders of every size"
+            },
+            "seed": {
+              "description": "seed of this patch, unless the placement sets one",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "size": {
+              "default": [64, 64],
+              "description": "own size of the patch in pixels; layout values are expressed at this size",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "stones": {
+              "description": "stones laid as the cells of a tileable Voronoi diagram",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "cells": {
+                  "default": [4, 4],
+                  "description": "number of stones across the patch: [columns, rows]; a heap scatters columns × rows stones (layout: scales with the patch)",
+                  "scale": "layout",
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "layout": {
+                  "default": "heap",
+                  "description": "grid: one stone per cell of a jittered grid, all of a similar size; heap: stones scattered at random, of every size, like boulders in a heap",
+                  "type": "string",
+                  "enum": ["grid", "heap"]
+                },
+                "variation": {
+                  "default": 0.7,
+                  "description": "heap only: spread of the stone sizes, in [0, 1]; 0 gives stones of a similar size",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "relief": {
+                  "default": 0.9,
+                  "description": "roundness of the stones, in [0, 1]: 0 for flat faces, 1 for domes lit from the top-left and shadowed towards their crevices",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "jitter": {
+                  "default": 1,
+                  "description": "grid only: irregularity of the stones, in [0, 1]: 0 lays them on a regular grid, 1 gives the most irregular shapes",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "stagger": {
+                  "default": 0,
+                  "description": "grid only: shift of every other row, in fraction of a stone; 0.5 with no jitter gives hexagons; needs an even number of rows",
+                  "type": "number",
+                  "minimum": 0,
+                  "exclusiveMaximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "panel": {
+              "description": "a large stone slab: room for an inscription or a switch",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "default": false,
+                  "description": "adds a large stone slab to the wall, surrounded by mortar",
+                  "type": "boolean"
+                },
+                "width": {
+                  "default": 32,
+                  "description": "slab width, mortar included (layout: scales with the patch)",
+                  "scale": "layout",
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "height": {
+                  "default": 24,
+                  "description": "slab height, mortar included (layout: scales with the patch)",
+                  "scale": "layout",
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "x": {
+                  "description": "left edge of the slab; defaults to centered (layout: scales with the patch)",
+                  "scale": "layout",
+                  "type": "number",
+                  "minimum": 0
+                },
+                "y": {
+                  "description": "top edge of the slab; defaults to centered (layout: scales with the patch)",
+                  "scale": "layout",
+                  "type": "number",
+                  "minimum": 0
+                },
+                "snap": {
+                  "default": true,
+                  "description": "aligns the top and bottom of the slab on the nearest row joints, so that no row is cut into a thin strip",
+                  "type": "boolean"
+                },
+                "bevel": {
+                  "default": 2,
+                  "description": "bevel width of the slab, in pixels (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "shade": {
+                  "default": 1,
+                  "description": "brightness factor of the slab",
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": false
+            },
+            "mortar": {
+              "description": "joints between stones",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "size": {
+                  "default": 2,
+                  "description": "joint thickness, in pixels (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "color": {
+                  "default": "#15120f",
+                  "description": "mortar color",
+                  "type": "string",
+                  "kind": "color"
+                },
+                "noise": {
+                  "description": "brightness variation of the mortar, in [0, 1]; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "erosion": {
+                  "description": "hollowed joints: darker, pitted mortar shadowed by the stones, in [0, 1]; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "bevel": {
+              "description": "stone edges lit from the top-left",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "size": {
+                  "default": 0,
+                  "description": "bevel width, in pixels (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "light": {
+                  "default": 1.2,
+                  "description": "brightness factor of the top and left edges",
+                  "type": "number",
+                  "minimum": 0
+                },
+                "dark": {
+                  "default": 0.7,
+                  "description": "brightness factor of the bottom and right edges",
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": false
+            },
+            "edges": {
+              "description": "irregularity of stone outlines",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "roughness": {
+                  "description": "maximum displacement of the stone outlines, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": false
+            },
+            "cracks": {
+              "description": "cracks running across stones",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "ratio": {
+                  "description": "ratio of cracked stones, in [0, 1]; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "length": {
+                  "description": "[min, max] crack length, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              },
+              "additionalProperties": false
+            },
+            "erosion": {
+              "description": "stones worn down by time: uneven edges",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "edges": {
+                  "description": "maximum depth worn into the stone edges, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": false
+            },
+            "stains": {
+              "description": "dirt: streaks of rainwater and soot, grime",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "ratio": {
+                  "description": "chance of a streak running down from the top of each stone; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "length": {
+                  "description": "[min, max] streak length; when unset, derived from age (layout: scales with the patch)",
+                  "scale": "layout",
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "width": {
+                  "description": "streak width, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "number",
+                  "minimum": 1
+                },
+                "darkness": {
+                  "description": "darkening at the top of a streak, in [0, 1]; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "grime": {
+                  "description": "blotchy darkening of the whole wall, in [0, 1]; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "spalling": {
+              "description": "flaked stone faces",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "ratio": {
+                  "description": "ratio of stones with a flaked, recessed patch, in [0, 1]; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "size": {
+                  "description": "[min, max] patch radius, in pixels; when unset, derived from age (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "depth": {
+                  "description": "darkening of the flaked patches, in [0, 1]; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "moss": {
+              "description": "moss growing along the top edges of the stones",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "coverage": {
+                  "default": 0,
+                  "description": "share of the stone tops covered with moss, in [0, 1]; 0 for none",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "depth": {
+                  "default": 2,
+                  "description": "thickness of the moss along the top edges, in pixels (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "number",
+                  "minimum": 0
+                },
+                "vines": {
+                  "default": 0.25,
+                  "description": "chance of a vine hanging from each column of moss, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "length": {
+                  "default": [2, 7],
+                  "description": "[min, max] length of the vines, in pixels (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "joints": {
+                  "default": 0.3,
+                  "description": "moss in the joints where the stones are mossy, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "palette": {
+                  "default": ["#17230f", "#2f441b", "#4f6d2c", "#86a24a"],
+                  "description": "moss colors, from darkest to lightest",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "kind": "color"
+                  }
+                }
+              },
+              "additionalProperties": false
+            },
+            "age": {
+              "default": 0.3,
+              "description": "overall weathering, from 0 (new) to 1 (ruined): sets every wear parameter left unset",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "stone": {
+              "description": "stone surface",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "palette": {
+                  "default": ["#2b2723", "#4f4840", "#776d60", "#9d917f"],
+                  "description": "stone colors, from darkest to lightest",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "kind": "color"
+                  }
+                },
+                "contrast": {
+                  "default": 0.8,
+                  "description": "spread of the surface noise over the palette",
+                  "type": "number",
+                  "minimum": 0
+                },
+                "shadeVariation": {
+                  "description": "random brightness variation between stones, in [0, 1]; when unset, derived from age",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "paletteShift": {
+                  "default": 0.25,
+                  "description": "random shift of each stone along the palette, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "grain": {
+                  "description": "random brightness variation between pixels, in [0, 1]; when unset, derived from age (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "noise": {
+                  "description": "surface noise",
+                  "default": {},
+                  "type": "object",
+                  "properties": {
+                    "period": {
+                      "default": 6,
+                      "description": "noise cells across the patch at the first octave (layout: scales with the patch)",
+                      "scale": "layout",
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    "octaves": {
+                      "default": 4,
+                      "description": "number of noise octaves, each one twice as fine",
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 16
+                    },
+                    "persistence": {
+                      "default": 0.6,
+                      "description": "weight ratio between an octave and the previous one",
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false,
+          "title": "cavewall",
+          "description": "Cave wall: a chaotic heap of rounded boulders of every size",
           "required": ["template"]
         },
         {

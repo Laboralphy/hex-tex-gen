@@ -355,6 +355,12 @@ const WEAR_ROWS: Record<string, WearRow[]> = {
         ),
         fieldstoneWear,
     ),
+    cavewall: rows(
+        WEAR_PARAMETERS.filter(
+            ([path]) => !path.startsWith('chips.') && path !== 'erosion.corners',
+        ),
+        fieldstoneWear,
+    ),
     beam: rows(BEAM_WEAR_PARAMETERS, beamWear),
     chain: rows(CHAIN_WEAR_PARAMETERS, chainWear),
     bookshelf: rows(BOOKSHELF_WEAR_PARAMETERS, bookshelfWear),
@@ -426,7 +432,7 @@ function isAging(generator: TextureGenerator): boolean {
 }
 
 /** templates whose derived pixel sizes follow the height of their stones */
-const STONE_WALLS = ['ashlar', 'bricks', 'panel', 'fieldstone'];
+const STONE_WALLS = ['ashlar', 'bricks', 'panel', 'fieldstone', 'cavewall'];
 
 function agingSection(generator: TextureGenerator): string {
     const name = generator.name;
@@ -717,6 +723,18 @@ A door fills its whole texture, and is always opaque.
 \`\`\`json
 { "template": "door", "kind": "double", "style": "fancy", "panels": { "rows": 4 }, "bands": { "count": 0 } }
 \`\`\``,
+    cavewall: `## Usage
+
+\`cavewall\` is a [\`fieldstone\`](fieldstone.md) wall with the defaults of a cave: a
+chaotic heap of rounded boulders of every size, with dark crevices between them. Every
+fieldstone parameter applies, its wear and its moss included.
+
+- \`stones.cells\` gives the number of boulders, \`[columns, rows]\` multiplied:
+  \`[4, 4]\` scatters 16 of them. \`stones.variation\` spreads their sizes: 1 mixes huge
+  boulders with small stones, 0 gives stones of a similar size.
+- \`stones.relief\` rounds them: each boulder is a dome lit from the top-left, darkening
+  towards its crevices, its corners carved into pockets. Lower it for flatter stones.
+- The boulders fill the patch and tile in both directions, like every wall.`,
     column: `## Usage
 
 \`column\` is an overlay: a marble column, the whole patch being the column, capital and
@@ -1049,6 +1067,15 @@ the \`Voronoi\` class of [@laboralphy/algorithms](https://www.npmjs.com/package/
 Everything else is the engine of the other walls: the stone surface, the bevel lit from
 the top-left, cracks, worn edges, spalling, stains, hollowed joints, \`age\`, and the panel.
 Chips and rounded corners, which need the corners of rectangular stones, do not apply.
+
+\`stones.layout\` lays the stones out: \`grid\`, one stone per cell of a jittered grid, all
+of a similar size; or \`heap\`, stones spread evenly at random with no grid, and sized by
+\`stones.variation\`, from similar stones (0) to boulders among pebbles (1): the cells of
+a power diagram, a Voronoi diagram whose sites claim more room the heavier they are.
+\`stones.relief\` rounds the stones, from flat faces (0) to domes (1): lit from the
+top-left, shadowed towards their crevices, and, in a heap, their corners carved into
+dark pockets. [\`cavewall\`](cavewall.md) is a fieldstone wall with a heap of rounded
+boulders by default.
 
 \`moss.coverage\` grows moss along the top edges of the stones, following their shape,
 with vines hanging down their faces: see [Moss on stone walls](../concepts.md#moss-on-stone-walls).

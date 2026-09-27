@@ -14,6 +14,14 @@ export function clamp(value: number, min = 0, max = 1): number {
 }
 
 /**
+ * The signed shortest offset from `b` to `a` on a circle of the given length: in
+ * [-length / 2, length / 2), so that positions wrapping around a tile stay close.
+ */
+export function wrapOffset(a: number, b: number, length: number): number {
+    return mod(a - b + length / 2, length) - length / 2;
+}
+
+/**
  * Distance between two positions on a circle of the given circumference.
  */
 export function circularDistance(a: number, b: number, circumference: number): number {

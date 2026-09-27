@@ -90,6 +90,22 @@ exports[`golden examples > brick-variants/12-mossy-sparse.json 1`] = `"64x64 6d0
 
 exports[`golden examples > castle-wall.json 1`] = `"128x128 437e2280d1682c99fce2110e119eb2445c82fbbe0e24dc9955501ea1c3316cb2"`;
 
+exports[`golden examples > cavewall-variants/1-default.json 1`] = `"64x64 67ee1b598f2472be9d7e25448880e303ac9300facc932869be411f138d178013"`;
+
+exports[`golden examples > cavewall-variants/2-large-boulders.json 1`] = `"64x64 ced24b0f7c42b09a036238b40ad7419ad38e96708143e750a0aea1546b3b882e"`;
+
+exports[`golden examples > cavewall-variants/3-pebbles.json 1`] = `"64x64 61811e58024e88ecc4522089bc867a01c00cb878660881fed4323cc04ea194c5"`;
+
+exports[`golden examples > cavewall-variants/4-mossy-cave.json 1`] = `"64x64 573359e72b1eddde32400f5cad5e49317fd63da08cb5a52da65cef18580f90e1"`;
+
+exports[`golden examples > cavewall-variants/5-wet-dark.json 1`] = `"64x64 daac51ff5bb9b22ffc9eb40bd5cfdfe361c82747301ccc974c588917d2b5734a"`;
+
+exports[`golden examples > cavewall-variants/6-ruined.json 1`] = `"64x64 ec081d546c346c6c19081eab4fed8a38cbadeb6201532fc1446123b561698736"`;
+
+exports[`golden examples > cavewall-variants/7-cave-passage.json 1`] = `"64x128 34cede1ce5cf445433f8400a0e2c9607c9673b43a2f6215ee9281f8537a5f021"`;
+
+exports[`golden examples > cavewall-variants/8-rounded-fieldstone.json 1`] = `"64x64 9f1c0c7a946a18f9521fffb00479842b863be26ed42f6ad57b056a8651f65b22"`;
+
 exports[`golden examples > chain-variants/1-single.json 1`] = `"64x64 9217311d4eff8d6194c8210b2328ece8d51068f1ec9b7479e22d743f9019e696"`;
 
 exports[`golden examples > chain-variants/2-row-of-chains.json 1`] = `"64x64 56454b3d99cee57c570b722a7a9a4a71388ae844a54eacde76426574603c6260"`;
@@ -279,6 +295,8 @@ exports[`golden templates > beam 1`] = `"64x9 2c7421ec2505ad5659cf9d50a3213da66f
 exports[`golden templates > bookshelf 1`] = `"64x64 8a977660c78afed3d1ce22c88d3dc430bf3c049955c9b560e1b187860f2e31f0"`;
 
 exports[`golden templates > bricks 1`] = `"64x64 9cfeb86f23c82c0359744b56af2fb4a5661ec6652df2a89e60dcdfd18f2ce3d4"`;
+
+exports[`golden templates > cavewall 1`] = `"64x64 653c2319dbaae8a3d0f59f7636c578be3a65d1eb18897645bc1f6aaa5fcacef2"`;
 
 exports[`golden templates > chain 1`] = `"12x48 b0d6eeb00acbbed9f51f7da38967483a6d8abd91b1aa690bb98ee868b1a76329"`;
 

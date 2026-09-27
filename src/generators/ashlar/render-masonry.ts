@@ -180,7 +180,7 @@ export function renderMasonry(
                     }
                 }
             }
-            texture.setPixel(x, y, shade(color, brightness));
+            texture.setPixel(x, y, shade(color, brightness * (hit.relief ?? 1)));
         }
     }
 

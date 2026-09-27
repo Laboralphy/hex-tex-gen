@@ -1,0 +1,36 @@
+{
+  "size": [64, 128],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "cavewall",
+        "size": [64, 128],
+        "stones": {
+          "cells": [6, 8]
+        }
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "hole",
+      "patch": {
+        "template": "opening",
+        "size": [40, 88],
+        "depth": 3,
+        "open": ["bottom"],
+        "arch": {
+          "shape": "round"
+        },
+        "edges": {
+          "roughness": 1.5
+        }
+      },
+      "x": 18.75,
+      "y": 31.25,
+      "width": 62.5,
+      "height": 68.75
+    }
+  ]
+}

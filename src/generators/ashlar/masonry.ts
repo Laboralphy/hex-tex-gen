@@ -33,6 +33,8 @@ export type StoneHit = {
     edges?: { dl: number; dt: number; dr: number; db: number };
     /** the point is on the panel */
     panel: boolean;
+    /** brightness of a rounded stone at the point, lit from the top-left; flat without */
+    relief?: number;
 };
 
 /**
