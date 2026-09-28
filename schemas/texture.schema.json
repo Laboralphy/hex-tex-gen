@@ -273,64 +273,6 @@
               },
               "additionalProperties": false
             },
-            "panel": {
-              "description": "a large stone slab: room for an inscription or a switch",
-              "default": {},
-              "type": "object",
-              "properties": {
-                "enabled": {
-                  "default": false,
-                  "description": "adds a large stone slab to the wall, surrounded by mortar",
-                  "type": "boolean"
-                },
-                "width": {
-                  "default": 32,
-                  "description": "slab width, mortar included (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "exclusiveMinimum": 0
-                },
-                "height": {
-                  "default": 24,
-                  "description": "slab height, mortar included (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "exclusiveMinimum": 0
-                },
-                "x": {
-                  "description": "left edge of the slab; defaults to centered (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "minimum": 0
-                },
-                "y": {
-                  "description": "top edge of the slab; defaults to centered (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "minimum": 0
-                },
-                "snap": {
-                  "default": true,
-                  "description": "aligns the top and bottom of the slab on the nearest row joints, so that no row is cut into a thin strip",
-                  "type": "boolean"
-                },
-                "bevel": {
-                  "default": 2,
-                  "description": "bevel width of the slab, in pixels (detail: real pixels, does not scale)",
-                  "scale": "detail",
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991
-                },
-                "shade": {
-                  "default": 1,
-                  "description": "brightness factor of the slab",
-                  "type": "number",
-                  "minimum": 0
-                }
-              },
-              "additionalProperties": false
-            },
             "mortar": {
               "description": "joints between stones",
               "default": {},
@@ -834,64 +776,6 @@
                   "description": "random: stones of random width; running: equal bricks, rows offset by half a brick; stack: equal bricks, joints aligned",
                   "type": "string",
                   "enum": ["random", "running", "stack"]
-                }
-              },
-              "additionalProperties": false
-            },
-            "panel": {
-              "description": "a large stone slab: room for an inscription or a switch",
-              "default": {},
-              "type": "object",
-              "properties": {
-                "enabled": {
-                  "default": false,
-                  "description": "adds a large stone slab to the wall, surrounded by mortar",
-                  "type": "boolean"
-                },
-                "width": {
-                  "default": 32,
-                  "description": "slab width, mortar included (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "exclusiveMinimum": 0
-                },
-                "height": {
-                  "default": 24,
-                  "description": "slab height, mortar included (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "exclusiveMinimum": 0
-                },
-                "x": {
-                  "description": "left edge of the slab; defaults to centered (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "minimum": 0
-                },
-                "y": {
-                  "description": "top edge of the slab; defaults to centered (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "minimum": 0
-                },
-                "snap": {
-                  "default": true,
-                  "description": "aligns the top and bottom of the slab on the nearest row joints, so that no row is cut into a thin strip",
-                  "type": "boolean"
-                },
-                "bevel": {
-                  "default": 2,
-                  "description": "bevel width of the slab, in pixels (detail: real pixels, does not scale)",
-                  "scale": "detail",
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991
-                },
-                "shade": {
-                  "default": 1,
-                  "description": "brightness factor of the slab",
-                  "type": "number",
-                  "minimum": 0
                 }
               },
               "additionalProperties": false
@@ -1402,64 +1286,6 @@
               },
               "additionalProperties": false
             },
-            "panel": {
-              "description": "a large stone slab: room for an inscription or a switch",
-              "default": {},
-              "type": "object",
-              "properties": {
-                "enabled": {
-                  "default": false,
-                  "description": "adds a large stone slab to the wall, surrounded by mortar",
-                  "type": "boolean"
-                },
-                "width": {
-                  "default": 32,
-                  "description": "slab width, mortar included (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "exclusiveMinimum": 0
-                },
-                "height": {
-                  "default": 24,
-                  "description": "slab height, mortar included (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "exclusiveMinimum": 0
-                },
-                "x": {
-                  "description": "left edge of the slab; defaults to centered (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "minimum": 0
-                },
-                "y": {
-                  "description": "top edge of the slab; defaults to centered (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "minimum": 0
-                },
-                "snap": {
-                  "default": true,
-                  "description": "aligns the top and bottom of the slab on the nearest row joints, so that no row is cut into a thin strip",
-                  "type": "boolean"
-                },
-                "bevel": {
-                  "default": 2,
-                  "description": "bevel width of the slab, in pixels (detail: real pixels, does not scale)",
-                  "scale": "detail",
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991
-                },
-                "shade": {
-                  "default": 1,
-                  "description": "brightness factor of the slab",
-                  "type": "number",
-                  "minimum": 0
-                }
-              },
-              "additionalProperties": false
-            },
             "mortar": {
               "description": "joints between stones",
               "default": {},
@@ -1924,64 +1750,6 @@
                   "type": "number",
                   "minimum": 0,
                   "exclusiveMaximum": 1
-                }
-              },
-              "additionalProperties": false
-            },
-            "panel": {
-              "description": "a large stone slab: room for an inscription or a switch",
-              "default": {},
-              "type": "object",
-              "properties": {
-                "enabled": {
-                  "default": false,
-                  "description": "adds a large stone slab to the wall, surrounded by mortar",
-                  "type": "boolean"
-                },
-                "width": {
-                  "default": 32,
-                  "description": "slab width, mortar included (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "exclusiveMinimum": 0
-                },
-                "height": {
-                  "default": 24,
-                  "description": "slab height, mortar included (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "exclusiveMinimum": 0
-                },
-                "x": {
-                  "description": "left edge of the slab; defaults to centered (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "minimum": 0
-                },
-                "y": {
-                  "description": "top edge of the slab; defaults to centered (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "minimum": 0
-                },
-                "snap": {
-                  "default": true,
-                  "description": "aligns the top and bottom of the slab on the nearest row joints, so that no row is cut into a thin strip",
-                  "type": "boolean"
-                },
-                "bevel": {
-                  "default": 2,
-                  "description": "bevel width of the slab, in pixels (detail: real pixels, does not scale)",
-                  "scale": "detail",
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991
-                },
-                "shade": {
-                  "default": 1,
-                  "description": "brightness factor of the slab",
-                  "type": "number",
-                  "minimum": 0
                 }
               },
               "additionalProperties": false
@@ -3037,64 +2805,6 @@
                   "description": "stack: equal plates, seams aligned; running: rows offset by half a plate; random: plates of random width",
                   "type": "string",
                   "enum": ["random", "running", "stack"]
-                }
-              },
-              "additionalProperties": false
-            },
-            "panel": {
-              "description": "a large stone slab: room for an inscription or a switch",
-              "default": {},
-              "type": "object",
-              "properties": {
-                "enabled": {
-                  "default": false,
-                  "description": "adds a large stone slab to the wall, surrounded by mortar",
-                  "type": "boolean"
-                },
-                "width": {
-                  "default": 40,
-                  "description": "slab width, mortar included (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "exclusiveMinimum": 0
-                },
-                "height": {
-                  "default": 32,
-                  "description": "slab height, mortar included (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "exclusiveMinimum": 0
-                },
-                "x": {
-                  "description": "left edge of the slab; defaults to centered (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "minimum": 0
-                },
-                "y": {
-                  "description": "top edge of the slab; defaults to centered (layout: scales with the patch)",
-                  "scale": "layout",
-                  "type": "number",
-                  "minimum": 0
-                },
-                "snap": {
-                  "default": true,
-                  "description": "aligns the top and bottom of the slab on the nearest row joints, so that no row is cut into a thin strip",
-                  "type": "boolean"
-                },
-                "bevel": {
-                  "default": 2,
-                  "description": "bevel width of the slab, in pixels (detail: real pixels, does not scale)",
-                  "scale": "detail",
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991
-                },
-                "shade": {
-                  "default": 1.05,
-                  "description": "brightness factor of the slab",
-                  "type": "number",
-                  "minimum": 0
                 }
               },
               "additionalProperties": false

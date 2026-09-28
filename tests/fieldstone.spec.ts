@@ -38,7 +38,6 @@ describe('fieldstone', () => {
         const t = fieldstone.generate({ seed: 1, stones: { cells: [5, 4] } });
         expect(t.anchors.stones).toHaveLength(20);
         expect(t.anchors.centers).toHaveLength(20);
-        expect(t.anchors.panel).toEqual([]);
         expect(t.anchors.tops).toHaveLength(20);
         // a center is on its stone, not in the mortar
         const flatT = fieldstone.generate({ seed: 1, ...flat, stones: { cells: [5, 4] } });
@@ -67,14 +66,6 @@ describe('fieldstone', () => {
         expect(() =>
             fieldstone.generate({ seed: 1, stones: { cells: [4, 3], stagger: 0.5 } }),
         ).toThrow('stones.cells: a stagger needs an even number of rows');
-    });
-
-    it('has a panel, like the other walls', () => {
-        const t = fieldstone.generate({ seed: 1, panel: { enabled: true } });
-        expect(t.anchors.panel).toHaveLength(1);
-        expect(() => fieldstone.generate({ seed: 1, panel: { enabled: true, width: 80 } })).toThrow(
-            'panel.width: the panel must fit in the width of the patch',
-        );
     });
 
     it('ages like ashlar, without chips', () => {

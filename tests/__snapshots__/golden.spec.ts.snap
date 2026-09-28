@@ -176,7 +176,7 @@ exports[`golden examples > fieldstone-variants/08-sandstone.json 1`] = `"64x64 a
 
 exports[`golden examples > fieldstone-variants/09-basalt.json 1`] = `"64x64 d3c69ff097c2b55fe5baea91f550fb1902852d6629ca114b60dce3ea3d8e9362"`;
 
-exports[`golden examples > fieldstone-variants/10-panel.json 1`] = `"64x64 7577c38a8ca83bd36ba51a78867d66f5ee89a7a8b7f5296b0a91db35e3b469ed"`;
+exports[`golden examples > fieldstone-variants/10-slab.json 1`] = `"64x64 f87dc6390b2003be897e99087e3d0291ee140b0fefd2990ab4b5105613af7064"`;
 
 exports[`golden examples > fieldstone-variants/11-mossy-fieldstone.json 1`] = `"64x64 03fd654d410825cfdee20f5ceb2b7601d0aaf61cc1958386fdbfb55bbdab9095"`;
 

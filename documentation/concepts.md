@@ -81,11 +81,11 @@ the seed, the size or the number of rows. See [Anchors](texture-files.md#anchors
 ## Moss on stone walls
 
 Stone walls ([`ashlar`](templates/ashlar.md), [`bricks`](templates/bricks.md) and
-[`fieldstone`](templates/fieldstone.md)), and the [`stoneslab`](templates/stoneslab.md) decoration, can grow moss
-themselves, with their `moss` parameters: along the top edges of the stones, following
-their real shape, in patches (`moss.coverage`, 0 by default), with vines hanging down the
-stone faces and moss in the joints. It suits irregular stones, whose slanted tops an
-overlay cannot follow.
+[`fieldstone`](templates/fieldstone.md)), and the [`stoneslab`](templates/stoneslab.md)
+decoration, can grow moss themselves, with their `moss` parameters: along the top edges of
+the stones, following their real shape, in patches (`moss.coverage`, 0 by default), with
+vines hanging down the stone faces and moss in the joints. It suits irregular stones, whose
+slanted tops an overlay cannot follow.
 
 The [`moss`](templates/moss.md) overlay, anchored under the joints, draws longer hanging
 moss, and suits the straight rows of bricks and ashlar: see [Anchors](texture-files.md#anchors).

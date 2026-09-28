@@ -5,7 +5,7 @@ import type { RenderContext } from '../types';
 import { WALL_ANCHORS } from './masonry';
 import { rectMasonry } from './rect-masonry';
 import { renderMasonry } from './render-masonry';
-import { NO_PANEL, wallSchema } from './wall-schema';
+import { wallSchema } from './wall-schema';
 import { ashlarWear } from './wear';
 
 /**
@@ -16,7 +16,6 @@ export const ashlarSchema = wallSchema({
     size: [64, 64],
     rows: { count: 4, heightVariation: 0.2 },
     blocks: { width: [14, 30], minJointOffset: 5, bond: 'random' },
-    panel: NO_PANEL,
     mortar: { size: 2, color: '#24211d' },
     bevel: { size: 1, light: 1.3, dark: 0.6 },
     stone: {

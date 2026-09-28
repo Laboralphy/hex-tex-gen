@@ -130,7 +130,6 @@ export {
     computePlanksLayout,
     computeAshlarLayout,
     masonryShape,
-    NO_PANEL,
     renderWall,
     WALL_ANCHORS,
     wallSchema,

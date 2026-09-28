@@ -171,9 +171,6 @@ shift it by half its size:
 }
 ```
 
-Walls can also build a slab into their own masonry, its joints matching the rows around
-it: see [The panel](ashlar.md#the-panel).
-
 ## Aging
 
 `age`, from 0 (new) to 1 (ruined), sets every wear parameter left unset. Values in

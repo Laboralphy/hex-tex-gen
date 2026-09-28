@@ -1,14 +1,7 @@
 import { z } from 'zod';
 import { size } from '../core/schema';
 import type { Texture } from '../core/Texture';
-import {
-    ashlarWear,
-    masonryShape,
-    NO_PANEL,
-    renderMasonry,
-    type AshlarWear,
-    type Masonry,
-} from './ashlar';
+import { ashlarWear, masonryShape, renderMasonry, type AshlarWear, type Masonry } from './ashlar';
 import { defineGenerator } from './define';
 import type { RenderContext } from './types';
 
@@ -65,7 +58,6 @@ function slabMasonry(p: StoneslabParams, { width, height }: RenderContext): Maso
                 shadowed: d === db || d === dr,
                 top: d === dt,
                 edges: { dl, dt, dr, db },
-                panel: false,
             };
         },
         anchors: () => ({
@@ -91,12 +83,7 @@ export function stoneslabWear(p: StoneslabParams): AshlarWear {
  * Renders a slab with validated parameters.
  */
 function renderSlab(p: StoneslabParams, context: RenderContext): Texture {
-    return renderMasonry(
-        { ...p, panel: NO_PANEL },
-        context,
-        slabMasonry(p, context),
-        stoneslabWear(p),
-    );
+    return renderMasonry(p, context, slabMasonry(p, context), stoneslabWear(p));
 }
 
 /**

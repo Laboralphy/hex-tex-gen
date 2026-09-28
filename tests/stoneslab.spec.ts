@@ -11,10 +11,8 @@ const flat = {
 const MORTAR = 0x000000ff;
 
 describe('stoneslab', () => {
-    it('has the stone parameters of ashlar, without rows, blocks or panel', () => {
-        const keys = Object.keys(ashlar.defaults).filter(
-            (k) => !['rows', 'blocks', 'panel'].includes(k),
-        );
+    it('has the stone parameters of ashlar, without rows or blocks', () => {
+        const keys = Object.keys(ashlar.defaults).filter((k) => !['rows', 'blocks'].includes(k));
         expect(Object.keys(stoneslab.defaults)).toEqual(keys);
         expect(stoneslab.category).toBe('architecture');
     });

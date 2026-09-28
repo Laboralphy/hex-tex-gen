@@ -102,7 +102,6 @@ export function renderMasonry(
 
             const hit = masonry.locate(wx, wy);
             const { id, lx, ly, d, lit, shadowed, edges, top } = hit;
-            const inPanel = hit.panel;
             const stone = stones[id];
             const r = stone.row;
             const i = stone.block;
@@ -160,11 +159,8 @@ export function renderMasonry(
                 (1 + (hash(seed, SALT_STONE, r, i, 3) - 0.5) * 2 * wear.shadeVariation) *
                 (1 + (hash(seed, SALT_GRAIN, x, y) - 0.5) * 2 * wear.grain);
             let color = sample(palette, 0.5 + (n - 0.5) * p.stone.contrast * 2 + shift);
-            if (worn < (inPanel ? p.panel.bevel : p.bevel.size)) {
+            if (worn < p.bevel.size) {
                 color = shade(color, lit ? p.bevel.light : p.bevel.dark);
-            }
-            if (inPanel) {
-                color = shade(color, p.panel.shade);
             }
             const spall = spalls[id];
             if (spall) {

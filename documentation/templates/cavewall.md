@@ -32,21 +32,6 @@ Stones laid as the cells of a tileable Voronoi diagram.
 | `stones.jitter`    | number in [0, 1]                | `1`      | —      | grid only: irregularity of the stones, in [0, 1]: 0 lays them on a regular grid, 1 gives the most irregular shapes                           |
 | `stones.stagger`   | number in [0, 1)                | `0`      | —      | grid only: shift of every other row, in fraction of a stone; 0.5 with no jitter gives hexagons; needs an even number of rows                 |
 
-### `panel`
-
-A large stone slab: room for an inscription or a switch.
-
-| Parameter       | Type        | Default  | Scale  | Description                                                                                              |
-| --------------- | ----------- | -------- | ------ | -------------------------------------------------------------------------------------------------------- |
-| `panel.enabled` | boolean     | `false`  | —      | adds a large stone slab to the wall, surrounded by mortar                                                |
-| `panel.width`   | number > 0  | `32`     | layout | slab width, mortar included                                                                              |
-| `panel.height`  | number > 0  | `24`     | layout | slab height, mortar included                                                                             |
-| `panel.x`       | number ≥ 0  | centered | layout | left edge of the slab                                                                                    |
-| `panel.y`       | number ≥ 0  | centered | layout | top edge of the slab                                                                                     |
-| `panel.snap`    | boolean     | `true`   | —      | aligns the top and bottom of the slab on the nearest row joints, so that no row is cut into a thin strip |
-| `panel.bevel`   | integer ≥ 0 | `2`      | detail | bevel width of the slab, in pixels                                                                       |
-| `panel.shade`   | number ≥ 0  | `1`      | —      | brightness factor of the slab                                                                            |
-
 ### `mortar`
 
 Joints between stones.
@@ -145,13 +130,11 @@ Stone surface.
 
 ## Anchors
 
-| Anchor        | Points                                                              |
-| ------------- | ------------------------------------------------------------------- |
-| `stones`      | top-left corner of the face of each stone, its bounding box         |
-| `centers`     | center of each stone                                                |
-| `tops`        | top edge of each stone, straight above its center: where moss hangs |
-| `panel`       | top-left corner of the face of the panel, when enabled              |
-| `panelCenter` | center of the face of the panel, when enabled                       |
+| Anchor    | Points                                                              |
+| --------- | ------------------------------------------------------------------- |
+| `stones`  | top-left corner of the face of each stone, its bounding box         |
+| `centers` | center of each stone                                                |
+| `tops`    | top edge of each stone, straight above its center: where moss hangs |
 
 ## Usage
 

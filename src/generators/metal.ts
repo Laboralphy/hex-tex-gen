@@ -7,7 +7,7 @@ import { firstPixel, mod } from '../core/math';
 import { createGradient, sample, shade } from '../core/palette';
 import { ageParam, color, DETAIL, LAYOUT, palette, range, ratio, size } from '../core/schema';
 import { Texture } from '../core/Texture';
-import { checkPanelFits, computeAshlarLayout, NO_PANEL, panelGroup, panelRect } from './ashlar';
+import { computeAshlarLayout } from './ashlar';
 import {
     metalWearBase,
     rustGroup,
@@ -71,7 +71,6 @@ export const metalSchema = z
             })
             .prefault({})
             .describe('plates within a row'),
-        panel: panelGroup({ ...NO_PANEL, width: 40, height: 32, shade: 1.05 }),
         seam: z
             .strictObject({
                 size: z
@@ -153,7 +152,6 @@ export const metalSchema = z
         tarnish: tarnishParam(),
     })
     .superRefine((p, ctx) => {
-        checkPanelFits(p, ctx);
         if (p.blocks.bond === 'running' && p.rows.count % 2 === 1) {
             ctx.addIssue({
                 code: 'custom',
@@ -203,7 +201,7 @@ const SALT_STREAK = 6;
 
 /**
  * Metal wall: plates joined by thin seams and fixed with rivets; rust, dents and scratches
- * come with age. Like the other walls, it can have a panel, a larger plate.
+ * come with age.
  */
 export const metal = defineGenerator({
     name: 'metal',
@@ -213,13 +211,10 @@ export const metal = defineGenerator({
     anchors: {
         rows: 'left edge and top of the plate faces of each row, just below the seam',
         plates: 'top-left corner of the face of each plate, row by row',
-        panel: 'top-left corner of the face of the panel, when enabled',
-        panelCenter: 'center of the face of the panel, when enabled',
     },
     render(p, { width, height, seed }) {
         const wear = metalWear(p);
         const layout = computeAshlarLayout(p, seed, width, height);
-        const panel = panelRect(p, layout, width, height);
         const texture = new Texture(width, height);
         const metalPalette = createGradient(p.metal.palette);
         const seamColor = Rainbow.parse(p.seam.color);
@@ -242,7 +237,7 @@ export const metal = defineGenerator({
             octaves: 3,
         });
 
-        // every plate, and its rectangle in pixels; the panel is one more plate
+        // every plate, and its rectangle in pixels
         const plates = layout.flatMap((row, r) =>
             row.blocks.map((block, i) => ({
                 r,
@@ -256,7 +251,6 @@ export const metal = defineGenerator({
         const plateIndex = layout.map((row, r) =>
             row.blocks.map((_, i) => plates.findIndex((q) => q.r === r && q.i === i)),
         );
-        const panelId = panel ? plates.push({ r: layout.length, i: 0, ...panel }) - 1 : -1;
 
         // a seam of n pixels: the plate after it (below, right) takes the larger half
         const after = Math.ceil(p.seam.size / 2);
@@ -269,16 +263,9 @@ export const metal = defineGenerator({
             for (let x = 0; x < width; ++x) {
                 const px = x + 0.5;
                 const py = y + 0.5;
-                const inPanel =
-                    panel !== undefined &&
-                    mod(px - panel.x, width) < panel.w &&
-                    mod(py - panel.y, height) < panel.h;
-                let id = panelId;
-                if (!inPanel) {
-                    const r = layout.findIndex((row) => py >= row.y && py < row.y + row.height);
-                    const i = layout[r].blocks.findIndex((b) => mod(px - b.x, width) < b.width);
-                    id = plateIndex[r][i];
-                }
+                const r = layout.findIndex((row) => py >= row.y && py < row.y + row.height);
+                const i = layout[r].blocks.findIndex((b) => mod(px - b.x, width) < b.width);
+                const id = plateIndex[r][i];
                 const plate = plates[id];
                 const lx = mod(px - plate.x, width);
                 const ly = mod(py - plate.y, height);
@@ -313,8 +300,7 @@ export const metal = defineGenerator({
                         (hash(seed, SALT_PLATE, plate.r, plate.i, 1) - 0.5) *
                             2 *
                             p.metal.shadeVariation) *
-                    (1 + (hash(seed, SALT_GRAIN, x, y) - 0.5) * 2 * p.metal.grain) *
-                    (inPanel ? p.panel.shade : 1);
+                    (1 + (hash(seed, SALT_GRAIN, x, y) - 0.5) * 2 * p.metal.grain);
                 texture.setPixel(x, y, shade(colour, brightness));
             }
         }
@@ -349,7 +335,7 @@ export const metal = defineGenerator({
 
         // rivets along the plate edges, and at their corners
         const rivets: [number, number][] = [];
-        // a rivet shows only where its plate does: not on the panel covering it
+        // a rivet shows only where its plate does
         const addRivet = (x: number, y: number, id: number) => {
             if (ids[mod(y, height) * width + mod(x, width)] === id) {
                 rivets.push([x, y]);
@@ -422,15 +408,6 @@ export const metal = defineGenerator({
             plates: layout.flatMap((row) =>
                 row.blocks.map((block) => ({ x: mod(face(block.x), width), y: face(row.y) })),
             ),
-            panel: panel ? [{ x: mod(face(panel.x), width), y: mod(face(panel.y), height) }] : [],
-            panelCenter: panel
-                ? [
-                      {
-                          x: mod(Math.floor(panel.x + panel.w / 2), width),
-                          y: mod(Math.floor(panel.y + panel.h / 2), height),
-                      },
-                  ]
-                : [],
         };
         return texture;
     },

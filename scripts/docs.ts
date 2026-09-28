@@ -482,23 +482,6 @@ ${ageTable(generator)}`;
 
 /** extra sections of some template pages, before the aging section */
 const EXTRA: Record<string, string> = {
-    ashlar: `## The panel
-
-Every stone wall (\`ashlar\`, [\`bricks\`](bricks.md), [\`fieldstone\`](fieldstone.md) and
-[\`metal\`](metal.md)) can build a slab into its own masonry: \`{ "panel": { "enabled": true } }\`
-adds a large stone surrounded by mortar, the joints of the wall stopping at its border and
-the stones around it cut to fit.
-
-- \`panel.x\`, \`panel.y\`, \`panel.width\` and \`panel.height\` are layout values, mortar
-  included: they scale with the patch. Without \`x\` or \`y\`, the slab is centered on that
-  axis.
-- \`panel.snap\` (on by default) moves the top and the bottom of the slab to the nearest row
-  joints, so that no row is cut into a thin strip: the slab height may change to match
-  whole rows. Set it to \`false\` to keep the exact height.
-- The slab ages with the wall, and is reported by the \`panel\` and \`panelCenter\` anchors.
-
-To lay a slab over any other surface, wood or metal for instance, or to place it freely,
-use the [\`stoneslab\`](stoneslab.md) decoration instead.`,
     bricks: `## Bricks and ashlar
 
 \`bricks\` is the [\`ashlar\`](ashlar.md) engine with brick defaults: it has exactly the same
@@ -694,10 +677,7 @@ shift it by half its size:
     }
   ]
 }
-\`\`\`
-
-Walls can also build a slab into their own masonry, its joints matching the rows around
-it: see [The panel](ashlar.md#the-panel).`,
+\`\`\``,
     tapestry: `## Usage
 
 \`tapestry\` is a [\`banner\`](banner.md) with the defaults of a tapestry: wide, flat,
@@ -719,7 +699,7 @@ patterned and fringed. Every banner parameter applies, and it ages the same way.
   \`pattern.period\` the size of one repeat, which scales with the tapestry.
 - \`fringe\` threads hang every other pixel from the flat lower end, where the fabric above
   is whole; \`border.stripes\` frame the field, the first one giving the fringe its color.`,
-    metal: `## Plates, rivets and panel
+    metal: `## Plates and rivets
 
 \`metal\` lays plates like the stone walls lay stones: \`rows\` and \`blocks\` work the same
 way, with a stack bond by default (\`blocks.bond\`: \`stack\`, \`running\` or \`random\`), and
@@ -727,8 +707,7 @@ thin seams (\`seam.size\`). Each plate has a soft sheen, lighter towards the top
 brushed horizontal streaks.
 
 Rivets are placed along the edges of every plate, every \`rivets.spacing\` pixels, and at
-its corners. Like the other walls, \`metal\` has a \`panel\`: a larger plate, with its own
-rivets, reported by the \`panel\` and \`panelCenter\` anchors.
+its corners.
 
 As it ages, rust grows from the seams (\`rust.coverage\`) and runs down from rivets
 (\`rust.streaks\`), the plates get dents, shaded against the light, and scratches, and the
@@ -1180,7 +1159,7 @@ the \`Voronoi\` class of [@laboralphy/algorithms](https://www.npmjs.com/package/
   joints have a constant width.
 
 Everything else is the engine of the other walls: the stone surface, the bevel lit from
-the top-left, cracks, worn edges, spalling, stains, hollowed joints, \`age\`, and the panel.
+the top-left, cracks, worn edges, spalling, stains, hollowed joints and \`age\`.
 Chips and rounded corners, which need the corners of rectangular stones, do not apply.
 
 \`stones.layout\` lays the stones out: \`grid\`, one stone per cell of a jittered grid, all

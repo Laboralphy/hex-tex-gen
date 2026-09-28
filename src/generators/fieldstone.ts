@@ -5,9 +5,6 @@ import { DETAIL, LAYOUT, ratio } from '../core/schema';
 import { Texture } from '../core/Texture';
 import {
     ashlarWear,
-    checkPanelFits,
-    NO_PANEL,
-    panelRect,
     renderMasonry,
     wallSchema,
     type AshlarParams,
@@ -51,7 +48,6 @@ export function stoneFieldSchema(d: StoneFieldDefaults) {
         size: d.size,
         rows: { count: 4, heightVariation: 0 },
         blocks: { width: [16, 16], minJointOffset: 0, bond: 'random' },
-        panel: NO_PANEL,
         mortar: d.mortar,
         bevel: d.bevel,
         stone: d.stone,
@@ -100,7 +96,6 @@ export function stoneFieldSchema(d: StoneFieldDefaults) {
                 })
                 .prefault({})
                 .describe('stones laid as the cells of a tileable Voronoi diagram'),
-            panel: wall.panel,
             mortar: wall.mortar,
             bevel: wall.bevel,
             edges: wall.edges,
@@ -125,7 +120,6 @@ export function stoneFieldSchema(d: StoneFieldDefaults) {
             stone: wall.stone,
         })
         .superRefine((p, ctx) => {
-            checkPanelFits(p, ctx);
             if (p.stones.stagger > 0 && p.stones.cells[1] % 2 === 1) {
                 ctx.addIssue({
                     code: 'custom',
@@ -168,7 +162,7 @@ export function fieldstoneWear(p: FieldstoneParams): AshlarWear {
 }
 
 /**
- * Stones laid as the cells of a tileable Voronoi diagram, and the panel over them.
+ * Stones laid as the cells of a tileable Voronoi diagram.
  */
 export function voronoiMasonry(
     p: FieldstoneParams,
@@ -208,7 +202,6 @@ export function voronoiMasonry(
             amount,
         );
     const mortarAfter = Math.ceil(half);
-    const mortarBefore = Math.floor(half);
 
     // the bounding box of each stone, measured around its center
     const count = columns * rows;
@@ -264,9 +257,6 @@ export function voronoiMasonry(
             }
         });
     }
-    // the panel is a rectangle over the stones; there are no rows to snap it to
-    const panel = panelRect({ ...p, panel: { ...p.panel, snap: false } }, [], width, height);
-    const panelId = panel ? stones.push({ row: rows, block: 0, ...panel }) - 1 : -1;
     const face = (edge: number) => firstPixel(edge, mortarAfter);
     // the top edge of each stone, straight above its center: the first pixel row whose
     // center is on the stone, going up from the center
@@ -286,30 +276,6 @@ export function voronoiMasonry(
     return {
         stones,
         locate(wx, wy) {
-            if (
-                panel !== undefined &&
-                mod(wx - panel.x, width) < panel.w &&
-                mod(wy - panel.y, height) < panel.h
-            ) {
-                const lx = mod(wx - panel.x, width);
-                const ly = mod(wy - panel.y, height);
-                const dl = lx - mortarAfter;
-                const dr = panel.w - lx - mortarBefore;
-                const dt = ly - mortarAfter;
-                const db = panel.h - ly - mortarBefore;
-                const d = Math.min(dl, dr, dt, db);
-                return {
-                    id: panelId,
-                    lx,
-                    ly,
-                    d,
-                    lit: d === dl || d === dt,
-                    shadowed: d === db || d === dr,
-                    top: d === dt,
-                    edges: { dl, dt, dr, db },
-                    panel: true,
-                };
-            }
             const s = voronoi.sample(wx, wy);
             const stone = stones[s.cell];
             // the nearest border faces the neighbor across it: its normal goes from the
@@ -335,25 +301,16 @@ export function voronoiMasonry(
                 lit,
                 shadowed: !lit,
                 top: ny < 0 && Math.abs(nx) < -ny * 0.84,
-                panel: false,
                 relief: relief > 0 ? roundedLight(wx, wy, center, d, stone, relief) : undefined,
             };
         },
         anchors: () => ({
-            stones: stones
-                .slice(0, count)
-                .map((b) => ({ x: mod(Math.round(b.x), width), y: mod(face(b.y), height) })),
+            stones: stones.map((b) => ({
+                x: mod(Math.round(b.x), width),
+                y: mod(face(b.y), height),
+            })),
             centers: centers.map(([x, y]) => ({ x: Math.floor(x), y: Math.floor(y) })),
             tops,
-            panel: panel ? [{ x: mod(face(panel.x), width), y: mod(face(panel.y), height) }] : [],
-            panelCenter: panel
-                ? [
-                      {
-                          x: mod(Math.floor(panel.x + panel.w / 2), width),
-                          y: mod(Math.floor(panel.y + panel.h / 2), height),
-                      },
-                  ]
-                : [],
         }),
     };
 }
@@ -363,8 +320,6 @@ export const STONE_FIELD_ANCHORS = {
     stones: 'top-left corner of the face of each stone, its bounding box',
     centers: 'center of each stone',
     tops: 'top edge of each stone, straight above its center: where moss hangs',
-    panel: 'top-left corner of the face of the panel, when enabled',
-    panelCenter: 'center of the face of the panel, when enabled',
 };
 
 /**

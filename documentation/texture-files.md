@@ -65,18 +65,17 @@ such as [`moss`](templates/moss.md), blend with their own alpha too.
 
 Templates report **anchor points**: named points computed while rendering, in pixels of
 the rendered patch. The walls ([`ashlar`](templates/ashlar.md#anchors),
-[`bricks`](templates/bricks.md#anchors), [`fieldstone`](templates/fieldstone.md#anchors) and [`metal`](templates/metal.md#anchors)) report:
+[`bricks`](templates/bricks.md#anchors), [`fieldstone`](templates/fieldstone.md#anchors)
+and [`metal`](templates/metal.md#anchors)) report:
 
-| Anchor        | Points                                                             |
-| ------------- | ------------------------------------------------------------------ |
-| `rows`        | the top-left of the stone faces of each row, just below the mortar |
-| `stones`      | the top-left corner of each stone face                             |
-| `panel`       | the top-left corner of the face of the slab, when `panel.enabled`  |
-| `panelCenter` | the center of the face of the slab, when `panel.enabled`           |
+| Anchor   | Points                                                             |
+| -------- | ------------------------------------------------------------------ |
+| `rows`   | the top-left of the stone faces of each row, just below the mortar |
+| `stones` | the top-left corner of each stone face                             |
 
 An anchor places the **top-left corner** of each copy on its point. To center a patch on a
-point, such as a switch on the `slabCenter` of a [`stoneslab`](templates/stoneslab.md#usage), shift it
-by half its size with `offset`.
+point, such as a switch on the `slabCenter` of a
+[`stoneslab`](templates/stoneslab.md#usage), shift it by half its size with `offset`.
 
 A placement with an `anchor` is repeated on the anchor points of a previous placement,
 instead of being placed with `x` and `y`:

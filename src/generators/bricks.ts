@@ -1,5 +1,5 @@
 import type { z } from 'zod';
-import { NO_PANEL, renderWall, WALL_ANCHORS, wallSchema } from './ashlar';
+import { renderWall, WALL_ANCHORS, wallSchema } from './ashlar';
 import { defineGenerator } from './define';
 
 /**
@@ -9,7 +9,6 @@ export const bricksSchema = wallSchema({
     size: [64, 64],
     rows: { count: 8, heightVariation: 0 },
     blocks: { width: [16, 16], minJointOffset: 0, bond: 'running' },
-    panel: NO_PANEL,
     mortar: { size: 1, color: '#3a322b' },
     bevel: { size: 1, light: 1.25, dark: 0.7 },
     stone: {

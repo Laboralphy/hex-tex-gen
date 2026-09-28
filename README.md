@@ -102,14 +102,12 @@ opaque placement are skipped (overlay generators such as `moss`, and placements 
 `opacity` below 1, hide nothing). Each copy gets its own seed, derived from the placement
 seed and the point index.
 
-| Template    | Anchor        | Points                                                             |
-| ----------- | ------------- | ------------------------------------------------------------------ |
-| walls       | `rows`        | left edge and top of the stone faces of each row, below the mortar |
-| walls       | `stones`      | top-left corner of the face of each stone                          |
-| walls       | `panel`       | top-left corner of the face of the slab, when `panel.enabled`      |
-| walls       | `panelCenter` | center of the face of the slab, when `panel.enabled`               |
-| `stoneslab` | `slab`        | top-left corner of the face of the slab                            |
-| `stoneslab` | `slabCenter`  | center of the face of the slab                                     |
+| Template    | Anchor       | Points                                                             |
+| ----------- | ------------ | ------------------------------------------------------------------ |
+| walls       | `rows`       | left edge and top of the stone faces of each row, below the mortar |
+| walls       | `stones`     | top-left corner of the face of each stone                          |
+| `stoneslab` | `slab`       | top-left corner of the face of the slab                            |
+| `stoneslab` | `slabCenter` | center of the face of the slab                                     |
 
 Walls are `ashlar`, `bricks`, `fieldstone` and `metal`. `stoneslab` is a slab laid over any
 wall.

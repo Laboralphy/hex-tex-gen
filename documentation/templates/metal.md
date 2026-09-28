@@ -40,21 +40,6 @@ Plates within a row.
 | `blocks.minJointOffset` | number ≥ 0                | `4`        | layout | minimum horizontal distance between a seam and the seams of adjacent rows (random bond only)             |
 | `blocks.bond`           | string                    | `"stack"`  | —      | stack: equal plates, seams aligned; running: rows offset by half a plate; random: plates of random width |
 
-### `panel`
-
-A large stone slab: room for an inscription or a switch.
-
-| Parameter       | Type        | Default  | Scale  | Description                                                                                              |
-| --------------- | ----------- | -------- | ------ | -------------------------------------------------------------------------------------------------------- |
-| `panel.enabled` | boolean     | `false`  | —      | adds a large stone slab to the wall, surrounded by mortar                                                |
-| `panel.width`   | number > 0  | `40`     | layout | slab width, mortar included                                                                              |
-| `panel.height`  | number > 0  | `32`     | layout | slab height, mortar included                                                                             |
-| `panel.x`       | number ≥ 0  | centered | layout | left edge of the slab                                                                                    |
-| `panel.y`       | number ≥ 0  | centered | layout | top edge of the slab                                                                                     |
-| `panel.snap`    | boolean     | `true`   | —      | aligns the top and bottom of the slab on the nearest row joints, so that no row is cut into a thin strip |
-| `panel.bevel`   | integer ≥ 0 | `2`      | detail | bevel width of the slab, in pixels                                                                       |
-| `panel.shade`   | number ≥ 0  | `1.05`   | —      | brightness factor of the slab                                                                            |
-
 ### `seam`
 
 Seams between plates.
@@ -118,14 +103,12 @@ Dents, shaded against the light.
 
 ## Anchors
 
-| Anchor        | Points                                                                |
-| ------------- | --------------------------------------------------------------------- |
-| `rows`        | left edge and top of the plate faces of each row, just below the seam |
-| `plates`      | top-left corner of the face of each plate, row by row                 |
-| `panel`       | top-left corner of the face of the panel, when enabled                |
-| `panelCenter` | center of the face of the panel, when enabled                         |
+| Anchor   | Points                                                                |
+| -------- | --------------------------------------------------------------------- |
+| `rows`   | left edge and top of the plate faces of each row, just below the seam |
+| `plates` | top-left corner of the face of each plate, row by row                 |
 
-## Plates, rivets and panel
+## Plates and rivets
 
 `metal` lays plates like the stone walls lay stones: `rows` and `blocks` work the same
 way, with a stack bond by default (`blocks.bond`: `stack`, `running` or `random`), and
@@ -133,8 +116,7 @@ thin seams (`seam.size`). Each plate has a soft sheen, lighter towards the top-l
 brushed horizontal streaks.
 
 Rivets are placed along the edges of every plate, every `rivets.spacing` pixels, and at
-its corners. Like the other walls, `metal` has a `panel`: a larger plate, with its own
-rivets, reported by the `panel` and `panelCenter` anchors.
+its corners.
 
 As it ages, rust grows from the seams (`rust.coverage`) and runs down from rivets
 (`rust.streaks`), the plates get dents, shaded against the light, and scratches, and the

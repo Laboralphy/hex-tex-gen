@@ -4,10 +4,8 @@
  */
 export { ashlarSchema, renderWall, ashlar } from './ashlar';
 export type { AshlarParams } from './ashlar';
-export { NO_PANEL, masonryShape, mossGroup, wallSchema } from './wall-schema';
+export { masonryShape, mossGroup, wallSchema } from './wall-schema';
 export type { WallDefaults } from './wall-schema';
-export { panelGroup, checkPanelFits, panelRect } from './panel';
-export type { PanelRect } from './panel';
 export { ashlarWear } from './wear';
 export type { AshlarWear, WearParams } from './wear';
 export { computeAshlarLayout } from './layout';

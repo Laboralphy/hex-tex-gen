@@ -38,21 +38,6 @@ Stones within a row.
 | `blocks.minJointOffset` | number ≥ 0                | `5`        | layout | minimum horizontal distance between a joint and the joints of adjacent rows (random bond only)                          |
 | `blocks.bond`           | string                    | `"random"` | —      | random: stones of random width; running: equal bricks, rows offset by half a brick; stack: equal bricks, joints aligned |
 
-### `panel`
-
-A large stone slab: room for an inscription or a switch.
-
-| Parameter       | Type        | Default  | Scale  | Description                                                                                              |
-| --------------- | ----------- | -------- | ------ | -------------------------------------------------------------------------------------------------------- |
-| `panel.enabled` | boolean     | `false`  | —      | adds a large stone slab to the wall, surrounded by mortar                                                |
-| `panel.width`   | number > 0  | `32`     | layout | slab width, mortar included                                                                              |
-| `panel.height`  | number > 0  | `24`     | layout | slab height, mortar included                                                                             |
-| `panel.x`       | number ≥ 0  | centered | layout | left edge of the slab                                                                                    |
-| `panel.y`       | number ≥ 0  | centered | layout | top edge of the slab                                                                                     |
-| `panel.snap`    | boolean     | `true`   | —      | aligns the top and bottom of the slab on the nearest row joints, so that no row is cut into a thin strip |
-| `panel.bevel`   | integer ≥ 0 | `2`      | detail | bevel width of the slab, in pixels                                                                       |
-| `panel.shade`   | number ≥ 0  | `1`      | —      | brightness factor of the slab                                                                            |
-
 ### `mortar`
 
 Joints between stones.
@@ -161,30 +146,10 @@ Stone surface.
 
 ## Anchors
 
-| Anchor        | Points                                                                  |
-| ------------- | ----------------------------------------------------------------------- |
-| `rows`        | left edge and top of the stone faces of each row, just below the mortar |
-| `stones`      | top-left corner of the face of each stone, row by row                   |
-| `panel`       | top-left corner of the face of the panel, when enabled                  |
-| `panelCenter` | center of the face of the panel, when enabled                           |
-
-## The panel
-
-Every stone wall (`ashlar`, [`bricks`](bricks.md), [`fieldstone`](fieldstone.md) and
-[`metal`](metal.md)) can build a slab into its own masonry: `{ "panel": { "enabled": true } }`
-adds a large stone surrounded by mortar, the joints of the wall stopping at its border and
-the stones around it cut to fit.
-
-- `panel.x`, `panel.y`, `panel.width` and `panel.height` are layout values, mortar
-  included: they scale with the patch. Without `x` or `y`, the slab is centered on that
-  axis.
-- `panel.snap` (on by default) moves the top and the bottom of the slab to the nearest row
-  joints, so that no row is cut into a thin strip: the slab height may change to match
-  whole rows. Set it to `false` to keep the exact height.
-- The slab ages with the wall, and is reported by the `panel` and `panelCenter` anchors.
-
-To lay a slab over any other surface, wood or metal for instance, or to place it freely,
-use the [`stoneslab`](stoneslab.md) decoration instead.
+| Anchor   | Points                                                                  |
+| -------- | ----------------------------------------------------------------------- |
+| `rows`   | left edge and top of the stone faces of each row, just below the mortar |
+| `stones` | top-left corner of the face of each stone, row by row                   |
 
 ## Aging
 

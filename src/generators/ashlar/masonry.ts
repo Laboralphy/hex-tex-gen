@@ -7,8 +7,6 @@ import type { AshlarParams } from './ashlar';
 export const WALL_ANCHORS = {
     rows: 'left edge and top of the stone faces of each row, just below the mortar',
     stones: 'top-left corner of the face of each stone, row by row',
-    panel: 'top-left corner of the face of the panel, when enabled',
-    panelCenter: 'center of the face of the panel, when enabled',
 };
 
 /** a stone of a wall, and its bounding box in pixels */
@@ -31,8 +29,6 @@ export type StoneHit = {
     top: boolean;
     /** distances to the left, top, right and bottom edges, for rectangular stones */
     edges?: { dl: number; dt: number; dr: number; db: number };
-    /** the point is on the panel */
-    panel: boolean;
     /** brightness of a rounded stone at the point, lit from the top-left; flat without */
     relief?: number;
 };
@@ -48,7 +44,4 @@ export interface Masonry {
 }
 
 /** parameters the stone renderer reads; the wear is resolved beforehand */
-export type MasonryParams = Pick<
-    AshlarParams,
-    'size' | 'mortar' | 'bevel' | 'panel' | 'stone' | 'moss'
->;
+export type MasonryParams = Pick<AshlarParams, 'size' | 'mortar' | 'bevel' | 'stone' | 'moss'>;

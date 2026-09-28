@@ -11,7 +11,6 @@ import {
     size,
 } from '../../core/schema';
 import { MOSS_PALETTE } from '../common/palettes';
-import { panelGroup, checkPanelFits } from './panel';
 
 /**
  * Default values of the parameters of a wall template that are not wear parameters.
@@ -24,14 +23,6 @@ export type WallDefaults = {
         minJointOffset: number;
         bond: 'random' | 'running' | 'stack';
     };
-    panel: {
-        enabled: boolean;
-        width: number;
-        height: number;
-        snap: boolean;
-        bevel: number;
-        shade: number;
-    };
     mortar: { size: number; color: string };
     bevel: { size: number; light: number; dark: number };
     stone: {
@@ -40,16 +31,6 @@ export type WallDefaults = {
         paletteShift: number;
         noise: { period: number; octaves: number; persistence: number };
     };
-};
-
-/** panel defaults of walls without a panel */
-export const NO_PANEL: WallDefaults['panel'] = {
-    enabled: false,
-    width: 32,
-    height: 24,
-    snap: true,
-    bevel: 2,
-    shade: 1,
 };
 
 /**
@@ -336,11 +317,9 @@ export function wallSchema(d: WallDefaults) {
                 })
                 .prefault({})
                 .describe('stones within a row'),
-            panel: panelGroup(d.panel),
             ...masonryShape(d),
         })
         .superRefine((p, ctx) => {
-            checkPanelFits(p, ctx);
             if (p.blocks.bond === 'running' && p.rows.count % 2 === 1) {
                 ctx.addIssue({
                     code: 'custom',
