@@ -71,7 +71,7 @@ Irregularity of the outline.
 ## Usage
 
 `opening` is an overlay placed over a wall: the whole patch is the opening, placed and
-sized like any patch, or anchored, on a `panel` slab for instance. It draws:
+sized like any patch, or anchored, on a [`stoneslab`](stoneslab.md) for instance. It draws:
 
 - **reveals**, the inner faces of the cut, `depth` pixels wide: the wall below, darkened
   or lightened (`reveals.*`, from -1 to 1), so that they are made of the wall's own

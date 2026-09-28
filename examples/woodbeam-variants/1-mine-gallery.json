@@ -1,0 +1,47 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 128],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "cavewall",
+        "size": [64, 128]
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "woodbeam",
+        "direction": "vertical",
+        "size": [10, 112]
+      },
+      "x": 6,
+      "y": 10,
+      "width": 15.625,
+      "height": 87.5
+    },
+    {
+      "patch": {
+        "template": "woodbeam",
+        "direction": "vertical",
+        "size": [10, 112]
+      },
+      "x": 78.5,
+      "y": 10,
+      "width": 15.625,
+      "height": 87.5
+    },
+    {
+      "patch": {
+        "template": "woodbeam",
+        "size": [64, 11]
+      },
+      "x": 0,
+      "y": 4,
+      "width": 100,
+      "height": 8.6
+    }
+  ]
+}

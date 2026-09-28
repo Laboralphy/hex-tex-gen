@@ -1,0 +1,27 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "planks"
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "slab",
+      "patch": {
+        "template": "stoneslab",
+        "stone": {
+          "palette": ["#3b3226", "#6b5a44", "#968067", "#bba589"]
+        }
+      },
+      "x": 25,
+      "y": 31.25,
+      "width": 50,
+      "height": 37.5
+    }
+  ]
+}

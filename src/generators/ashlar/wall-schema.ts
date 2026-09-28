@@ -87,6 +87,203 @@ export function mossGroup() {
 }
 
 /**
+ * The parameter groups of stone surfaces: mortar, bevel, wear, moss, age and the stone
+ * itself. Walls and `stoneslab` share them.
+ */
+export function masonryShape(d: Pick<WallDefaults, 'mortar' | 'bevel' | 'stone'>) {
+    return {
+        mortar: z
+            .strictObject({
+                size: z
+                    .number()
+                    .int()
+                    .min(0)
+                    .default(d.mortar.size)
+                    .describe('joint thickness, in pixels')
+                    .meta(DETAIL),
+                color: color().default(d.mortar.color).describe('mortar color'),
+                noise: ratio()
+                    .optional()
+                    .describe(`brightness variation of the mortar, in [0, 1];${FROM_AGE}`),
+                erosion: ratio()
+                    .optional()
+                    .describe(
+                        `hollowed joints: darker, pitted mortar shadowed by the stones, in [0, 1];${FROM_AGE}`,
+                    ),
+            })
+            .prefault({})
+            .describe('joints between stones'),
+        bevel: z
+            .strictObject({
+                size: z
+                    .number()
+                    .int()
+                    .min(0)
+                    .default(d.bevel.size)
+                    .describe('bevel width, in pixels')
+                    .meta(DETAIL),
+                light: z
+                    .number()
+                    .min(0)
+                    .default(d.bevel.light)
+                    .describe('brightness factor of the top and left edges'),
+                dark: z
+                    .number()
+                    .min(0)
+                    .default(d.bevel.dark)
+                    .describe('brightness factor of the bottom and right edges'),
+            })
+            .prefault({})
+            .describe('stone edges lit from the top-left'),
+        edges: z
+            .strictObject({
+                roughness: z
+                    .number()
+                    .min(0)
+                    .optional()
+                    .describe(`maximum displacement of the stone outlines, in pixels;${FROM_AGE}`)
+                    .meta(DETAIL),
+            })
+            .prefault({})
+            .describe('irregularity of stone outlines'),
+        chips: z
+            .strictObject({
+                ratio: ratio()
+                    .optional()
+                    .describe(`ratio of chipped stones, in [0, 1];${FROM_AGE}`),
+                size: range(z.number().min(0))
+                    .optional()
+                    .describe(`[min, max] chip size, in pixels;${FROM_AGE}`)
+                    .meta(DETAIL),
+            })
+            .prefault({})
+            .describe('broken stone corners'),
+        cracks: z
+            .strictObject({
+                ratio: ratio()
+                    .optional()
+                    .describe(`ratio of cracked stones, in [0, 1];${FROM_AGE}`),
+                length: range(z.number().min(0))
+                    .optional()
+                    .describe(`[min, max] crack length, in pixels;${FROM_AGE}`)
+                    .meta(DETAIL),
+            })
+            .prefault({})
+            .describe('cracks running across stones'),
+        erosion: z
+            .strictObject({
+                corners: z
+                    .number()
+                    .min(0)
+                    .optional()
+                    .describe(`radius of the rounded stone corners, in pixels;${FROM_AGE}`)
+                    .meta(DETAIL),
+                edges: z
+                    .number()
+                    .min(0)
+                    .optional()
+                    .describe(`maximum depth worn into the stone edges, in pixels;${FROM_AGE}`)
+                    .meta(DETAIL),
+            })
+            .prefault({})
+            .describe('stones worn down by time: rounded corners, uneven edges'),
+        stains: z
+            .strictObject({
+                ratio: ratio()
+                    .optional()
+                    .describe(
+                        `chance of a streak running down from the top of each stone;${FROM_AGE}`,
+                    ),
+                length: range(z.number().min(0))
+                    .optional()
+                    .describe(`[min, max] streak length;${FROM_AGE}`)
+                    .meta(LAYOUT),
+                width: z
+                    .number()
+                    .min(1)
+                    .optional()
+                    .describe(`streak width, in pixels;${FROM_AGE}`)
+                    .meta(DETAIL),
+                darkness: ratio()
+                    .optional()
+                    .describe(`darkening at the top of a streak, in [0, 1];${FROM_AGE}`),
+                grime: ratio()
+                    .optional()
+                    .describe(`blotchy darkening of the whole wall, in [0, 1];${FROM_AGE}`),
+            })
+            .prefault({})
+            .describe('dirt: streaks of rainwater and soot, grime'),
+        spalling: z
+            .strictObject({
+                ratio: ratio()
+                    .optional()
+                    .describe(
+                        `ratio of stones with a flaked, recessed patch, in [0, 1];${FROM_AGE}`,
+                    ),
+                size: range(z.number().min(0))
+                    .optional()
+                    .describe(`[min, max] patch radius, in pixels;${FROM_AGE}`)
+                    .meta(DETAIL),
+                depth: ratio()
+                    .optional()
+                    .describe(`darkening of the flaked patches, in [0, 1];${FROM_AGE}`),
+            })
+            .prefault({})
+            .describe('flaked stone faces'),
+        moss: mossGroup(),
+        age: ageParam(),
+        stone: z
+            .strictObject({
+                palette: palette()
+                    .default(d.stone.palette)
+                    .describe('stone colors, from darkest to lightest'),
+                contrast: z
+                    .number()
+                    .min(0)
+                    .default(d.stone.contrast)
+                    .describe('spread of the surface noise over the palette'),
+                shadeVariation: ratio()
+                    .optional()
+                    .describe(`random brightness variation between stones, in [0, 1];${FROM_AGE}`),
+                paletteShift: ratio()
+                    .default(d.stone.paletteShift)
+                    .describe('random shift of each stone along the palette, in [0, 1]'),
+                grain: ratio()
+                    .optional()
+                    .describe(`random brightness variation between pixels, in [0, 1];${FROM_AGE}`)
+                    .meta(DETAIL),
+                noise: z
+                    .strictObject({
+                        period: z
+                            .number()
+                            .int()
+                            .min(1)
+                            .default(d.stone.noise.period)
+                            .describe('noise cells across the patch at the first octave')
+                            .meta(LAYOUT),
+                        octaves: z
+                            .number()
+                            .int()
+                            .min(1)
+                            .max(16)
+                            .default(d.stone.noise.octaves)
+                            .describe('number of noise octaves, each one twice as fine'),
+                        persistence: z
+                            .number()
+                            .gt(0)
+                            .max(1)
+                            .default(d.stone.noise.persistence)
+                            .describe('weight ratio between an octave and the previous one'),
+                    })
+                    .prefault({})
+                    .describe('surface noise'),
+            })
+            .prefault({})
+            .describe('stone surface'),
+    };
+}
+
+/**
  * Parameters of a wall, with the given defaults: `ashlar` and `bricks` share them.
  */
 export function wallSchema(d: WallDefaults) {
@@ -140,200 +337,7 @@ export function wallSchema(d: WallDefaults) {
                 .prefault({})
                 .describe('stones within a row'),
             panel: panelGroup(d.panel),
-            mortar: z
-                .strictObject({
-                    size: z
-                        .number()
-                        .int()
-                        .min(0)
-                        .default(d.mortar.size)
-                        .describe('joint thickness, in pixels')
-                        .meta(DETAIL),
-                    color: color().default(d.mortar.color).describe('mortar color'),
-                    noise: ratio()
-                        .optional()
-                        .describe(`brightness variation of the mortar, in [0, 1];${FROM_AGE}`),
-                    erosion: ratio()
-                        .optional()
-                        .describe(
-                            `hollowed joints: darker, pitted mortar shadowed by the stones, in [0, 1];${FROM_AGE}`,
-                        ),
-                })
-                .prefault({})
-                .describe('joints between stones'),
-            bevel: z
-                .strictObject({
-                    size: z
-                        .number()
-                        .int()
-                        .min(0)
-                        .default(d.bevel.size)
-                        .describe('bevel width, in pixels')
-                        .meta(DETAIL),
-                    light: z
-                        .number()
-                        .min(0)
-                        .default(d.bevel.light)
-                        .describe('brightness factor of the top and left edges'),
-                    dark: z
-                        .number()
-                        .min(0)
-                        .default(d.bevel.dark)
-                        .describe('brightness factor of the bottom and right edges'),
-                })
-                .prefault({})
-                .describe('stone edges lit from the top-left'),
-            edges: z
-                .strictObject({
-                    roughness: z
-                        .number()
-                        .min(0)
-                        .optional()
-                        .describe(
-                            `maximum displacement of the stone outlines, in pixels;${FROM_AGE}`,
-                        )
-                        .meta(DETAIL),
-                })
-                .prefault({})
-                .describe('irregularity of stone outlines'),
-            chips: z
-                .strictObject({
-                    ratio: ratio()
-                        .optional()
-                        .describe(`ratio of chipped stones, in [0, 1];${FROM_AGE}`),
-                    size: range(z.number().min(0))
-                        .optional()
-                        .describe(`[min, max] chip size, in pixels;${FROM_AGE}`)
-                        .meta(DETAIL),
-                })
-                .prefault({})
-                .describe('broken stone corners'),
-            cracks: z
-                .strictObject({
-                    ratio: ratio()
-                        .optional()
-                        .describe(`ratio of cracked stones, in [0, 1];${FROM_AGE}`),
-                    length: range(z.number().min(0))
-                        .optional()
-                        .describe(`[min, max] crack length, in pixels;${FROM_AGE}`)
-                        .meta(DETAIL),
-                })
-                .prefault({})
-                .describe('cracks running across stones'),
-            erosion: z
-                .strictObject({
-                    corners: z
-                        .number()
-                        .min(0)
-                        .optional()
-                        .describe(`radius of the rounded stone corners, in pixels;${FROM_AGE}`)
-                        .meta(DETAIL),
-                    edges: z
-                        .number()
-                        .min(0)
-                        .optional()
-                        .describe(`maximum depth worn into the stone edges, in pixels;${FROM_AGE}`)
-                        .meta(DETAIL),
-                })
-                .prefault({})
-                .describe('stones worn down by time: rounded corners, uneven edges'),
-            stains: z
-                .strictObject({
-                    ratio: ratio()
-                        .optional()
-                        .describe(
-                            `chance of a streak running down from the top of each stone;${FROM_AGE}`,
-                        ),
-                    length: range(z.number().min(0))
-                        .optional()
-                        .describe(`[min, max] streak length;${FROM_AGE}`)
-                        .meta(LAYOUT),
-                    width: z
-                        .number()
-                        .min(1)
-                        .optional()
-                        .describe(`streak width, in pixels;${FROM_AGE}`)
-                        .meta(DETAIL),
-                    darkness: ratio()
-                        .optional()
-                        .describe(`darkening at the top of a streak, in [0, 1];${FROM_AGE}`),
-                    grime: ratio()
-                        .optional()
-                        .describe(`blotchy darkening of the whole wall, in [0, 1];${FROM_AGE}`),
-                })
-                .prefault({})
-                .describe('dirt: streaks of rainwater and soot, grime'),
-            spalling: z
-                .strictObject({
-                    ratio: ratio()
-                        .optional()
-                        .describe(
-                            `ratio of stones with a flaked, recessed patch, in [0, 1];${FROM_AGE}`,
-                        ),
-                    size: range(z.number().min(0))
-                        .optional()
-                        .describe(`[min, max] patch radius, in pixels;${FROM_AGE}`)
-                        .meta(DETAIL),
-                    depth: ratio()
-                        .optional()
-                        .describe(`darkening of the flaked patches, in [0, 1];${FROM_AGE}`),
-                })
-                .prefault({})
-                .describe('flaked stone faces'),
-            moss: mossGroup(),
-            age: ageParam(),
-            stone: z
-                .strictObject({
-                    palette: palette()
-                        .default(d.stone.palette)
-                        .describe('stone colors, from darkest to lightest'),
-                    contrast: z
-                        .number()
-                        .min(0)
-                        .default(d.stone.contrast)
-                        .describe('spread of the surface noise over the palette'),
-                    shadeVariation: ratio()
-                        .optional()
-                        .describe(
-                            `random brightness variation between stones, in [0, 1];${FROM_AGE}`,
-                        ),
-                    paletteShift: ratio()
-                        .default(d.stone.paletteShift)
-                        .describe('random shift of each stone along the palette, in [0, 1]'),
-                    grain: ratio()
-                        .optional()
-                        .describe(
-                            `random brightness variation between pixels, in [0, 1];${FROM_AGE}`,
-                        )
-                        .meta(DETAIL),
-                    noise: z
-                        .strictObject({
-                            period: z
-                                .number()
-                                .int()
-                                .min(1)
-                                .default(d.stone.noise.period)
-                                .describe('noise cells across the patch at the first octave')
-                                .meta(LAYOUT),
-                            octaves: z
-                                .number()
-                                .int()
-                                .min(1)
-                                .max(16)
-                                .default(d.stone.noise.octaves)
-                                .describe('number of noise octaves, each one twice as fine'),
-                            persistence: z
-                                .number()
-                                .gt(0)
-                                .max(1)
-                                .default(d.stone.noise.persistence)
-                                .describe('weight ratio between an octave and the previous one'),
-                        })
-                        .prefault({})
-                        .describe('surface noise'),
-                })
-                .prefault({})
-                .describe('stone surface'),
+            ...masonryShape(d),
         })
         .superRefine((p, ctx) => {
             checkPanelFits(p, ctx);

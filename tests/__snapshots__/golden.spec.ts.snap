@@ -282,6 +282,16 @@ exports[`golden examples > slot-variants/5-bricks.json 1`] = `"64x64 56f4650eb94
 
 exports[`golden examples > slot-variants/6-rusted.json 1`] = `"64x64 b53dc4a7a6c7354394140ff979ab66b25662ccce11d0c123604f174885e02077"`;
 
+exports[`golden examples > stoneslab-variants/1-on-ashlar.json 1`] = `"64x64 7d5f1536d0fe2ba4187b90abd97aeede4f84fd192eba997cdd5e87d2667b325c"`;
+
+exports[`golden examples > stoneslab-variants/2-on-bricks.json 1`] = `"64x64 ca54205c6228f59926116cfd52602a66260866a164d6e0d0570cff2deb1ccd67"`;
+
+exports[`golden examples > stoneslab-variants/3-on-planks.json 1`] = `"64x64 f75c3c1648a819bf658aadd185fb3e8e79254eff02a0b333d84ae68b481c3792"`;
+
+exports[`golden examples > stoneslab-variants/4-ruined-mossy.json 1`] = `"64x64 29dd25dfe524bfd66223efff0d31055bde53eb9c3cfe02c21808a9a431ded184"`;
+
+exports[`golden examples > stoneslab-variants/5-notice-on-metal.json 1`] = `"64x64 cf91ec701bc258ecc656b86b93c32d2c9c3dd2ebabf58a43b0916007c785c5ec"`;
+
 exports[`golden examples > tapestry-variants/1-lozenge.json 1`] = `"64x64 24c31b05522a276a42d2f903d70e25ec48e99e584fdb0403dadf19195fd72fef"`;
 
 exports[`golden examples > tapestry-variants/2-checky.json 1`] = `"64x64 db52b1988401eaea7c687d22c44262b57e091d16083eb71453fb43faaaa59ee0"`;
@@ -309,6 +319,14 @@ exports[`golden examples > window-variants/6-metal-grid.json 1`] = `"64x64 077fb
 exports[`golden examples > window-variants/7-cobwebbed.json 1`] = `"64x64 750ba0e5311121c40520df3e3d4fe7d93103e46cc8ae1f96074791331a662cec"`;
 
 exports[`golden examples > window-variants/8-tall-lit-room.json 1`] = `"64x128 9f90a78a3706a42dedf7a203843ed05ac3cbedacd0b7d3c6ec70f431d15dee42"`;
+
+exports[`golden examples > woodbeam-variants/1-mine-gallery.json 1`] = `"64x128 a4ebd865db5a7d98880356ee5bc89c8136c863fd83df8f4085131871a88151f0"`;
+
+exports[`golden examples > woodbeam-variants/2-log-props.json 1`] = `"64x128 7d02d9e8c1c73c0194625584ea647de880901e56914ce95be5c8b8588b5f988c"`;
+
+exports[`golden examples > woodbeam-variants/3-abandoned-mine.json 1`] = `"64x128 1d223daeb8ad1ef7ed1d90376539ed46928b99035be3b5a0b523dbcfe3b53db0"`;
+
+exports[`golden examples > woodbeam-variants/4-dark-timbers.json 1`] = `"64x128 2aab74fee85f47fba6594ba87ed75346d55e5514a63593cfcbc2b22d393b6d57"`;
 
 exports[`golden templates > ashlar 1`] = `"64x64 892bbd7e63dabb13bf78b83918a2c34ad6f060485da908ae927a1fd8e577a85c"`;
 
@@ -348,8 +366,6 @@ exports[`golden templates > moss 1`] = `"64x16 68993c4f19434e4d5d794f72451da7f64
 
 exports[`golden templates > opening 1`] = `"32x32 38d778ec19e1db0c109b364e8f7ec4b5c31c31cb2e967439a89144191b7634bf"`;
 
-exports[`golden templates > panel 1`] = `"64x64 8a8d0a7ebc0c498f7c6c9a48d07248790f50c375f992911c53917874e995a891"`;
-
 exports[`golden templates > parchment 1`] = `"32x40 6d12559cad41ae7e8a008b20e14c3253528eee7f28fd46ecab328c7f8c4a140b"`;
 
 exports[`golden templates > planks 1`] = `"64x64 d890a3523bda7ef2826e787c5867173202ff92fc7f2a06b17c3090bed7dd35c5"`;
@@ -360,6 +376,10 @@ exports[`golden templates > shield 1`] = `"24x32 79ad3a6690dd294b36cd32f065434e8
 
 exports[`golden templates > slot 1`] = `"10x64 7a88847c0e209ba47696fc87d33b8df43fa4dcadb421c69982fb2427f362d1e1"`;
 
+exports[`golden templates > stoneslab 1`] = `"32x24 dda995904c95416ccb3d00bde5327521201c9f8f3ba88ca840e2c99bd493367e"`;
+
 exports[`golden templates > tapestry 1`] = `"64x40 670bec81d066c223f1e8c048568a80c11ce224afa3adf91358862fbf35372ac3"`;
 
 exports[`golden templates > window 1`] = `"32x40 0ea0580c4d2c8d3b33f8c9551d6c1da1a5757c5763e5341cc08d4bf6733a8314"`;
+
+exports[`golden templates > woodbeam 1`] = `"64x10 8ab2564add104361fbaa71196ab83b430dbefa5b4a6dac5ce7f52e9cc87e78bc"`;

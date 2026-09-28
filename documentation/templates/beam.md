@@ -121,6 +121,8 @@ plank wall:
   `rivets.spacing` pixels. As it ages, the beam rusts, its rivets bleed rust streaks
   running down, whatever its direction, and it gets scratches and tarnish.
 
+For wooden beams, the timbers of a mine for instance, see [`woodbeam`](woodbeam.md).
+
 ## Aging
 
 `age`, from 0 (new) to 1 (ruined), sets every wear parameter left unset. Values in

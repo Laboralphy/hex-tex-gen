@@ -88,7 +88,7 @@ Edges of the sheet.
 ## Usage
 
 `parchment` is an overlay: a sheet pinned on a wall, placed and sized like any patch, or
-anchored, on a `panel` slab for instance. The whole patch is the sheet and its shadow:
+anchored, on a [`stoneslab`](stoneslab.md) for instance. The whole patch is the sheet and its shadow:
 `shadow.offset` pixels are kept at the bottom and on the right for the shadow cast on the
 wall, the light coming from the top-left.
 
@@ -103,11 +103,19 @@ writing area, inside the `margin`, and `sheetCenter`:
 {
   "size": [64, 64],
   "patches": [
-    { "id": "wall", "patch": { "template": "panel" }, "width": 100, "height": 100 },
+    { "patch": { "template": "ashlar" }, "width": 100, "height": 100 },
+    {
+      "id": "slab",
+      "patch": { "template": "stoneslab" },
+      "x": 25,
+      "y": 31.25,
+      "width": 50,
+      "height": 37.5
+    },
     {
       "id": "notice",
       "patch": { "template": "parchment", "size": [24, 20], "age": 0.6 },
-      "anchor": { "to": "wall", "at": "panelCenter", "offset": [-12, -10] },
+      "anchor": { "to": "slab", "at": "slabCenter", "offset": [-12, -10] },
       "width": 37.5,
       "height": 31.25
     },

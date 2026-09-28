@@ -20,6 +20,8 @@ import {
     grassWear,
     type GrassWear,
     slotWear,
+    stoneslabWear,
+    woodbeamWear,
     type SlotWear,
     chainWear,
     type ChainWear,
@@ -363,7 +365,12 @@ const WEAR_ROWS: Record<string, WearRow[]> = {
         ),
         fieldstoneWear,
     ),
+    stoneslab: rows(WEAR_PARAMETERS, stoneslabWear),
     beam: rows(BEAM_WEAR_PARAMETERS, beamWear),
+    woodbeam: rows(
+        PLANK_WEAR_PARAMETERS.filter(([path]) => path !== 'edges.roughness'),
+        woodbeamWear,
+    ),
     chain: rows(CHAIN_WEAR_PARAMETERS, chainWear),
     bookshelf: rows(BOOKSHELF_WEAR_PARAMETERS, bookshelfWear),
     window: rows(WINDOW_WEAR_PARAMETERS, windowWear),
@@ -441,7 +448,7 @@ function isAging(generator: TextureGenerator): boolean {
 }
 
 /** templates whose derived pixel sizes follow the height of their stones */
-const STONE_WALLS = ['ashlar', 'bricks', 'panel', 'fieldstone', 'cavewall'];
+const STONE_WALLS = ['ashlar', 'bricks', 'fieldstone', 'cavewall'];
 
 function agingSection(generator: TextureGenerator): string {
     const name = generator.name;
@@ -475,6 +482,23 @@ ${ageTable(generator)}`;
 
 /** extra sections of some template pages, before the aging section */
 const EXTRA: Record<string, string> = {
+    ashlar: `## The panel
+
+Every stone wall (\`ashlar\`, [\`bricks\`](bricks.md), [\`fieldstone\`](fieldstone.md) and
+[\`metal\`](metal.md)) can build a slab into its own masonry: \`{ "panel": { "enabled": true } }\`
+adds a large stone surrounded by mortar, the joints of the wall stopping at its border and
+the stones around it cut to fit.
+
+- \`panel.x\`, \`panel.y\`, \`panel.width\` and \`panel.height\` are layout values, mortar
+  included: they scale with the patch. Without \`x\` or \`y\`, the slab is centered on that
+  axis.
+- \`panel.snap\` (on by default) moves the top and the bottom of the slab to the nearest row
+  joints, so that no row is cut into a thin strip: the slab height may change to match
+  whole rows. Set it to \`false\` to keep the exact height.
+- The slab ages with the wall, and is reported by the \`panel\` and \`panelCenter\` anchors.
+
+To lay a slab over any other surface, wood or metal for instance, or to place it freely,
+use the [\`stoneslab\`](stoneslab.md) decoration instead.`,
     bricks: `## Bricks and ashlar
 
 \`bricks\` is the [\`ashlar\`](ashlar.md) engine with brick defaults: it has exactly the same
@@ -485,41 +509,6 @@ are aligned; with \`"bond": "random"\`, bricks get random widths, like ashlar st
 In regular bonds, each row holds as many equal bricks as the mean of \`blocks.width\` fits
 in the width, and \`blocks.minJointOffset\` is not used. A running bond needs an even
 \`rows.count\`, so that the texture tiles vertically.`,
-    panel: `## The slab
-
-\`panel\` is the [\`ashlar\`](ashlar.md) engine with its slab enabled: a large stone surrounded
-by mortar, the joints of the wall stopping at its border and the stones around it cut to
-fit. Every wall has the \`panel\` parameters: \`{ "panel": { "enabled": true } }\` adds a slab
-to \`ashlar\` or [\`bricks\`](bricks.md) too.
-
-- \`panel.x\`, \`panel.y\`, \`panel.width\` and \`panel.height\` are layout values, mortar
-  included: they scale with the patch. Without \`x\` or \`y\`, the slab is centered on that
-  axis.
-- \`panel.snap\` (on by default) moves the top and the bottom of the slab to the nearest row
-  joints, so that no row is cut into a thin strip: the slab height may change to match
-  whole rows. Set it to \`false\` to keep the exact height.
-- The slab ages with the wall: \`age\` chips its corners, cracks it and stains it.
-
-## Usage
-
-The slab leaves room for an inscription, a switch or a sign, placed with the \`panel\` or
-\`panelCenter\` anchors. An anchor places the top-left corner of each copy on its point:
-to center a 16 × 16 switch on the slab of a 64 × 64 texture, shift it by half its size:
-
-\`\`\`jsonc
-{
-  "size": [64, 64],
-  "patches": [
-    { "id": "wall", "patch": { "template": "panel" }, "width": 100, "height": 100 },
-    {
-      "patch": "./patches/switch.json",
-      "anchor": { "to": "wall", "at": "panelCenter", "offset": [-8, -8] },
-      "width": 25,
-      "height": 25
-    }
-  ]
-}
-\`\`\``,
     planks: `## Layout
 
 Planks are laid in **lines**: columns of vertical planks, or rows of horizontal ones with
@@ -559,7 +548,7 @@ Planks running across the whole patch have no end, and no \`planks\` anchor: anc
     opening: `## Usage
 
 \`opening\` is an overlay placed over a wall: the whole patch is the opening, placed and
-sized like any patch, or anchored, on a \`panel\` slab for instance. It draws:
+sized like any patch, or anchored, on a [\`stoneslab\`](stoneslab.md) for instance. It draws:
 
 - **reveals**, the inner faces of the cut, \`depth\` pixels wide: the wall below, darkened
   or lightened (\`reveals.*\`, from -1 to 1), so that they are made of the wall's own
@@ -608,7 +597,7 @@ into each corner, see [Anchors](../texture-files.md#anchors):
     parchment: `## Usage
 
 \`parchment\` is an overlay: a sheet pinned on a wall, placed and sized like any patch, or
-anchored, on a \`panel\` slab for instance. The whole patch is the sheet and its shadow:
+anchored, on a [\`stoneslab\`](stoneslab.md) for instance. The whole patch is the sheet and its shadow:
 \`shadow.offset\` pixels are kept at the bottom and on the right for the shadow cast on the
 wall, the light coming from the top-left.
 
@@ -623,11 +612,12 @@ writing area, inside the \`margin\`, and \`sheetCenter\`:
 {
   "size": [64, 64],
   "patches": [
-    { "id": "wall", "patch": { "template": "panel" }, "width": 100, "height": 100 },
+    { "patch": { "template": "ashlar" }, "width": 100, "height": 100 },
+    { "id": "slab", "patch": { "template": "stoneslab" }, "x": 25, "y": 31.25, "width": 50, "height": 37.5 },
     {
       "id": "notice",
       "patch": { "template": "parchment", "size": [24, 20], "age": 0.6 },
-      "anchor": { "to": "wall", "at": "panelCenter", "offset": [-12, -10] },
+      "anchor": { "to": "slab", "at": "slabCenter", "offset": [-12, -10] },
       "width": 37.5,
       "height": 31.25
     },
@@ -674,6 +664,40 @@ rod and its shadow:
   outline and moth holes, through which the wall shows.
 - The \`emblem\` anchor, at the center of the field, and \`field\`, its top-left corner
   inside the border, leave room for a coat of arms.`,
+    stoneslab: `## Usage
+
+\`stoneslab\` is a decoration: a single large stone, the stone of [\`ashlar\`](ashlar.md),
+set in a bed of mortar \`mortar.size\` pixels wide on every side. The whole patch is the
+slab, placed and sized like any patch over any surface: stone, [\`bricks\`](bricks.md),
+[\`planks\`](planks.md) or [\`metal\`](metal.md). It hides the wall below.
+
+It has every stone parameter of \`ashlar\`, and ages like it: chips, cracks, worn edges,
+spalling, stains, hollowed mortar and moss along its top edge. Its derived wear is that of
+an \`ashlar\` stone 16 pixels high, whatever the size of the slab.
+
+The slab leaves room for an inscription, a switch, a sign or a [\`parchment\`](parchment.md),
+placed with the \`slab\` anchor, the top-left corner of its face, or \`slabCenter\`. An
+anchor places the top-left corner of each copy on its point: to center a patch on the slab,
+shift it by half its size:
+
+\`\`\`json
+{
+  "size": [64, 64],
+  "patches": [
+    { "patch": { "template": "planks" }, "width": 100, "height": 100 },
+    { "id": "slab", "patch": { "template": "stoneslab" }, "x": 25, "y": 31.25, "width": 50, "height": 37.5 },
+    {
+      "patch": "./patches/switch.json",
+      "anchor": { "to": "slab", "at": "slabCenter", "offset": [-8, -8] },
+      "width": 25,
+      "height": 25
+    }
+  ]
+}
+\`\`\`
+
+Walls can also build a slab into their own masonry, its joints matching the rows around
+it: see [The panel](ashlar.md#the-panel).`,
     tapestry: `## Usage
 
 \`tapestry\` is a [\`banner\`](banner.md) with the defaults of a tapestry: wide, flat,
@@ -1103,7 +1127,44 @@ plank wall:
   (\`flange\` pixels thick) and a recessed web in their shadow; \`flat\`, a flat strap.
 - Rivets run along each flange of a girder, or along the middle of a strap, every
   \`rivets.spacing\` pixels. As it ages, the beam rusts, its rivets bleed rust streaks
-  running down, whatever its direction, and it gets scratches and tarnish.`,
+  running down, whatever its direction, and it gets scratches and tarnish.
+
+For wooden beams, the timbers of a mine for instance, see [\`woodbeam\`](woodbeam.md).`,
+    woodbeam: `## Usage
+
+\`woodbeam\` is the wooden counterpart of the metal [\`beam\`](beam.md): an overlay, the whole
+patch being the beam and its shadow, made of the wood of [\`planks\`](planks.md), a single
+plank running its whole length. Posts and a cap frame the galleries of a mine, an alcove or
+a door:
+
+\`\`\`json
+{
+  "size": [64, 128],
+  "patches": [
+    { "patch": { "template": "cavewall", "size": [64, 128] } },
+    {
+      "patch": { "template": "woodbeam", "direction": "vertical", "size": [10, 112] },
+      "x": 6, "y": 10, "width": 15.625, "height": 87.5
+    },
+    {
+      "patch": { "template": "woodbeam", "direction": "vertical", "size": [10, 112] },
+      "x": 78.5, "y": 10, "width": 15.625, "height": 87.5
+    },
+    {
+      "patch": { "template": "woodbeam", "size": [64, 11] },
+      "x": 0, "y": 4, "width": 100, "height": 8.6
+    }
+  ]
+}
+\`\`\`
+
+- \`direction\`: a vertical beam is a horizontal one transposed, so that its lighting stays
+  top-left; give it a \`[thickness, length]\` size.
+- \`profile\`: \`squared\`, a sawn timber, its edges bevelled (\`bevel\`); \`log\`, a round
+  log, lit above its middle and dark below.
+- \`wood\` and \`knots\` are those of \`planks\`. As it ages, the wood turns silver-grey,
+  splits along the grain and gets grimy, like planks; its outline stays straight. See
+  [\`examples/woodbeam-variants\`](../../examples/woodbeam-variants).`,
     fieldstone: `## Voronoi stones
 
 \`fieldstone\` lays natural stones of irregular shapes: the cells of a Voronoi diagram, from

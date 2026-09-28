@@ -1,0 +1,40 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "metal"
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "slab",
+      "patch": {
+        "template": "stoneslab",
+        "size": [32, 40],
+        "age": 0.2
+      },
+      "x": 25,
+      "y": 18.75,
+      "width": 50,
+      "height": 62.5
+    },
+    {
+      "patch": {
+        "template": "parchment",
+        "size": [20, 26],
+        "age": 0.6
+      },
+      "anchor": {
+        "to": "slab",
+        "at": "slabCenter",
+        "offset": [-10, -13]
+      },
+      "width": 31.25,
+      "height": 40.625
+    }
+  ]
+}

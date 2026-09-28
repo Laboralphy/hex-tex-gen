@@ -17,14 +17,15 @@ import { gravel } from './gravel';
 import { metal } from './metal';
 import { moss } from './moss';
 import { opening } from './opening';
-import { panel } from './panel';
 import { parchment } from './parchment';
 import { planks } from './planks';
 import { sand } from './sand';
 import { shield } from './shield';
 import { slot } from './slot';
+import { stoneslab } from './stoneslab';
 import { tapestry } from './tapestry';
 import { glassWindow } from './window';
+import { woodbeam } from './woodbeam';
 import type { TextureGenerator } from './types';
 
 export {
@@ -47,20 +48,22 @@ export {
     metal,
     moss,
     opening,
-    panel,
     parchment,
     planks,
     sand,
     shield,
     slot,
+    stoneslab,
     tapestry,
     glassWindow,
+    woodbeam,
 };
 export {
     ashlarSchema,
     ashlarWear,
     computeAshlarLayout,
     checkPanelFits,
+    masonryShape,
     NO_PANEL,
     panelGroup,
     panelRect,
@@ -94,14 +97,15 @@ export { gravelSchema } from './gravel';
 export { metalSchema, metalWear } from './metal';
 export { mossSchema } from './moss';
 export { openingSchema } from './opening';
-export { panelSchema } from './panel';
 export { parchmentSchema, parchmentWear } from './parchment';
 export { computePlanksLayout, planksSchema, planksWear } from './planks';
 export { sandSchema } from './sand';
 export { shieldSchema, shieldWear } from './shield';
 export { slotSchema, slotWear } from './slot';
+export { stoneslabSchema, stoneslabWear } from './stoneslab';
 export { tapestrySchema } from './tapestry';
 export { windowSchema, windowWear } from './window';
+export { woodbeamSchema, woodbeamWear } from './woodbeam';
 export type {
     AshlarBlock,
     AshlarParams,
@@ -132,14 +136,15 @@ export type { GravelParams } from './gravel';
 export type { MetalParams, MetalWear } from './metal';
 export type { MossParams } from './moss';
 export type { OpeningParams } from './opening';
-export type { PanelParams } from './panel';
 export type { ParchmentParams, ParchmentWear } from './parchment';
 export type { Plank, PlankColumn, PlanksParams, PlanksWear } from './planks';
 export type { SandParams } from './sand';
 export type { ShieldParams, ShieldWear } from './shield';
 export type { SlotParams, SlotWear } from './slot';
+export type { StoneslabParams } from './stoneslab';
 export type { TapestryParams } from './tapestry';
 export type { WindowParams, WindowWear } from './window';
+export type { WoodbeamParams } from './woodbeam';
 export { defineGenerator } from './define';
 export type { GeneratorDefinition } from './define';
 export { CATEGORIES } from './types';
@@ -159,7 +164,6 @@ export const generators: Record<string, TextureGenerator> = Object.fromEntries(
     [
         ashlar,
         bricks,
-        panel,
         fieldstone,
         cavewall,
         dirt,
@@ -172,6 +176,7 @@ export const generators: Record<string, TextureGenerator> = Object.fromEntries(
         bookshelf,
         moss,
         opening,
+        stoneslab,
         column,
         entablature,
         slot,
@@ -184,5 +189,6 @@ export const generators: Record<string, TextureGenerator> = Object.fromEntries(
         tapestry,
         shield,
         beam,
+        woodbeam,
     ].map((g) => [g.name, g as unknown as TextureGenerator]),
 );

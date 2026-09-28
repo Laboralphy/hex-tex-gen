@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { ashlar, bricks, panel } from '../src';
+import { ashlar, bricks } from '../src';
+
+/** ashlar with the slab of the former `panel` template */
+const panel = {
+    generate: (params: Parameters<typeof ashlar.generate>[0]) =>
+        ashlar.generate({
+            ...params,
+            panel: { enabled: true, width: 36, height: 30, ...params.panel },
+        }),
+};
 
 // flat colors: black mortar, stones and slab a single light color
 const flat = {
@@ -10,11 +19,9 @@ const flat = {
 };
 const MORTAR = 0x000000ff;
 
-describe('panel', () => {
-    it('is ashlar with a centered slab', () => {
-        expect(panel.defaults.panel.enabled).toBe(true);
+describe('wall panel', () => {
+    it('is disabled by default', () => {
         expect(ashlar.defaults.panel.enabled).toBe(false);
-        expect(Object.keys(panel.defaults)).toEqual(Object.keys(ashlar.defaults));
     });
 
     it('reports the slab anchors, walls without a slab report none', () => {

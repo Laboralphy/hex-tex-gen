@@ -1,0 +1,62 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 128],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "fieldstone",
+        "size": [64, 128],
+        "stones": {
+          "cells": [4, 8]
+        }
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "woodbeam",
+        "wood": {
+          "palette": ["#0e0a08", "#1e1610", "#2e2218", "#3e3020"]
+        },
+        "age": 0.5,
+        "direction": "vertical",
+        "size": [10, 112]
+      },
+      "x": 6,
+      "y": 10,
+      "width": 15.625,
+      "height": 87.5
+    },
+    {
+      "patch": {
+        "template": "woodbeam",
+        "wood": {
+          "palette": ["#0e0a08", "#1e1610", "#2e2218", "#3e3020"]
+        },
+        "age": 0.5,
+        "direction": "vertical",
+        "size": [10, 112]
+      },
+      "x": 78.5,
+      "y": 10,
+      "width": 15.625,
+      "height": 87.5
+    },
+    {
+      "patch": {
+        "template": "woodbeam",
+        "wood": {
+          "palette": ["#0e0a08", "#1e1610", "#2e2218", "#3e3020"]
+        },
+        "age": 0.5,
+        "size": [64, 11]
+      },
+      "x": 0,
+      "y": 4,
+      "width": 100,
+      "height": 8.6
+    }
+  ]
+}

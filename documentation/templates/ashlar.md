@@ -168,6 +168,24 @@ Stone surface.
 | `panel`       | top-left corner of the face of the panel, when enabled                  |
 | `panelCenter` | center of the face of the panel, when enabled                           |
 
+## The panel
+
+Every stone wall (`ashlar`, [`bricks`](bricks.md), [`fieldstone`](fieldstone.md) and
+[`metal`](metal.md)) can build a slab into its own masonry: `{ "panel": { "enabled": true } }`
+adds a large stone surrounded by mortar, the joints of the wall stopping at its border and
+the stones around it cut to fit.
+
+- `panel.x`, `panel.y`, `panel.width` and `panel.height` are layout values, mortar
+  included: they scale with the patch. Without `x` or `y`, the slab is centered on that
+  axis.
+- `panel.snap` (on by default) moves the top and the bottom of the slab to the nearest row
+  joints, so that no row is cut into a thin strip: the slab height may change to match
+  whole rows. Set it to `false` to keep the exact height.
+- The slab ages with the wall, and is reported by the `panel` and `panelCenter` anchors.
+
+To lay a slab over any other surface, wood or metal for instance, or to place it freely,
+use the [`stoneslab`](stoneslab.md) decoration instead.
+
 ## Aging
 
 `age`, from 0 (new) to 1 (ruined), sets every wear parameter left unset. Values in

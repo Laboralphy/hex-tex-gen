@@ -1,0 +1,32 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "fieldstone",
+        "age": 0.8,
+        "moss": {
+          "coverage": 0.4
+        }
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "slab",
+      "patch": {
+        "template": "stoneslab",
+        "age": 1,
+        "moss": {
+          "coverage": 0.6
+        }
+      },
+      "x": 25,
+      "y": 31.25,
+      "width": 50,
+      "height": 37.5
+    }
+  ]
+}
