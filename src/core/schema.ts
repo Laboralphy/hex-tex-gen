@@ -37,7 +37,8 @@ export const color = () =>
         .meta({ kind: 'color' });
 
 /** CSS colors, from darkest to lightest */
-export const palette = () => z.array(color()).min(2, 'expected at least two colors');
+export const palette = () =>
+    z.array(color()).min(2, 'expected at least two colors').meta({ kind: 'palette' });
 
 /** a number in [0, 1] */
 export const ratio = () => z.number().min(0).max(1);

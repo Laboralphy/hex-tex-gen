@@ -3,6 +3,10 @@
  *
  * @packageDocumentation
  */
+export { describeParameters, templateCatalog } from './catalog';
+export type { ParameterInfo, ParameterKind, TemplateInfo } from './catalog';
+export { deepMerge } from './core/object-fusion';
+export { expandPath } from './core/params';
 export { Texture } from './core/Texture';
 export type { AnchorPoint, Corner } from './core/Texture';
 export { hash, hashRange, hashSeed } from './core/hash';

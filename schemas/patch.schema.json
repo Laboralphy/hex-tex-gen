@@ -474,7 +474,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             }
           },
           "additionalProperties": false
@@ -499,7 +500,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "contrast": {
               "default": 0.9,
@@ -1037,7 +1039,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             }
           },
           "additionalProperties": false
@@ -1062,7 +1065,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "contrast": {
               "default": 0.6,
@@ -1600,7 +1604,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             }
           },
           "additionalProperties": false
@@ -1625,7 +1630,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "contrast": {
               "default": 0.9,
@@ -2124,7 +2130,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             }
           },
           "additionalProperties": false
@@ -2149,7 +2156,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "contrast": {
               "default": 0.9,
@@ -2648,7 +2656,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             }
           },
           "additionalProperties": false
@@ -2673,7 +2682,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "contrast": {
               "default": 0.8,
@@ -2789,7 +2799,8 @@
           "items": {
             "type": "string",
             "kind": "color"
-          }
+          },
+          "kind": "palette"
         },
         "blotches": {
           "default": 4,
@@ -2917,7 +2928,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             }
           },
           "additionalProperties": false
@@ -2942,7 +2954,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "blotches": {
               "default": 4,
@@ -3086,7 +3099,8 @@
           "items": {
             "type": "string",
             "kind": "color"
-          }
+          },
+          "kind": "palette"
         },
         "ripples": {
           "description": "ripples left by the wind: a long lit slope, a short shadowed one",
@@ -3221,7 +3235,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "shift": {
               "default": 0.35,
@@ -3260,7 +3275,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "blotches": {
               "default": 4,
@@ -3546,7 +3562,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "sheen": {
               "default": 0.3,
@@ -3635,7 +3652,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "streaks": {
               "description": "ratio of rivets with a rust streak running down; when unset, derived from age",
@@ -3880,7 +3898,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "contrast": {
               "default": 0.8,
@@ -4153,7 +4172,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             }
           },
           "additionalProperties": false
@@ -4171,7 +4191,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             }
           },
           "additionalProperties": false
@@ -4367,7 +4388,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "back": {
               "default": 0.4,
@@ -4684,7 +4706,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "alpha": {
               "default": 0.9,
@@ -4990,7 +5013,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "veins": {
               "default": 3,
@@ -5170,7 +5194,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "veins": {
               "default": 3,
@@ -5309,7 +5334,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "brushed": {
               "default": 0.12,
@@ -5376,7 +5402,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "streaks": {
               "description": "ratio of rivets with a rust streak running down; when unset, derived from age",
@@ -5530,7 +5557,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "grain": {
               "default": 0.04,
@@ -5592,7 +5620,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "streaks": {
               "description": "ratio of rivets with a rust streak running down; when unset, derived from age",
@@ -5837,7 +5866,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "grain": {
               "default": 0.05,
@@ -6003,7 +6033,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "metal": {
               "default": ["#2b2f33", "#474d53", "#687077", "#8f979e"],
@@ -6013,7 +6044,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "grain": {
               "default": 0.06,
@@ -6151,7 +6183,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "streaks": {
               "description": "ratio of rivets with a rust streak running down; when unset, derived from age",
@@ -6411,7 +6444,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "contrast": {
               "default": 0.5,
@@ -7381,7 +7415,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             }
           },
           "additionalProperties": false
@@ -7548,7 +7583,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "brushed": {
               "default": 0.12,
@@ -7638,7 +7674,8 @@
               "items": {
                 "type": "string",
                 "kind": "color"
-              }
+              },
+              "kind": "palette"
             },
             "streaks": {
               "description": "ratio of rivets with a rust streak running down; when unset, derived from age",

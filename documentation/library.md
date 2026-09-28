@@ -92,6 +92,55 @@ The schemas are exported, to validate or build definitions in your own code:
 `parseWith(schema, value)` parses with readable errors. `ashlarWear(params)` returns the
 wear values of an `ashlar` wall, resolved from its `age`.
 
+## Building a user interface
+
+The library exposes what a form or a texture picker needs, so that an editor never
+hard-codes a template:
+
+```ts
+import {
+  createMemoryLoader,
+  deepMerge,
+  describeParameters,
+  expandPath,
+  generators,
+  renderTexture,
+  templateCatalog,
+} from '@laboralphy/hex-tex-gen';
+
+// the templates, with their category, own size, overlay flag, age, anchors
+const catalog = templateCatalog();
+
+// the parameters of a template, flattened: a field per parameter
+const fields = describeParameters(generators.ashlar);
+const simple = fields.filter((p) => p.essential); // age, colors, style choices
+```
+
+Each parameter has a `path` (`stone.palette`), a `kind` telling which field fits it
+(`number`, `integer`, `boolean`, `enum`, `color`, `palette`, `colors`, `range`, `pair`,
+`choices`...), its `default`, `minimum`, `maximum` and `options`, its `description`, its
+`scale` (`layout` or `detail`), and `fromAge` when an unset value is derived from `age`.
+`essential` marks the few worth showing in a simplified form: `age`, the colors, and the
+style choices at the top level of the template.
+
+The values of a form become parameters with `expandPath`, merged with `deepMerge`:
+
+```ts
+const params = deepMerge(
+  expandPath('stone.palette', ['#2a2a2a', '#9a9a9a']),
+  expandPath('age', 0.8),
+);
+const texture = renderTexture(
+  { size: [64, 96], seed: 7, patches: [{ patch: { template: 'ashlar', ...params } }] },
+  createMemoryLoader({}),
+);
+```
+
+A texture's `data` is laid out like the browser's `ImageData`: draw it with
+`new ImageData(texture.data, texture.width, texture.height)` and `putImageData`, or send
+its buffer out of a Web Worker, where rendering keeps the page responsive. The library has
+no dependency on Node: it runs in a browser and in workers.
+
 ## Writing a template
 
 A template is defined with `defineGenerator`: a Zod schema of its parameters, and a
