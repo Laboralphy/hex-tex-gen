@@ -1,0 +1,25 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 64],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "bricks"
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "glyph",
+        "type": "tally",
+        "chaos": 0.35
+      },
+      "x": 25,
+      "y": 31.25,
+      "width": 50,
+      "height": 37.5
+    }
+  ]
+}

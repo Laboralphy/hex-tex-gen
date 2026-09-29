@@ -186,6 +186,18 @@ exports[`golden examples > fieldstone-variants/13-mossy-cobbles.json 1`] = `"64x
 
 exports[`golden examples > fieldstone-variants/14-lichen.json 1`] = `"64x64 4bcc6754cb1d161c2cceda43b63c5bb79de350da0828e16de3c607477bb489a5"`;
 
+exports[`golden examples > glyph-variants/1-pentagram-in-blood.json 1`] = `"64x64 b06c8dd8e1faa5980ebcf174078021a1b546c5fa3a778ee4694c9ae450c77a8a"`;
+
+exports[`golden examples > glyph-variants/2-rune-grid.json 1`] = `"64x64 ffbc514890fdc48e8dc4ceca4062bd8d1f349c505d11c20bca5f81aff04b7735"`;
+
+exports[`golden examples > glyph-variants/3-alchemical-circle.json 1`] = `"64x64 68e465ab086ab53172529dbde2ba4c141f9a1c5d8342dc68358dfe63f6447320"`;
+
+exports[`golden examples > glyph-variants/4-faded-alchemy.json 1`] = `"64x64 59e84a87b6225752eda4536d42bf2f333935e390d4de502cc3ad3a7358c7649b"`;
+
+exports[`golden examples > glyph-variants/5-prison-tally.json 1`] = `"64x64 3345b17247015c21214706a7d2d27eedc2b192f2edb6e1042932724732e3d884"`;
+
+exports[`golden examples > glyph-variants/6-tally-three.json 1`] = `"64x64 aa5a5c13d184de4e7db37778b202fc76810c0c5fe2d3ad8930ba84c5319cf3e6"`;
+
 exports[`golden examples > ground-variants/01-dirt.json 1`] = `"64x64 a9cb2a2d851e89d738c4a98f8450fb3a794d416f6920f7ff3e98c4ee926c69d5"`;
 
 exports[`golden examples > ground-variants/02-mud.json 1`] = `"64x64 e5a8c433fe383506b0d03af64e4b70822154e8d5e09f095d43e44e9d742fbff0"`;
@@ -282,6 +294,16 @@ exports[`golden examples > slot-variants/5-bricks.json 1`] = `"64x64 56f4650eb94
 
 exports[`golden examples > slot-variants/6-rusted.json 1`] = `"64x64 b53dc4a7a6c7354394140ff979ab66b25662ccce11d0c123604f174885e02077"`;
 
+exports[`golden examples > splatter-variants/1-blood-on-ashlar.json 1`] = `"64x64 dfb6c12a1906bfff4d7f91efa255309ee833f172f618e6999dddcecca5122d25"`;
+
+exports[`golden examples > splatter-variants/2-thrown-on-bricks.json 1`] = `"64x64 3d9729d1cbdc010c2b79aa94d59c0ba2550949e38b3e93451691ed3d7f84e1dd"`;
+
+exports[`golden examples > splatter-variants/3-slime-on-fieldstone.json 1`] = `"64x64 6661f6d9ff0e70482a3ca0c332e37ed415ed31ba332716e91f64a2ec1a26a76a"`;
+
+exports[`golden examples > splatter-variants/4-dry-blood-on-floor.json 1`] = `"64x64 b89fa834e6bf5196f3098323a3563f452b13a19fa861227ca35e7e9dca63170b"`;
+
+exports[`golden examples > splatter-variants/5-water-on-metal.json 1`] = `"64x64 4e3afecf363aa74599170315a24a3a1ac1c245874bfdf928056f15dcaab3c1b7"`;
+
 exports[`golden examples > stoneslab-variants/1-on-ashlar.json 1`] = `"64x64 7d5f1536d0fe2ba4187b90abd97aeede4f84fd192eba997cdd5e87d2667b325c"`;
 
 exports[`golden examples > stoneslab-variants/2-on-bricks.json 1`] = `"64x64 ca54205c6228f59926116cfd52602a66260866a164d6e0d0570cff2deb1ccd67"`;
@@ -356,6 +378,8 @@ exports[`golden templates > entablature 1`] = `"64x16 8e8ae74937807cac7d05017d26
 
 exports[`golden templates > fieldstone 1`] = `"64x64 266a1cc49c5d62a4328fd351165844d9d3c5acd16062d65a0c08ccc42a5daeab"`;
 
+exports[`golden templates > glyph 1`] = `"32x32 0f3634410422ca3d5ebb9464d5b955e3f84b46012c899029bbc67d7fa136c168"`;
+
 exports[`golden templates > grass 1`] = `"64x64 b2fe50e3f931e8f897c9039528df4fe60009d8bd7c74468426835174f13c30e9"`;
 
 exports[`golden templates > gravel 1`] = `"64x64 9d51fcd4f14a1a084a2f4186126bd9bc094df04e53841622f156a9a5cb662f46"`;
@@ -375,6 +399,8 @@ exports[`golden templates > sand 1`] = `"64x64 803105e6fc005eb8a565c7d83098ac8a1
 exports[`golden templates > shield 1`] = `"24x32 79ad3a6690dd294b36cd32f065434e8a6b94fc0d9d9aba7d7db8a8cb93117e07"`;
 
 exports[`golden templates > slot 1`] = `"10x64 7a88847c0e209ba47696fc87d33b8df43fa4dcadb421c69982fb2427f362d1e1"`;
+
+exports[`golden templates > splatter 1`] = `"32x32 654ae4db089bf43c0f5bd1fb6f855f41a4742e23c306a03183ff921f117ccda3"`;
 
 exports[`golden templates > stoneslab 1`] = `"32x24 dda995904c95416ccb3d00bde5327521201c9f8f3ba88ca840e2c99bd493367e"`;
 

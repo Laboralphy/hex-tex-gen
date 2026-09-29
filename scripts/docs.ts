@@ -11,6 +11,8 @@ import {
     bannerWear,
     barsWear,
     cobwebWear,
+    glyphWear,
+    type GlyphWear,
     columnWear,
     type ColumnWear,
     entablatureWear,
@@ -375,6 +377,7 @@ const WEAR_ROWS: Record<string, WearRow[]> = {
     bookshelf: rows(BOOKSHELF_WEAR_PARAMETERS, bookshelfWear),
     window: rows(WINDOW_WEAR_PARAMETERS, windowWear),
     cobweb: rows(COBWEB_WEAR_PARAMETERS, cobwebWear),
+    glyph: rows([['fading', (w: GlyphWear) => w.fading]], glyphWear),
     bars: rows(BARS_WEAR_PARAMETERS, barsWear),
     metal: rows(METAL_WEAR_PARAMETERS, metalWear),
     banner: rows(BANNER_WEAR_PARAMETERS, bannerWear),
@@ -1032,6 +1035,70 @@ transparent elsewhere. Anchor it on the \`corners\` of an [\`opening\`](opening.
   back is transparent; a \`thread.alpha\` below 1 makes them translucent pixels.
 - As it ages, the web tears (\`torn\`: threads missing, spokes stopping short) and gathers
   \`dust\`: greyer threads, and a matted sheet filling the apex.`,
+    splatter: `## Usage
+
+\`splatter\` is an overlay: a splash of liquid, transparent elsewhere. Every stain is a
+filled circle: a ragged pool where the liquid hit, streaks shooting out of it, each ending
+in a droplet, and droplets scattered around, denser and larger near the pool. Lay it over
+a wall or a floor:
+
+\`\`\`json
+{
+  "size": [64, 64],
+  "patches": [
+    { "patch": { "template": "ashlar" }, "width": 100, "height": 100 },
+    {
+      "patch": { "template": "splatter" },
+      "x": 12.5, "y": 12.5, "width": 75, "height": 75
+    }
+  ]
+}
+\`\`\`
+
+- The splash never crosses the edges of its patch: a placement inside the texture leaves
+  nothing to wrap around it. \`impact.radius\` is clamped so that the pool fits.
+- \`direction.angle\` is where the liquid was thrown, 0 to the right, 90 downwards;
+  \`direction.bias\` how much the splash leans that way: the pool is pushed back, and the
+  streaks and droplets gather and fly farther along the throw. 0 is a drop fallen straight
+  on the wall.
+- Blood by default: another \`liquid.color\` and \`liquid.alpha\` make it slime, oil or
+  water. \`liquid.gloss\` lights the top-left of the stains larger than \`highlight\`
+  pixels; 0 gives a dry stain.`,
+    glyph: `## Usage
+
+\`glyph\` is an overlay: a sign written on the wall, transparent elsewhere. \`type\` picks
+the sign:
+
+- \`pentagram\`: an inverted five-pointed star, one point down, inside two concentric
+  circles;
+- \`grid\`: a 3 × 3 grid, an unreadable character of a few strokes in \`grid.filled\` of its
+  squares, picked by the seed;
+- \`alchemy\`: an alchemical circle: a double ring divided by ticks, a triangle, a square
+  or a hexagram inscribed in it, small circles on its vertices and a circle in its heart;
+  the seed picks the figure and the divisions;
+- \`tally\`: days counted by a prisoner, \`tally.count\` from 1 to 5, the fifth stroke
+  across the four others.
+
+\`\`\`json
+{
+  "size": [64, 64],
+  "patches": [
+    { "patch": { "template": "ashlar" }, "width": 100, "height": 100 },
+    {
+      "patch": { "template": "glyph", "type": "alchemy", "age": 0.6 },
+      "x": 12.5, "y": 12.5, "width": 75, "height": 75
+    }
+  ]
+}
+\`\`\`
+
+- The sign is drawn in the largest square centered in the patch, and scales with it; the
+  strokes keep their \`stroke.thickness\`, in pixels.
+- \`chaos\` shakes the hand: each stroke wanders off its path, and tally strokes lean and
+  vary in length.
+- Chalk by default: a \`stroke.color\` such as \`#8e1b14\` paints it in red.
+- As it ages, the writing fades in cloudy blotches (\`fading\`): some parts worn away, the
+  others faint.`,
     bars: `## Usage
 
 \`bars\` is an overlay: vertical metal bars held by horizontal rails, the whole patch being
@@ -1253,13 +1320,7 @@ const CATALOG: Record<Category, { title: string; text: string; ideas: string[] }
     dungeon: {
         title: 'Dungeon',
         text: 'Prisons, cellars and torture chambers.',
-        ideas: [
-            'shackles on a short bar',
-            'skulls and bones',
-            'blood stains',
-            'sewer grates',
-            'tally marks scratched in the stone',
-        ],
+        ideas: ['shackles on a short bar', 'skulls and bones', 'sewer grates'],
     },
     architecture: {
         title: 'Architecture',

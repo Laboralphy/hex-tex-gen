@@ -13,6 +13,7 @@ import { door } from './door';
 import { entablature } from './entablature';
 import { fieldstone } from './fieldstone';
 import { grass } from './grass';
+import { glyph } from './glyph';
 import { gravel } from './gravel';
 import { metal } from './metal';
 import { moss } from './moss';
@@ -22,6 +23,7 @@ import { planks } from './planks';
 import { sand } from './sand';
 import { shield } from './shield';
 import { slot } from './slot';
+import { splatter } from './splatter';
 import { stoneslab } from './stoneslab';
 import { tapestry } from './tapestry';
 import { glassWindow } from './window';
@@ -43,6 +45,7 @@ export {
     door,
     entablature,
     fieldstone,
+    glyph,
     grass,
     gravel,
     metal,
@@ -53,6 +56,7 @@ export {
     sand,
     shield,
     slot,
+    splatter,
     stoneslab,
     tapestry,
     glassWindow,
@@ -89,6 +93,7 @@ export {
     voronoiMasonry,
 } from './fieldstone';
 export { grassSchema, grassWear } from './grass';
+export { glyphSchema, glyphWear } from './glyph';
 export { gravelSchema } from './gravel';
 export { metalSchema, metalWear } from './metal';
 export { mossSchema } from './moss';
@@ -98,6 +103,7 @@ export { computePlanksLayout, planksSchema, planksWear } from './planks';
 export { sandSchema } from './sand';
 export { shieldSchema, shieldWear } from './shield';
 export { slotSchema, slotWear } from './slot';
+export { splatterSchema } from './splatter';
 export { stoneslabSchema, stoneslabWear } from './stoneslab';
 export { tapestrySchema } from './tapestry';
 export { windowSchema, windowWear } from './window';
@@ -128,6 +134,7 @@ export type { DoorParams } from './door';
 export type { EntablatureParams, EntablatureWear } from './entablature';
 export type { FieldstoneParams } from './fieldstone';
 export type { GrassParams, GrassWear } from './grass';
+export type { GlyphParams, GlyphWear } from './glyph';
 export type { GravelParams } from './gravel';
 export type { MetalParams, MetalWear } from './metal';
 export type { MossParams } from './moss';
@@ -137,6 +144,7 @@ export type { Plank, PlankColumn, PlanksParams, PlanksWear } from './planks';
 export type { SandParams } from './sand';
 export type { ShieldParams, ShieldWear } from './shield';
 export type { SlotParams, SlotWear } from './slot';
+export type { SplatterParams } from './splatter';
 export type { StoneslabParams } from './stoneslab';
 export type { TapestryParams } from './tapestry';
 export type { WindowParams, WindowWear } from './window';
@@ -180,6 +188,8 @@ export const generators: Record<string, TextureGenerator> = Object.fromEntries(
         chain,
         glassWindow,
         cobweb,
+        splatter,
+        glyph,
         parchment,
         banner,
         tapestry,

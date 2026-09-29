@@ -5990,6 +5990,365 @@
           "type": "string"
         },
         "template": {
+          "const": "splatter",
+          "description": "Splash of blood, or of any liquid: a ragged pool, streaks and droplets"
+        },
+        "seed": {
+          "description": "seed of this patch, unless the placement sets one",
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "size": {
+          "default": [32, 32],
+          "description": "own size of the patch in pixels; layout values are expressed at this size",
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "impact": {
+          "description": "the pool at the point of impact",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "radius": {
+              "default": 4,
+              "description": "radius of the pool where the liquid hit, clamped to the patch (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "number",
+              "minimum": 0.5
+            },
+            "lobes": {
+              "default": 7,
+              "description": "smaller circles overlapping the rim of the pool, making it ragged",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "additionalProperties": false
+        },
+        "spikes": {
+          "description": "streaks radiating from the pool",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "count": {
+              "default": 6,
+              "description": "streaks shooting out of the pool, tapering to a droplet",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "length": {
+              "default": [0.3, 0.75],
+              "description": "[min, max] length of a streak, as a share of the room between the pool and the patch edge",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "additionalProperties": false
+        },
+        "drops": {
+          "description": "droplets around the pool",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "count": {
+              "default": 28,
+              "description": "droplets scattered around the pool, denser near it",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "radius": {
+              "default": [0.5, 1.8],
+              "description": "[min, max] radius of a droplet; the farther, the smaller (layout: scales with the patch)",
+              "scale": "layout",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "number",
+                  "minimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "spread": {
+              "default": 0.9,
+              "description": "how far the droplets fly, as a share of the room between the pool and the patch edge, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "streaks": {
+              "default": 0.35,
+              "description": "share of the droplets drawn out along their flight into a short tapering tail, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "direction": {
+          "description": "direction of the splash",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "angle": {
+              "default": 60,
+              "description": "direction the liquid was thrown, in degrees: 0 to the right, 90 downwards",
+              "type": "number"
+            },
+            "bias": {
+              "default": 0.3,
+              "description": "how much the splash leans that way, in [0, 1]: 0 is a drop fallen straight on the wall, 1 a jet thrown sideways",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "liquid": {
+          "description": "the liquid",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "color": {
+              "default": "#5a1e12",
+              "description": "color of the liquid: blood by default",
+              "type": "string",
+              "kind": "color"
+            },
+            "alpha": {
+              "default": 0.9,
+              "description": "alpha of the liquid, in [0, 1]: lower for a thin or watery liquid",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "rim": {
+              "default": 0.25,
+              "description": "darkening of the edges of the stains, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "gloss": {
+              "default": 0.2,
+              "description": "highlight on the top-left of the larger stains, in [0, 1]: 0 for a dry stain",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "grain": {
+              "default": 0.06,
+              "description": "random brightness variation between pixels, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "highlight": {
+          "default": 2,
+          "description": "radius from which a stain gets a gloss highlight, in pixels (detail: real pixels, does not scale)",
+          "scale": "detail",
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "title": "splatter",
+      "description": "Splash of blood, or of any liquid: a ragged pool, streaks and droplets",
+      "required": ["template"]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "description": "JSON Schema of this file, for editors",
+          "type": "string"
+        },
+        "extends": {
+          "description": "parent patch file, relative to this file, deep-merged under this one",
+          "type": "string"
+        },
+        "template": {
+          "const": "glyph",
+          "description": "Glyph written on a wall: pentagram, grid of runes, alchemical circle or tally"
+        },
+        "seed": {
+          "description": "seed of this patch, unless the placement sets one",
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "size": {
+          "default": [32, 32],
+          "description": "own size of the patch in pixels",
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "type": {
+          "default": "pentagram",
+          "description": "pentagram: an inverted five-pointed star, one point down, inside concentric circles; grid: a 3 × 3 grid, unreadable characters in some squares; alchemy: an alchemical or astrological circle, its figure picked by the seed; tally: strokes counting days, the fifth across the four others",
+          "type": "string",
+          "enum": ["pentagram", "grid", "alchemy", "tally"]
+        },
+        "grid": {
+          "description": "the grid type",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "filled": {
+              "default": 5,
+              "description": "grid only: squares holding a character, from 0 to 9",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9
+            }
+          },
+          "additionalProperties": false
+        },
+        "tally": {
+          "description": "the tally type",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "count": {
+              "default": 5,
+              "description": "tally only: the number counted, from 1 to 5",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            }
+          },
+          "additionalProperties": false
+        },
+        "chaos": {
+          "default": 0.15,
+          "description": "jitter of the scribing, in [0, 1]: 0 is a steady hand, 1 a shaking one; tally strokes also lean and vary in length",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "stroke": {
+          "description": "the strokes of the writing",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "color": {
+              "default": "#d8d0bc",
+              "description": "color of the writing: chalk by default",
+              "type": "string",
+              "kind": "color"
+            },
+            "alpha": {
+              "default": 0.9,
+              "description": "alpha of the writing, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "thickness": {
+              "default": 1,
+              "description": "thickness of the strokes, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 1
+            },
+            "grain": {
+              "default": 0.08,
+              "description": "random brightness variation between pixels, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "age": {
+          "default": 0.3,
+          "description": "overall aging, from 0 (fresh) to 1 (nearly erased): sets every wear parameter left unset",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "fading": {
+          "description": "cloudy variation of the alpha of the writing, in [0, 1]: blotches worn away, the rest faint; when unset, derived from age",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": false,
+      "title": "glyph",
+      "description": "Glyph written on a wall: pentagram, grid of runes, alchemical circle or tally",
+      "required": ["template"]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "description": "JSON Schema of this file, for editors",
+          "type": "string"
+        },
+        "extends": {
+          "description": "parent patch file, relative to this file, deep-merged under this one",
+          "type": "string"
+        },
+        "template": {
           "const": "parchment",
           "description": "Sheet of parchment pinned on a wall, blank or aged, room for decals"
         },
