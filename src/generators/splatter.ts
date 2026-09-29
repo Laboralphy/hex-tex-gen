@@ -2,7 +2,7 @@ import { Rainbow } from '@laboralphy/rainbow';
 import { z } from 'zod';
 import { hash, hashRange } from '../core/hash';
 import { shade } from '../core/palette';
-import { color, DETAIL, LAYOUT, range, ratio, size } from '../core/schema';
+import { color, DETAIL, ESSENTIAL, LAYOUT, range, ratio, size } from '../core/schema';
 import { Texture } from '../core/Texture';
 import { defineGenerator } from './define';
 
@@ -79,12 +79,14 @@ export const splatterSchema = z.strictObject({
                 .default(60)
                 .describe(
                     'direction the liquid was thrown, in degrees: 0 to the right, 90 downwards',
-                ),
+                )
+                .meta(ESSENTIAL),
             bias: ratio()
                 .default(0.3)
                 .describe(
                     'how much the splash leans that way, in [0, 1]: 0 is a drop fallen straight on the wall, 1 a jet thrown sideways',
-                ),
+                )
+                .meta(ESSENTIAL),
         })
         .prefault({})
         .describe('direction of the splash'),

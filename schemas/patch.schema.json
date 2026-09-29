@@ -6132,11 +6132,13 @@
             "angle": {
               "default": 60,
               "description": "direction the liquid was thrown, in degrees: 0 to the right, 90 downwards",
+              "essential": true,
               "type": "number"
             },
             "bias": {
               "default": 0.3,
               "description": "how much the splash leans that way, in [0, 1]: 0 is a drop fallen straight on the wall, 1 a jet thrown sideways",
+              "essential": true,
               "type": "number",
               "minimum": 0,
               "maximum": 1

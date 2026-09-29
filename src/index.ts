@@ -16,6 +16,7 @@ export {
     ageParam,
     color,
     DETAIL,
+    ESSENTIAL,
     formatIssues,
     FROM_AGE,
     LAYOUT,

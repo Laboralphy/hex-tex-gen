@@ -203,7 +203,8 @@ export const pillar = defineGenerator({
 ```
 
 Every property needs a default (nested objects use `.prefault({})`), and `size` is
-required. Mark layout values with `.meta(LAYOUT)` and detail values with `.meta(DETAIL)`.
+required. Mark layout values with `.meta(LAYOUT)` and detail values with `.meta(DETAIL)`;
+`.meta(ESSENTIAL)` shows a parameter in simplified forms (see `describeParameters`).
 A template can declare `anchors` (names and descriptions) and fill `texture.anchors` in
 `render`, and set `overlay: true` when it is transparent by design.
 

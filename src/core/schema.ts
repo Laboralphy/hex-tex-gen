@@ -12,6 +12,12 @@ export const LAYOUT = { scale: 'layout' } as const;
  */
 export const DETAIL = { scale: 'detail' } as const;
 
+/**
+ * Metadata of a parameter worth showing in a simplified form, besides `age`, the colors and
+ * the top-level style choices that are essential anyway.
+ */
+export const ESSENTIAL = { essential: true } as const;
+
 const HEX_COLOR = /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
 
 function isColor(value: string): boolean {

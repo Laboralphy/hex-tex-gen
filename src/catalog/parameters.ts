@@ -43,8 +43,8 @@ export type ParameterInfo = {
     /** layout values scale with the patch; detail values are real pixels */
     scale?: 'layout' | 'detail';
     /**
-     * worth showing in a simplified form: `age`, the colors, and the style choices at the
-     * top level of the template
+     * worth showing in a simplified form: `age`, the colors, the style choices at the top
+     * level of the template, and the parameters marked with `ESSENTIAL`
      */
     essential: boolean;
 };
@@ -60,6 +60,7 @@ type JsonSchema = {
     enum?: unknown[];
     kind?: string;
     scale?: string;
+    essential?: boolean;
     properties?: Record<string, JsonSchema>;
     items?: JsonSchema | false;
     prefixItems?: JsonSchema[];
@@ -145,6 +146,7 @@ export function describeParameters(generator: TextureGenerator): ParameterInfo[]
                 options: (s.enum ?? (s.items ? s.items.enum : undefined))?.map(String),
                 scale: s.scale === 'layout' || s.scale === 'detail' ? s.scale : undefined,
                 essential:
+                    s.essential === true ||
                     path === 'age' ||
                     (colorful && depth <= 1) ||
                     (depth === 0 && (kind === 'enum' || kind === 'boolean')),

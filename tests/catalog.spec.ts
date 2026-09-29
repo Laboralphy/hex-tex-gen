@@ -64,7 +64,7 @@ describe('describeParameters', () => {
         expect(find('ashlar', 'blocks.width').scale).toBe('layout');
     });
 
-    it('marks the essential parameters: age, colors, top-level style choices', () => {
+    it('marks the essential parameters: age, colors, top-level style choices, marked ones', () => {
         const essential = (template: string) =>
             describeParameters(generators[template])
                 .filter((p) => p.essential)
@@ -76,6 +76,10 @@ describe('describeParameters', () => {
         expect(essential('shield')).toEqual(
             expect.arrayContaining(['shape', 'swords', 'field.tinctures']),
         );
+        expect(essential('splatter')).toEqual(
+            expect.arrayContaining(['direction.angle', 'direction.bias', 'liquid.color']),
+        );
+        expect(essential('splatter')).not.toContain('drops.count');
     });
 
     it('flags as derived from age only parameters without a default, of aging templates', () => {

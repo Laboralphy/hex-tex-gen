@@ -1,6 +1,6 @@
 {
   "name": "@laboralphy/hex-tex-gen",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Procedural generator of Hexen/Doom-like 2D bitmap textures, with a CLI producing PNG files.",
   "author": {
     "name": "Raphaël Marandet",

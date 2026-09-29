@@ -120,8 +120,9 @@ Each parameter has a `path` (`stone.palette`), a `kind` telling which field fits
 (`number`, `integer`, `boolean`, `enum`, `color`, `palette`, `colors`, `range`, `pair`,
 `choices`...), its `default`, `minimum`, `maximum` and `options`, its `description`, its
 `scale` (`layout` or `detail`), and `fromAge` when an unset value is derived from `age`.
-`essential` marks the few worth showing in a simplified form: `age`, the colors, and the
-style choices at the top level of the template.
+`essential` marks the few worth showing in a simplified form: `age`, the colors, the
+style choices at the top level of the template, and the parameters a template marks with
+`.meta(ESSENTIAL)`, such as the direction of a [`splatter`](templates/splatter.md).
 
 The values of a form become parameters with `expandPath`, merged with `deepMerge`:
 
