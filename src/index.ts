@@ -50,6 +50,25 @@ export type {
     TextureDefinition,
 } from './compose';
 export {
+    ambiances,
+    cave,
+    drawTheme,
+    dungeon,
+    generateSet,
+    plainWall,
+    recipes,
+    splatteredWall,
+} from './themes';
+export type {
+    Ambiance,
+    GenerateSetOptions,
+    TextureRecipe,
+    TextureSet,
+    Theme,
+    ThemeOverrides,
+    ThemePatch,
+} from './themes';
+export {
     generators,
     CATEGORIES,
     defineGenerator,

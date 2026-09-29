@@ -1,0 +1,21 @@
+{
+  "size": [
+    64,
+    96
+  ],
+  "seed": 1234,
+  "patches": [
+    {
+      "id": "base",
+      "patch": {
+        "template": "ashlar",
+        "bevel": {
+          "size": 1
+        },
+        "mortar": {
+          "size": 1
+        }
+      }
+    }
+  ]
+}

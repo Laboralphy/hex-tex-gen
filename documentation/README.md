@@ -25,6 +25,7 @@ npx hex-tex-gen render examples/mossy-castle-wall.json
 | [Concepts](concepts.md)           | textures and patches, own size and resizing, layout and detail, seeds, aging |
 | [Patch files](patch-files.md)     | writing patch files, `extends`, validation, editor completion                |
 | [Texture files](texture-files.md) | placing patches: positions in percent, seeds, opacity, anchors, overlays     |
+| [Texture sets](texture-sets.md)   | sets of textures sharing a look, from one seed: ambiances, themes, recipes   |
 | [Command line](cli.md)            | the `hex-tex-gen` commands and options                                       |
 | [Library](library.md)             | using hex-tex-gen from TypeScript, writing a new template                    |
 

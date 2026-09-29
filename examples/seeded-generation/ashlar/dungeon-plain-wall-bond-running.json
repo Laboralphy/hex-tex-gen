@@ -1,0 +1,18 @@
+{
+  "size": [
+    64,
+    96
+  ],
+  "seed": 1234,
+  "patches": [
+    {
+      "id": "base",
+      "patch": {
+        "template": "ashlar",
+        "blocks": {
+          "bond": "running"
+        }
+      }
+    }
+  ]
+}

@@ -3,6 +3,7 @@
 ```
 hex-tex-gen render <texture.json> [options]   render a texture file
 hex-tex-gen patch <patch.json> [options]      render a single patch file
+hex-tex-gen set [options]                     generate a set of textures from one seed
 hex-tex-gen <template> [options]              render a template with its defaults
 hex-tex-gen --list                            list templates and their parameters
 ```
@@ -41,6 +42,24 @@ hex-tex-gen patch examples/patches/moss.json -w 128 -H 32 -s 7 -p vines.count=20
 
 The patch is regenerated at the given size, never stretched: see
 [Own size and resizing](concepts.md#own-size-and-resizing).
+
+## `set`: a set of textures from one seed
+
+```sh
+hex-tex-gen set -s 42
+hex-tex-gen set -s 42 -a cave -o cave-textures
+```
+
+Generates a [texture set](texture-sets.md): every texture of the set is written as a
+texture file and its PNG image, in a directory.
+
+| Option                  | Description                                                   |
+| ----------------------- | ------------------------------------------------------------- |
+| `-o, --output <dir>`    | output directory; `set-<seed>` by default                     |
+| `-s, --seed <n>`        | seed of the set; a random one by default (printed)            |
+| `-a, --ambiance <name>` | ambiance: `dungeon` or `cave`; drawn from the seed by default |
+| `-w, --width <px>`      | width of the textures, in pixels; 64 by default               |
+| `-H, --height <px>`     | height of the textures, in pixels; 128 by default             |
 
 ## `<template>`: a template with its defaults
 

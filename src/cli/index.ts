@@ -1,26 +1,38 @@
 #!/usr/bin/env node
-import { basename, extname, resolve } from 'node:path';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { basename, extname, join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { z } from 'zod';
-import { checkPatchParams, loadPatch, renderPatch, renderTextureFile } from '../compose';
+import {
+    checkPatchParams,
+    loadPatch,
+    renderPatch,
+    renderTexture,
+    renderTextureFile,
+} from '../compose';
 import { deepMerge, isPlainObject } from '../core/object-fusion';
 import { expandPath } from '../core/params';
 import type { Texture } from '../core/Texture';
 import { generators } from '../generators';
+import { ambiances, generateSet } from '../themes';
 import { createNodeLoader } from './node-loader';
 import { writePng } from './png';
 
 const USAGE = `Usage:
   hex-tex-gen render <texture.json> [options]   render a texture file
   hex-tex-gen patch <patch.json> [options]      render a single patch file
+  hex-tex-gen set [options]                     generate a set of textures from one seed
   hex-tex-gen <generator> [options]             render a generator with its defaults
 
 Options:
   -o, --output <file>     output PNG file (default: input name with .png)
+                          set: output directory (default: set-<seed>)
   -s, --seed <n>          render: overrides the texture's global seed
-                          patch, generator: random seed (default: patch seed, else random)
-  -w, --width <px>        patch, generator: width (default: own size)
-  -H, --height <px>       patch, generator: height (default: own size)
+                          patch, generator, set: random seed (default: patch seed, else random)
+  -a, --ambiance <name>   set: ambiance, one of ${Object.keys(ambiances).join(', ')}
+                          (default: drawn from the seed)
+  -w, --width <px>        patch, generator, set: width (default: own size, set: 64)
+  -H, --height <px>       patch, generator, set: height (default: own size, set: 128)
   -c, --config <file>     generator: JSON file of parameters
   -p, --param <key=value> patch, generator: parameter override, repeatable.
                           key may be a dotted path (mortar.size=3).
@@ -105,6 +117,26 @@ function listGenerators(): void {
     }
 }
 
+/**
+ * Writes every texture of a set as a texture file and its PNG image.
+ */
+function writeSet(
+    seed: number,
+    ambiance: string | undefined,
+    size: [number, number],
+    dir: string,
+): void {
+    const set = generateSet({ seed, ambiance, size });
+    const loader = createNodeLoader();
+    mkdirSync(dir, { recursive: true });
+    for (const [name, definition] of Object.entries(set.textures)) {
+        writeFileSync(join(dir, `${name}.json`), JSON.stringify(definition, null, 2) + '\n');
+        writePng(renderTexture(definition, loader), join(dir, `${name}.png`));
+        console.log(join(dir, `${name}.png`));
+    }
+    console.log(`${set.ambiance} set, seed ${seed}`);
+}
+
 function main(argv: string[]): void {
     const { values, positionals } = parseArgs({
         args: argv,
@@ -114,6 +146,7 @@ function main(argv: string[]): void {
             width: { type: 'string', short: 'w' },
             height: { type: 'string', short: 'H' },
             seed: { type: 'string', short: 's' },
+            ambiance: { type: 'string', short: 'a' },
             config: { type: 'string', short: 'c' },
             param: { type: 'string', short: 'p', multiple: true, default: [] },
             list: { type: 'boolean', short: 'l' },
@@ -137,6 +170,17 @@ function main(argv: string[]): void {
     const width = values.width === undefined ? undefined : parseInteger('width', values.width);
     const height = values.height === undefined ? undefined : parseInteger('height', values.height);
     const seedOption = values.seed === undefined ? undefined : parseInteger('seed', values.seed);
+    if (command === 'set') {
+        const seed = seedOption ?? Date.now() >>> 0;
+        writeSet(
+            seed,
+            values.ambiance,
+            [width ?? 64, height ?? 128],
+            values.output ?? `set-${seed}`,
+        );
+        return;
+    }
+
     let texture: Texture;
     let output: string;
     let seed: number | undefined;

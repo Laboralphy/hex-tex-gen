@@ -270,6 +270,28 @@ exports[`golden examples > plank-variants/13-mossy-rows.json 1`] = `"64x64 23a32
 
 exports[`golden examples > plank-variants/14-old-barn.json 1`] = `"64x64 6be7fbcd612035e7ecfc836b9b3e5150b9d50334592e3d3cd7718e2bc832fd93"`;
 
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-base.json 1`] = `"64x96 7d9f54fe6a58c776afb3d6a855658377331ccf4c8695c219b94b3028a21b4662"`;
+
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-bevel-size.json 1`] = `"64x96 305b9c66e161999298eb85e88448bb77fe899db0b66c8c521f6ceb2c1ad0bb10"`;
+
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-bond-running.json 1`] = `"64x96 81325b65f0f130ccd7a652c17a68d5acc2d0ef23b7c2f1e64280e31ca489f7f5"`;
+
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-bond-stack.json 1`] = `"64x96 02c33490af726fba184c2e49a499cf3c8d0cfb795ed0f9d31e569ab905b79fd6"`;
+
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-brick-size-range.json 1`] = `"64x96 162d49750336890fed232260e333e98dcd3e50a71eae93807494ea794bb40ada"`;
+
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-color.json 1`] = `"64x96 f1ebdd7c1db14737e2038ae3fc40b707797249874119d86987aedbf6911a7f52"`;
+
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-contrast.json 1`] = `"64x96 b5ddbe0ce799332e986495a637178a3452e534bb83b7ebef6b44523c655f1e4e"`;
+
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-more-row-height-variation.json 1`] = `"64x96 120f072235b9082ba93894fa1885f3bd7096d032b211966171f08d742a27399b"`;
+
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-more-rows.json 1`] = `"64x96 2a2e95187a2688cc6c97348733d259fbc754dff15c370aba2d9daa653d6c82b4"`;
+
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-mortar-size.json 1`] = `"64x96 84ffc15a5551c3460d3f73c3e38c6ef618ead88d8d711a26d39eb8704b175c9e"`;
+
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-mortar-size-color.json 1`] = `"64x96 ccd2e6b40627288005e0ecc30991063ac3266c91f895d73fc60dd9623b17f9ae"`;
+
 exports[`golden examples > shield-variants/1-heater-cross.json 1`] = `"48x48 4b943d2f5ae6dfe43f879ed3b729f93f4e5f07dabf61761b7cd4bfcfa016328b"`;
 
 exports[`golden examples > shield-variants/2-round-boss.json 1`] = `"48x48 45270c5bd661b6c51e94a274ec7683e1cda20b1268aaf440ee781714f989ee3c"`;
@@ -353,6 +375,48 @@ exports[`golden examples > woodbeam-variants/4-dark-timbers.json 1`] = `"64x128 
 exports[`golden examples > wrap-variants/1-wrapped.json 1`] = `"64x96 549c7bb11c75860e4220a2f7a5a1fe634724a1bde7a1c9feb62b40da40805f58"`;
 
 exports[`golden examples > wrap-variants/2-kept-inside.json 1`] = `"64x96 f5e45f619e0f1f28c5e295332e1b5549ee639d7ab539f40d66c6d05c8d6b7a2e"`;
+
+exports[`golden sets > cave, seed 1 1`] = `
+{
+  "plain-wall": "64x128 b67acb9d90037d2a30735e257bf54f9c5d130d67cbcc1ca9121d2089fef0c4af",
+  "splattered-wall": "64x128 edf96ddd90802b88038ba8b2b93a139c85a6f573bfd465ac1edb66a6b49df6c6",
+}
+`;
+
+exports[`golden sets > cave, seed 2 1`] = `
+{
+  "plain-wall": "64x128 71abfc0b45e86c7096d492998112a0f01e934527f3cdf9064e582b70ad1eb3b5",
+  "splattered-wall": "64x128 686fcb150f48a7ac0f345e47ea854d9fddfd33d98357915c7cc0ee67f6be7deb",
+}
+`;
+
+exports[`golden sets > cave, seed 3 1`] = `
+{
+  "plain-wall": "64x128 206dd250c66d48fa14c4ff4e6bf20ab1cb1cb1e3c8ee915e4a328b6bf9f7fc8c",
+  "splattered-wall": "64x128 54aba1e8c54751d1c0fbe3c407dc3a9c24e1a03632c5c52dd4799a30f6674c75",
+}
+`;
+
+exports[`golden sets > dungeon, seed 1 1`] = `
+{
+  "plain-wall": "64x128 41b84b9ebf1fd8443a758d1960574687d42c62eb780fd3130df9b679a3b4b87a",
+  "splattered-wall": "64x128 9e06aa798c28bdfa7363578103bc631ee1240dd5f68b32b0b1374dcdeb9b73ab",
+}
+`;
+
+exports[`golden sets > dungeon, seed 2 1`] = `
+{
+  "plain-wall": "64x128 b34521dd67ba82be3069af05c74abcddc65e5f57d3c9a6e05ca92d8e4e02a251",
+  "splattered-wall": "64x128 26454a6e17e61bf005912430032c2a44e303e4c7dc815372a1452cfd34c9cee3",
+}
+`;
+
+exports[`golden sets > dungeon, seed 3 1`] = `
+{
+  "plain-wall": "64x128 d2eae8c35e26d22fb594609853efd1f3cc9b489f17969b7377af0e18a95a1c95",
+  "splattered-wall": "64x128 2267b84e0d53e6d5ab9f993895acfdeae1b6bed3dda2f35c881df11fef548ca6",
+}
+`;
 
 exports[`golden templates > ashlar 1`] = `"64x64 892bbd7e63dabb13bf78b83918a2c34ad6f060485da908ae927a1fd8e577a85c"`;
 

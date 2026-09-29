@@ -1,0 +1,23 @@
+{
+  "size": [
+    64,
+    96
+  ],
+  "seed": 1234,
+  "patches": [
+    {
+      "id": "base",
+      "patch": {
+        "template": "ashlar",
+        "stone": {
+          "palette": [
+            "#1b2d2e",
+            "#3d5a5b",
+            "#608888",
+            "#82b5b5"
+          ]
+        }
+      }
+    }
+  ]
+}

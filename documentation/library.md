@@ -74,6 +74,9 @@ interface Loader {
 Lower-level functions: `loadPatch` resolves a patch file and its `extends` chain,
 `renderPatch` renders it at a given size, `patchSize` gives its own size.
 
+A whole set of textures sharing one look, generated from a seed, is described in
+[Texture sets](texture-sets.md).
+
 ## Validation
 
 Invalid parameters throw a `ValidationError`, whose message lists every problem with its
