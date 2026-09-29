@@ -6,30 +6,32 @@ Every key of texture and patch files. See [Texture files](../texture-files.md) a
 
 ## Texture file
 
-| Key          | Type                            | Default      | Description                           |
-| ------------ | ------------------------------- | ------------ | ------------------------------------- |
-| `$schema`    | string                          | —            | JSON Schema of this file, for editors |
-| `size`       | [width, height] of integers > 0 | —            | texture size, in pixels               |
-| `seed`       | integer                         | 0            | global seed                           |
-| `background` | CSS color                       | opaque black | CSS color under the patches           |
-| `patches`    | array of object                 | —            | patches, drawn in order               |
+| Key          | Type                            | Default      | Description                                                                                                                                                                                              |
+| ------------ | ------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `$schema`    | string                          | —            | JSON Schema of this file, for editors                                                                                                                                                                    |
+| `size`       | [width, height] of integers > 0 | —            | texture size, in pixels                                                                                                                                                                                  |
+| `seed`       | integer                         | 0            | global seed                                                                                                                                                                                              |
+| `background` | CSS color                       | opaque black | CSS color under the patches                                                                                                                                                                              |
+| `wrap`       | boolean                         | true         | whether patches may cross the edges and continue on the opposite side, so that the texture tiles with itself; false keeps every patch inside, for a texture laid next to others; a placement "wrap" wins |
+| `patches`    | array of object                 | —            | patches, drawn in order                                                                                                                                                                                  |
 
 ## Placement
 
 An item of `patches` in a texture file.
 
-| Key       | Type               | Default                               | Description                                                                                                           |
-| --------- | ------------------ | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `patch`   | file path or patch | —                                     | patch file, relative to the texture file, or inline patch definition                                                  |
-| `id`      | string             | —                                     | name other placements use to anchor on this one                                                                       |
-| `anchor`  | object             | —                                     | repeats the patch on the anchor points of a previous placement; points hidden by a later opaque placement are skipped |
-| `x`       | number             | 0                                     | left edge, in percent of the texture width                                                                            |
-| `y`       | number             | 0                                     | top edge, in percent of the texture height                                                                            |
-| `width`   | number ≥ 0         | the patch's own width                 | width, in percent of the texture width                                                                                |
-| `height`  | number ≥ 0         | the patch's own height                | height, in percent of the texture height                                                                              |
-| `seed`    | integer            | the patch seed, else the texture seed | seed of this placement                                                                                                |
-| `params`  | object             | —                                     | template parameters deep-merged over the patch                                                                        |
-| `opacity` | number in [0, 1]   | 1                                     | opacity, in [0, 1]                                                                                                    |
+| Key       | Type               | Default                               | Description                                                                                                                                                                                 |
+| --------- | ------------------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `patch`   | file path or patch | —                                     | patch file, relative to the texture file, or inline patch definition                                                                                                                        |
+| `id`      | string             | —                                     | name other placements use to anchor on this one                                                                                                                                             |
+| `anchor`  | object             | —                                     | repeats the patch on the anchor points of a previous placement; points hidden by a later opaque placement are skipped                                                                       |
+| `x`       | number             | 0                                     | left edge, in percent of the texture width                                                                                                                                                  |
+| `y`       | number             | 0                                     | top edge, in percent of the texture height                                                                                                                                                  |
+| `width`   | number ≥ 0         | the patch's own width                 | width, in percent of the texture width                                                                                                                                                      |
+| `height`  | number ≥ 0         | the patch's own height                | height, in percent of the texture height                                                                                                                                                    |
+| `seed`    | integer            | the patch seed, else the texture seed | seed of this placement                                                                                                                                                                      |
+| `params`  | object             | —                                     | template parameters deep-merged over the patch                                                                                                                                              |
+| `opacity` | number in [0, 1]   | 1                                     | opacity, in [0, 1]                                                                                                                                                                          |
+| `wrap`    | boolean            | the texture "wrap"                    | whether the patch may cross an edge of the texture and continue on the opposite side; when false, a placed patch is shifted inside and anchored copies that would cross an edge are skipped |
 
 ## Anchor
 

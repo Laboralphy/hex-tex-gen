@@ -119,6 +119,12 @@ export const placementSchema = z
             .optional()
             .describe('template parameters deep-merged over the patch'),
         opacity: ratio().optional().describe('opacity, in [0, 1]; defaults to 1'),
+        wrap: z
+            .boolean()
+            .optional()
+            .describe(
+                'whether the patch may cross an edge of the texture and continue on the opposite side; when false, a placed patch is shifted inside and anchored copies that would cross an edge are skipped; defaults to the texture "wrap"',
+            ),
     })
     .refine((p) => !p.anchor || (p.x === undefined && p.y === undefined), {
         message: '"x" and "y" are set by the anchor, use "anchor.offset"',
@@ -138,6 +144,12 @@ export const textureDefinitionSchema = z
         background: color()
             .optional()
             .describe('CSS color under the patches; defaults to opaque black'),
+        wrap: z
+            .boolean()
+            .optional()
+            .describe(
+                'whether patches may cross the edges and continue on the opposite side, so that the texture tiles with itself; false keeps every patch inside, for a texture laid next to others; a placement "wrap" wins; defaults to true',
+            ),
         patches: z.array(placementSchema).describe('patches, drawn in order'),
     })
     .describe('a texture: patches placed on a canvas');

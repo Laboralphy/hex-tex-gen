@@ -295,6 +295,102 @@ describe('anchored placements', () => {
         });
     });
 
+    describe('wrap', () => {
+        // 8-pixel marks on the points of a row: (0, 0), (3, 0), ... (27, 0); drawn in order,
+        // each one covers the red corner of the previous ones it overlaps
+        const renderRow = (wrap: object, rowX = 0, anchor: object = {}) =>
+            renderTexture(
+                {
+                    size: [32, 32],
+                    patches: [
+                        { id: 'row', patch: { template: 'test-row' }, x: rowX },
+                        {
+                            patch: { template: 'test-mark' },
+                            anchor: { to: 'row', at: 'points', ...anchor },
+                            width: 25,
+                            height: 25,
+                            ...wrap,
+                        },
+                    ],
+                },
+                loader,
+            );
+        const corners = (t: Texture) => redPixels(t).map(([x]) => x);
+
+        it('wraps copies across the edges by default', () => {
+            const t = renderRow({});
+            // the copy on (27, 0) continues on the left edge, over the first one
+            expect(t.getPixel(0, 0)).toBe(BLUE);
+            expect(corners(t)).toEqual([3, 6, 9, 12, 15, 18, 21, 24, 27]);
+        });
+
+        it('skips the copies that would cross an edge', () => {
+            const t = renderRow({ wrap: false });
+            expect(t.getPixel(0, 0)).toBe(RED);
+            expect(corners(t)).toEqual([0, 3, 6, 9, 12, 15, 18, 21, 24]);
+            // the points of a target crossing the edge count where they land: 16, 19, 22,
+            // then 2, 5, 8, 11 past the edge, drawn last, the one on 11 covering 16
+            expect(corners(renderRow({ wrap: false }, 50))).toEqual([2, 5, 8, 11, 19, 22]);
+        });
+
+        it('takes its default from the texture, the placement winning', () => {
+            const placed = (textureWrap: boolean, wrap?: boolean) =>
+                renderTexture(
+                    {
+                        size: [32, 32],
+                        wrap: textureWrap,
+                        patches: [
+                            { id: 'row', patch: { template: 'test-row' } },
+                            {
+                                patch: { template: 'test-mark' },
+                                anchor: { to: 'row', at: 'points' },
+                                width: 25,
+                                height: 25,
+                                wrap,
+                            },
+                        ],
+                    },
+                    loader,
+                ).getPixel(0, 0);
+            expect(placed(false)).toBe(RED);
+            expect(placed(false, true)).toBe(BLUE);
+            expect(placed(true, false)).toBe(RED);
+        });
+
+        it('picks the ratio among the copies that fit', () => {
+            // 5 of the 9 copies that fit; a later copy may cover the corner of an earlier one
+            const kept = corners(renderRow({ wrap: false }, 0, { ratio: 0.5 }));
+            expect(kept.length).toBeGreaterThanOrEqual(3);
+            kept.forEach((x) => expect(x).toBeLessThanOrEqual(24));
+        });
+
+        it('checks mirrored copies where they land', () => {
+            const corners = (mirror: boolean) =>
+                redPixels(
+                    renderTexture(
+                        {
+                            size: [16, 16],
+                            wrap: false,
+                            patches: [
+                                { id: 'frame', patch: { template: 'test-frame' } },
+                                {
+                                    patch: { template: 'test-mark' },
+                                    anchor: { to: 'frame', at: 'corners', mirror },
+                                    width: 25,
+                                    height: 25,
+                                },
+                            ],
+                        },
+                        loader,
+                    ),
+                );
+            // 4-pixel marks: unmirrored, only the top-left one fits
+            expect(corners(false)).toEqual([[2, 2]]);
+            // mirrored, each one grows into the frame
+            expect(corners(true)).toHaveLength(4);
+        });
+    });
+
     it('reports invalid anchors', () => {
         expect(() => render([wall, dots({ to: 'nope' })])).toThrow(
             'texture: patches[1].anchor: no previous placement with id "nope"',

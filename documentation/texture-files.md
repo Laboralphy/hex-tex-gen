@@ -20,6 +20,7 @@ A texture file places patches on a canvas:
 | `size`       | texture size in pixels, `[width, height]`                          |
 | `seed`       | global seed, 0 by default; `hex-tex-gen render -s` overrides it    |
 | `background` | CSS color under the patches, opaque black by default               |
+| `wrap`       | whether patches may cross the edges, see [Edges](#edges); `true`   |
 | `patches`    | placements, drawn in order: later ones are drawn over earlier ones |
 | `$schema`    | JSON Schema of the file, for editors; ignored when rendering       |
 
@@ -41,6 +42,7 @@ A placement draws a patch on the texture:
 | `seed`            | seed of this placement; the patch seed, else the texture seed, by default                  |
 | `params`          | template parameters deep-merged over the patch file, for this placement only               |
 | `opacity`         | in [0, 1], 1 by default                                                                    |
+| `wrap`            | whether the patch may cross an edge, see [Edges](#edges); the texture `wrap` by default    |
 | `id`              | name other placements use to [anchor](#anchors) on this one                                |
 | `anchor`          | repeats the patch on the anchor points of a previous placement, see [below](#anchors)      |
 
@@ -49,8 +51,7 @@ texture is pixel 96. Omit `width` or `height` to keep the patch's own size on th
 in pixels.
 
 The patch is **regenerated** at its placed size, never stretched: see
-[Own size and resizing](concepts.md#own-size-and-resizing). A placement crossing an edge
-wraps around to the opposite edge, so textures keep tiling.
+[Own size and resizing](concepts.md#own-size-and-resizing).
 
 `params` tweaks a patch for one placement without writing a new file:
 
@@ -60,6 +61,40 @@ wraps around to the opposite edge, so textures keep tiling.
 
 `opacity` blends the patch over what is already drawn; patches with transparent pixels,
 such as [`moss`](templates/moss.md), blend with their own alpha too.
+
+## Edges
+
+By default, a placement crossing an edge wraps around to the opposite edge, so the texture
+tiles with itself: the right half of a window placed on the right edge shows on the left.
+In a game, a wall is often laid next to another texture, a plain wall, and half a window
+cut off at the seam looks wrong. `"wrap": false` keeps patches inside the texture:
+
+- a **placed** patch crossing an edge is shifted back inside; one larger than the texture
+  is an error;
+- an **anchored** copy that would cross an edge is skipped, so that the copies kept stay
+  on their anchor points. `ratio` picks among the copies that fit, and mirrored copies are
+  checked where they land.
+
+Set `wrap` on the texture for every placement, or on a placement, which wins:
+
+```json
+{
+  "size": [64, 96],
+  "wrap": false,
+  "patches": [
+    { "id": "wall", "patch": { "template": "ashlar" }, "width": 100, "height": 100 },
+    {
+      "patch": { "template": "opening", "depth": 2 },
+      "anchor": { "to": "wall", "at": "stones", "ratio": 0.3 },
+      "width": 25,
+      "height": 12.5
+    }
+  ]
+}
+```
+
+A base covering the whole texture fits exactly and is not affected. Grounds, which tile
+in both directions, keep the default.
 
 ## Anchors
 

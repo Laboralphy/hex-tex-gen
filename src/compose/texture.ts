@@ -1,6 +1,6 @@
 import { Rainbow } from '@laboralphy/rainbow';
 import { hash, hashSeed } from '../core/hash';
-import { mod } from '../core/math';
+import { clamp, mod } from '../core/math';
 import { deepMerge } from '../core/object-fusion';
 import { parseWith, ValidationError } from '../core/schema';
 import { Texture, type AnchorPoint } from '../core/Texture';
@@ -52,6 +52,8 @@ type PreparedPlacement = {
     y?: number;
     /** can hide the anchor points of the placements under it */
     opaque: boolean;
+    /** may cross an edge of the texture and continue on the opposite side */
+    wrap: boolean;
 };
 
 /** salt of the random ranks of anchor points, apart from the seeds of the copies */
@@ -101,6 +103,15 @@ function preparePlacements(
                 );
             }
         }
+        const wrap = placement.wrap ?? def.wrap ?? true;
+        if (!wrap && !anchor && (w > width || h > height)) {
+            throw new Error(
+                `${at}: placed size ${w}x${h} is larger than the texture, it cannot stay inside with "wrap": false`,
+            );
+        }
+        // a placement that must not wrap is shifted inside the texture
+        const inside = (position: number, length: number, total: number) =>
+            wrap ? position : clamp(position, 0, total - length);
         const prepared: PreparedPlacement = {
             placement,
             where: at,
@@ -108,10 +119,11 @@ function preparePlacements(
             seed: placement.seed ?? patch.seed ?? globalSeed,
             width: w,
             height: h,
-            x: anchor ? undefined : percent(placement.x ?? 0, width),
-            y: anchor ? undefined : percent(placement.y ?? 0, height),
+            x: anchor ? undefined : inside(percent(placement.x ?? 0, width), w, width),
+            y: anchor ? undefined : inside(percent(placement.y ?? 0, height), h, height),
             opaque:
                 !anchor && !generators[patch.template].overlay && (placement.opacity ?? 1) === 1,
+            wrap,
         };
         if (placement.id !== undefined) {
             if (ids.has(placement.id)) {
@@ -125,7 +137,9 @@ function preparePlacements(
 
 /**
  * Renders a texture definition: each patch is regenerated at its placed size and drawn
- * in order. Placements crossing an edge wrap around, so textures keep tiling.
+ * in order. Placements crossing an edge wrap around, so textures keep tiling, unless
+ * `wrap` is false: placed patches are then shifted inside, and anchored copies that would
+ * cross an edge are skipped.
  *
  * Seeds: placement seed, else patch file seed, else global seed.
  */
@@ -167,15 +181,30 @@ export function renderTexture(
         const target = ids.get(anchor.to)!;
         const points = rendered.get(target)!.anchors[anchor.at] ?? [];
         const [dx, dy] = anchor.offset ?? [0, 0];
-        // candidates: the points selected by `only`, and visible
+        // candidates: the points selected by `only`, visible, and where the copy lands
+        // inside the texture when it must not wrap
         const candidates = points
-            .map((point, i) => ({
-                i,
-                at: { x: target.x! + point.x, y: target.y! + point.y },
-                corner: point.corner,
-            }))
+            .map((point, i) => {
+                const at = { x: target.x! + point.x, y: target.y! + point.y };
+                // mirrored copies: their top-left corner on the corner point, growing inwards
+                const flipX = anchor.mirror === true && point.corner?.endsWith('right') === true;
+                const flipY = anchor.mirror === true && point.corner?.startsWith('bottom') === true;
+                return {
+                    i,
+                    at,
+                    flipX,
+                    flipY,
+                    x: flipX ? at.x - p.width + 1 - dx : at.x + dx,
+                    y: flipY ? at.y - p.height + 1 - dy : at.y + dy,
+                };
+            })
             .filter(({ i }) => !anchor.only || anchor.only.includes(i))
-            .filter(({ at }) => !isHidden(target, at));
+            .filter(({ at }) => !isHidden(target, at))
+            .filter(
+                ({ x, y }) =>
+                    p.wrap ||
+                    (mod(x, width) + p.width <= width && mod(y, height) + p.height <= height),
+            );
         // ratio: keep the candidates of lowest random rank, an exact share of them; a
         // point's rank does not depend on the ratio, so raising the ratio only adds points
         const rank = (i: number) => hash(p.seed, SALT_RATIO, i);
@@ -183,19 +212,11 @@ export function renderTexture(
             .sort((a, b) => rank(a.i) - rank(b.i))
             .slice(0, Math.round((anchor.ratio ?? 1) * candidates.length))
             .sort((a, b) => a.i - b.i);
-        for (const { i, at, corner } of kept) {
+        for (const { i, flipX, flipY, x, y } of kept) {
             // each copy gets its own seed, stable whatever points are skipped
             const seed = hashSeed(p.seed, i);
             const image = renderPatch(p.patch, seed, p.width, p.height);
-            // mirrored copies: their top-left corner on the corner point, growing inwards
-            const flipX = anchor.mirror === true && corner?.endsWith('right') === true;
-            const flipY = anchor.mirror === true && corner?.startsWith('bottom') === true;
-            texture.draw(
-                flipX || flipY ? image.mirrored(flipX, flipY) : image,
-                flipX ? at.x - p.width + 1 - dx : at.x + dx,
-                flipY ? at.y - p.height + 1 - dy : at.y + dy,
-                opacity,
-            );
+            texture.draw(flipX || flipY ? image.mirrored(flipX, flipY) : image, x, y, opacity);
         }
     }
     return texture;

@@ -115,6 +115,41 @@ describe('renderTexture', () => {
         expect(t.getPixel(16, 16)).toBe(0x00ff00ff);
     });
 
+    it('shifts placements inside the texture when they must not wrap', () => {
+        const at = (wrap: object, placement: object = {}) =>
+            renderTexture(
+                {
+                    size: [64, 64],
+                    background: '#00ff00',
+                    ...wrap,
+                    patches: [{ patch: base, x: 75, y: -10, ...placement }],
+                },
+                loader,
+            );
+        // the 32px patch is moved back to (32, 0): nothing on the opposite edges
+        const inside = at({ wrap: false });
+        expect(inside.getPixel(0, 0)).toBe(0x00ff00ff);
+        expect(inside.getPixel(0, 63)).toBe(0x00ff00ff);
+        expect(inside.getPixel(31, 16)).toBe(0x00ff00ff);
+        expect(inside.getPixel(32, 0)).not.toBe(0x00ff00ff);
+        expect(inside.getPixel(63, 31)).not.toBe(0x00ff00ff);
+        expect(inside.getPixel(63, 32)).toBe(0x00ff00ff);
+        // the placement wins over the texture
+        expect(at({ wrap: false }, { wrap: true }).getPixel(0, 63)).not.toBe(0x00ff00ff);
+        expect(at({}, { wrap: false }).getPixel(0, 63)).toBe(0x00ff00ff);
+    });
+
+    it('rejects a placement larger than the texture that must not wrap', () => {
+        expect(() =>
+            renderTexture(
+                { size: [16, 16], wrap: false, patches: [{ patch: base, width: 150 }] },
+                loader,
+            ),
+        ).toThrow(
+            'texture: patches[0]: placed size 24x32 is larger than the texture, it cannot stay inside with "wrap": false',
+        );
+    });
+
     it('applies seeds by precedence: placement, patch, global', () => {
         const render = (placement: object, seed?: number) =>
             renderTexture(

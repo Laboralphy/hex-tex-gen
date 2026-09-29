@@ -61,12 +61,15 @@ lives in its own JSON file: a `template` (a generator) and its parameters.
 | `seed`            | overrides the patch seed, which overrides the texture's global seed        |
 | `params`          | template parameters deep-merged over the patch file                        |
 | `opacity`         | in [0, 1] (default 1)                                                      |
+| `wrap`            | may cross an edge (default: the texture `wrap`, itself `true` by default)  |
 
 Patches are **regenerated** at their placed size, never stretched. "Layout" parameters
 (stone widths, row count...) are expressed at the patch's own `size` and scale with it;
 "detail" parameters (mortar, bevel, cracks...) are real pixels and do not. Randomness is
 position-based (`hash(seed, row, column...)`), so the same seed gives the same stones at
-every size. Placements crossing an edge wrap around, so textures keep tiling.
+every size. Placements crossing an edge wrap around, so textures keep tiling; with
+`"wrap": false`, on the texture or a placement, they stay inside: placed patches are
+shifted back in, anchored copies that would cross an edge are skipped.
 
 ### Anchors
 

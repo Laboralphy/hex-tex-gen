@@ -350,6 +350,10 @@ exports[`golden examples > woodbeam-variants/3-abandoned-mine.json 1`] = `"64x12
 
 exports[`golden examples > woodbeam-variants/4-dark-timbers.json 1`] = `"64x128 2aab74fee85f47fba6594ba87ed75346d55e5514a63593cfcbc2b22d393b6d57"`;
 
+exports[`golden examples > wrap-variants/1-wrapped.json 1`] = `"64x96 549c7bb11c75860e4220a2f7a5a1fe634724a1bde7a1c9feb62b40da40805f58"`;
+
+exports[`golden examples > wrap-variants/2-kept-inside.json 1`] = `"64x96 f5e45f619e0f1f28c5e295332e1b5549ee639d7ab539f40d66c6d05c8d6b7a2e"`;
+
 exports[`golden templates > ashlar 1`] = `"64x64 892bbd7e63dabb13bf78b83918a2c34ad6f060485da908ae927a1fd8e577a85c"`;
 
 exports[`golden templates > banner 1`] = `"24x56 f178f07188b97018f8c9b2f84f07b781807325f2c7d0196132195cc46b96e729"`;
