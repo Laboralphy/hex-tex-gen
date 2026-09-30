@@ -6712,6 +6712,235 @@
               "type": "string"
             },
             "template": {
+              "const": "burn",
+              "description": "Burn mark: soot and charred crust left on a wall by a fire"
+            },
+            "seed": {
+              "description": "seed of this patch, unless the placement sets one",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "size": {
+              "default": [48, 64],
+              "description": "own size of the patch in pixels; layout values are expressed at this size",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "base": {
+              "description": "where the fire burned, against the wall",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "x": {
+                  "default": 0.5,
+                  "description": "where the fire stood, across the patch, in [0, 1]: 0.5 in the middle",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "y": {
+                  "default": 0.85,
+                  "description": "height of the fire, down the patch, in [0, 1]: 1 at the bottom edge",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "width": {
+                  "default": 0.35,
+                  "description": "width of the mark where the fire stood, as a share of the patch width",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "plume": {
+              "description": "the soot rising from the fire",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "height": {
+                  "default": 0.9,
+                  "description": "how high the soot rises, as a share of the room above the fire, in [0, 1]",
+                  "essential": true,
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "spread": {
+                  "default": 1,
+                  "description": "width of the mark at its top, as a share of the patch width, in [0, 1]",
+                  "essential": true,
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "lean": {
+                  "default": 0,
+                  "description": "draft pushing the smoke sideways, in [-1, 1]: negative to the left, positive to the right",
+                  "type": "number",
+                  "minimum": -1,
+                  "maximum": 1
+                },
+                "tongues": {
+                  "default": 0.5,
+                  "description": "flame licks: vertical streaks of darker and lighter soot, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "soot": {
+              "description": "the soot deposit",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "color": {
+                  "default": "#100c0a",
+                  "description": "soot color",
+                  "type": "string",
+                  "kind": "color"
+                },
+                "opacity": {
+                  "default": 0.85,
+                  "description": "opacity of the densest soot, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "mottling": {
+                  "default": 0.5,
+                  "description": "ragged outline and uneven soot, in [0, 1]: 0 gives a smooth plume",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "char": {
+              "description": "the crust where the flames licked the wall",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "color": {
+                  "default": "#050404",
+                  "description": "color of the charred crust",
+                  "type": "string",
+                  "kind": "color"
+                },
+                "amount": {
+                  "default": 0.35,
+                  "description": "share of the densest soot charred into a black crust, near the fire, in [0, 1]; 0 for none",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "grain": {
+                  "default": 0.2,
+                  "description": "random brightness variation of the crust, in [0, 1] (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "singe": {
+              "description": "the brown fringe of stone scorched by the heat, around the soot",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "color": {
+                  "default": "#6b4424",
+                  "description": "color of the singed stone",
+                  "type": "string",
+                  "kind": "color"
+                },
+                "width": {
+                  "default": 0.35,
+                  "description": "how far the singed fringe reaches beyond the soot, as a share of the mark, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "strength": {
+                  "default": 0.6,
+                  "description": "how brown the fringe turns, in [0, 1]; 0 for none",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "noise": {
+              "description": "noise shaping the outline and the soot",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "period": {
+                  "default": 5,
+                  "description": "noise cells across the patch at the first octave (layout: scales with the patch)",
+                  "scale": "layout",
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "octaves": {
+                  "default": 4,
+                  "description": "number of noise octaves, each one twice as fine",
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 16
+                }
+              },
+              "additionalProperties": false
+            },
+            "margin": {
+              "default": 3,
+              "description": "distance from the patch edges over which the mark fades out, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": false,
+          "title": "burn",
+          "description": "Burn mark: soot and charred crust left on a wall by a fire",
+          "required": ["template"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "$schema": {
+              "description": "JSON Schema of this file, for editors",
+              "type": "string"
+            },
+            "extends": {
+              "description": "parent patch file, relative to this file, deep-merged under this one",
+              "type": "string"
+            },
+            "template": {
               "const": "glyph",
               "description": "Glyph written on a wall: pentagram, grid of runes, alchemical circle or tally"
             },

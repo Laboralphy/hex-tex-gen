@@ -22,7 +22,7 @@ import type { TextureRecipe } from '../types';
 export const splatteredWall: TextureRecipe = {
     name: 'splattered-wall',
     description: 'the plain wall, splashed with the liquid of the theme',
-    ambiances: ['dungeon', 'cave'],
+    ambiances: ['dungeon', 'cave', 'interior'],
     build(theme, seed, size) {
         const own = hashSeed(seed, SALT_SPLATTERED_WALL);
         const [width, height] = size;

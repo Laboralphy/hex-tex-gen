@@ -5,9 +5,11 @@ import {
     SALT_BARRED_WAY,
     SALT_BEAM_PROFILE,
     SALT_CAVE_BARRED_WAY,
+    SALT_INTERIOR_BARRED_WAY,
     SALT_PLAIN_WALL,
 } from '../salts';
 import type { Theme, TextureRecipe } from '../types';
+import { beamWood } from './wood';
 
 /** thickness of the beams of a cave, in percent of the texture width */
 const BEAM = 15;
@@ -15,11 +17,17 @@ const BEAM = 15;
 /** the whole texture */
 const FULL = { x: 0, y: 0, width: 100, height: 100 };
 
+/** the wooden posts of interiors, each as wide as this, in percent of the texture width */
+const POST = 10;
+
+/** the wooden rail of interiors, across the posts, in percent of the texture */
+const RAIL = { x: 0, y: 66, width: 100, height: 10 };
+
 /**
- * The wall, cut through as a whole but for its reveals along the edges, and bars across
- * the whole way: shared by both variants.
+ * The wall, cut through as a whole but for its reveals along the edges: shared by every
+ * variant.
  */
-function barredWay(theme: Theme, own: number): Placement[] {
+function cutWay(theme: Theme): Placement[] {
     return [
         { id: 'wall', patch: theme.wall, width: 100, height: 100 },
         {
@@ -28,6 +36,16 @@ function barredWay(theme: Theme, own: number): Placement[] {
             ...FULL,
             wrap: false,
         },
+    ];
+}
+
+/**
+ * The wall cut through as a whole, and bars across the whole way: shared by the variants
+ * of dungeons and caves.
+ */
+function barredWay(theme: Theme, own: number): Placement[] {
+    return [
+        ...cutWay(theme),
         {
             id: 'bars',
             patch: {
@@ -109,6 +127,60 @@ export const barredWayCave: TextureRecipe = {
                 post(100 - BEAM, 2),
                 rail(0, 3),
                 rail(Math.round((100 - across) * 100) / 100, 4),
+            ],
+        };
+    },
+};
+
+/**
+ * A way closed by wood in an interior: the plain wall, same planks included, cut through as
+ * a whole, transparent but for its reveals along the edges, four wooden posts standing
+ * across it from top to bottom, and a wooden rail across them. It has the name of the
+ * barred way of dungeons.
+ */
+export const barredWayInterior: TextureRecipe = {
+    name: 'barred-way',
+    description: 'the plain wall cut through as a whole, four wooden posts and a rail across it',
+    ambiances: ['interior'],
+    build(theme, seed, size) {
+        const own = hashSeed(seed, SALT_INTERIOR_BARRED_WAY);
+        const [width, height] = size;
+        const beam = {
+            template: 'woodbeam',
+            ...beamWood(theme),
+            ...(typeof theme.wall.age === 'number' ? { age: theme.wall.age } : {}),
+        };
+        // centered in four equal columns
+        const post = (i: number): Placement => ({
+            patch: {
+                ...beam,
+                direction: 'vertical',
+                size: [Math.round((POST / 100) * width), height],
+            },
+            x: 25 * i + (25 - POST) / 2,
+            y: 0,
+            width: POST,
+            height: 100,
+            wrap: false,
+            seed: hashSeed(own, i),
+        });
+        return {
+            size,
+            // the seed of the plain wall: the same planks in its reveals
+            seed: hashSeed(seed, SALT_PLAIN_WALL),
+            patches: [
+                ...cutWay(theme),
+                ...[0, 1, 2, 3].map(post),
+                // the rail over the posts
+                {
+                    patch: {
+                        ...beam,
+                        size: [width, Math.round((RAIL.height / 100) * height)],
+                    },
+                    ...RAIL,
+                    wrap: false,
+                    seed: hashSeed(own, 4),
+                },
             ],
         };
     },

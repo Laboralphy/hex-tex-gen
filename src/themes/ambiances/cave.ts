@@ -4,6 +4,7 @@ import { pickFloat, pickInt, pickOne } from '../pick';
 import {
     SALT_AGE,
     SALT_CONTRAST,
+    SALT_DECOR_AGE,
     SALT_HUE,
     SALT_LIGHTNESS,
     SALT_MORTAR_COLOR,
@@ -71,6 +72,7 @@ export const cave: Ambiance = {
                 ],
                 seed,
             ),
+            decor: { age: pickFloat(0.85, 1, seed, SALT_DECOR_AGE) },
         };
     },
 };

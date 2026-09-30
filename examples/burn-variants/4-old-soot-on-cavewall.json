@@ -1,0 +1,33 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 128],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "cavewall"
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "burn",
+        "soot": {
+          "opacity": 0.55
+        },
+        "char": {
+          "amount": 0
+        },
+        "singe": {
+          "strength": 0.3
+        }
+      },
+      "x": 9.375,
+      "y": 20,
+      "width": 81.25,
+      "height": 75,
+      "wrap": false
+    }
+  ]
+}

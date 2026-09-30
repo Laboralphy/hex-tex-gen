@@ -8,6 +8,7 @@ import {
     SALT_BLOCK_WIDTH,
     SALT_BOND,
     SALT_CONTRAST,
+    SALT_DECOR_AGE,
     SALT_HUE,
     SALT_LIGHTNESS,
     SALT_MORTAR_COLOR,
@@ -101,6 +102,7 @@ export const dungeon: Ambiance = {
                 ],
                 seed,
             ),
+            decor: { age: pickFloat(0.2, 0.6, seed, SALT_DECOR_AGE) },
         };
     },
 };

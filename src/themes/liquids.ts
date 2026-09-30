@@ -11,6 +11,7 @@ export const LIQUIDS = {
     slime: { color: '#4f7a1c', alpha: [0.65, 0.85], gloss: [0.3, 0.5] },
     water: { color: '#26404a', alpha: [0.5, 0.7], gloss: [0.3, 0.5] },
     ichor: { color: '#15130f', alpha: [0.8, 0.95], gloss: [0.2, 0.4] },
+    wine: { color: '#4a0d24', alpha: [0.7, 0.85], gloss: [0.25, 0.45] },
 } satisfies Record<string, LiquidKind>;
 
 /**

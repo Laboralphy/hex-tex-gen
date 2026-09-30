@@ -1090,6 +1090,34 @@ Lay it over any wall:
   texture, with \`"wrap": false\`, for a wall laid next to others.
 - The \`bottom\` anchor is the lowest point of the earth below the center: where rubble
   rests. See [\`examples/breach-variants\`](../../examples/breach-variants).`,
+    burn: `## Usage
+
+\`burn\` is an overlay: the mark a fire left on a wall, transparent elsewhere. Soot rises
+from where the fire stood, \`base\`, and widens into a plume as it goes up, fading on its
+way; near the fire the densest soot is charred into a black crust, and a fringe of brown,
+singed stone surrounds it all. Lay it over a wall:
+
+\`\`\`json
+{
+  "size": [64, 128],
+  "patches": [
+    { "patch": { "template": "ashlar" }, "width": 100, "height": 100 },
+    {
+      "patch": { "template": "burn" },
+      "x": 12.5, "y": 30, "width": 75, "height": 65, "wrap": false
+    }
+  ]
+}
+\`\`\`
+
+- The mark fades out over \`margin\` pixels before the edges of its patch, whatever its
+  shape: keep the placement inside the texture, with \`"wrap": false\`, and the mark never
+  reaches the texture edges.
+- \`plume.height\` and \`plume.spread\` shape the soot, as shares of the patch;
+  \`plume.lean\` bends it with a draft, \`plume.tongues\` draws the flame licks.
+- \`char.amount\` 0 and a lower \`soot.opacity\` give old, faded soot; another
+  \`singe.color\` gives the heat tint of metal. See
+  [\`examples/burn-variants\`](../../examples/burn-variants).`,
     splatter: `## Usage
 
 \`splatter\` is an overlay: a splash of liquid, transparent elsewhere. Every stain is a

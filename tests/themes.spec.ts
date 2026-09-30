@@ -8,6 +8,10 @@ import {
     generators,
     renderTexture,
 } from '../src';
+import { BANNER_COLORS } from '../src/themes/recipes/banner-wall';
+
+/** an ambiance with breached walls: interiors have none */
+const withBreach = (seed: number) => (seed % 2 ? 'dungeon' : 'cave');
 
 const SEEDS = Array.from({ length: 200 }, (_, i) => i * 7919 + 1);
 
@@ -111,9 +115,41 @@ describe('generateSet', () => {
         }
     });
 
-    it('breaks through the same wall as the plain wall, the hole inside the texture', () => {
+    it('burns the same wall as the plain wall, the soot at its foot and inside the texture', () => {
         for (const seed of SEEDS.slice(0, 20)) {
             const { textures } = generateSet({ seed });
+            const plain = textures['plain-wall'];
+            const burnt = textures['burnt-wall'];
+            expect(burnt.seed).toBe(plain.seed);
+            expect(burnt.patches[0]).toEqual(plain.patches[0]);
+            const [, mark] = burnt.patches;
+            expect(mark).toMatchObject({ patch: { template: 'burn' }, wrap: false });
+            expect(mark.x! + mark.width!).toBeLessThanOrEqual(100);
+            expect(mark.y! + mark.height!).toBeCloseTo(100);
+            expect(mark.x!).toBeGreaterThanOrEqual(0);
+        }
+    });
+
+    it('keeps every edge of the burnt wall those of the plain wall', () => {
+        for (const seed of SEEDS.slice(0, 20)) {
+            const set = generateSet({ seed, size: [32, 48] });
+            const render = (name: string) =>
+                renderTexture(set.textures[name], createMemoryLoader({}));
+            const [plain, burnt] = [render('plain-wall'), render('burnt-wall')];
+            expect(burnt.data).not.toEqual(plain.data);
+            for (let y = 0; y < plain.height; y++) {
+                for (let x = 0; x < plain.width; x++) {
+                    if (x === 0 || y === 0 || x === plain.width - 1 || y === plain.height - 1) {
+                        expect(burnt.getPixel(x, y)).toBe(plain.getPixel(x, y));
+                    }
+                }
+            }
+        }
+    });
+
+    it('breaks through the same wall as the plain wall, the hole inside the texture', () => {
+        for (const seed of SEEDS.slice(0, 20)) {
+            const { textures } = generateSet({ seed, ambiance: withBreach(seed) });
             const plain = textures['plain-wall'];
             const breached = textures['breached-wall'];
             expect(breached.seed).toBe(plain.seed);
@@ -127,7 +163,9 @@ describe('generateSet', () => {
         // every shape of hole, across seeds
         const shapes = new Set(
             SEEDS.map((seed) => {
-                const [, hole] = generateSet({ seed }).textures['breached-wall'].patches;
+                const [, hole] = generateSet({ seed, ambiance: withBreach(seed) }).textures[
+                    'breached-wall'
+                ].patches;
                 return (hole.patch as { hole: { shape: string } }).hole.shape;
             }),
         );
@@ -339,6 +377,208 @@ describe('generateSet', () => {
             clear += (texture.getPixel(x, 40) & 0xff) === 0 ? 1 : 0;
         }
         expect(clear).toBeGreaterThan(texture.width / 2);
+    });
+
+    it('panels the walls of interiors with wood, and keeps them nearly new', () => {
+        for (const seed of SEEDS.slice(0, 50)) {
+            const { theme } = drawTheme({ seed, ambiance: 'interior' });
+            expect(theme.wall.template).toBe('planks');
+            expect(theme.wall.age).toBeLessThanOrEqual(0.4);
+            expect(theme.decor.age).toBeLessThanOrEqual(0.25);
+        }
+    });
+
+    it('frames the alcove of interiors with carved columns under an entablature, in the wood of the wall', () => {
+        for (const seed of SEEDS.slice(0, 20)) {
+            const { theme, textures } = generateSet({ seed, ambiance: 'interior' });
+            const alcove = textures['arch-alcove'];
+            expect(alcove.seed).toBe(textures['plain-wall'].seed);
+            const templates = alcove.patches.map((p) => (p.patch as { template: string }).template);
+            expect(templates).toEqual(['planks', 'opening', 'column', 'column', 'entablature']);
+            const wood = (theme.wall.wood as { palette: string[] }).palette;
+            for (const carved of alcove.patches.slice(2)) {
+                const { marble } = carved.patch as { marble: { palette: string[] } };
+                // the wood of the wall, polished lighter
+                expect(marble.palette).toHaveLength(wood.length);
+                expect(marble.palette).not.toEqual(wood);
+                expect(carved.wrap).toBe(false);
+            }
+            // the columns stand under the entablature
+            const [, , left, right, top] = alcove.patches;
+            expect(left.y).toBe(top.height);
+            expect(right.x! + right.width!).toBe(100);
+        }
+        // cut through between the columns
+        const set = generateSet({ seed: 1, ambiance: 'interior' });
+        const t = renderTexture(set.textures['arch-alcove'], createMemoryLoader({}));
+        expect(t.getPixel(32, 100) & 0xff).toBe(0);
+        expect(t.getPixel(4, 100) & 0xff).toBe(255);
+    });
+
+    it('hangs two banners of heraldic colors on the walls of every ambiance', () => {
+        const pairs = BANNER_COLORS.map((pair) => pair.join());
+        const drawn = new Set<string>();
+        for (const ambiance of Object.keys(ambiances)) {
+            for (const seed of SEEDS.slice(0, 20)) {
+                const { theme, textures } = generateSet({ seed, ambiance });
+                expect(Object.keys(textures).filter((n) => n.startsWith('banner-wall'))).toEqual([
+                    'banner-wall-1',
+                    'banner-wall-2',
+                ]);
+                const banners = ['banner-wall-1', 'banner-wall-2'].map((name) => {
+                    const texture = textures[name];
+                    expect(texture.seed).toBe(textures['plain-wall'].seed);
+                    const [, hung] = texture.patches;
+                    expect(hung.wrap).toBe(false);
+                    const banner = hung.patch as {
+                        fabric: { color: string };
+                        border: { stripes: { color: string }[] };
+                        age: number;
+                    };
+                    expect(banner.age).toBe(theme.decor.age);
+                    const colors = [banner.fabric.color, banner.border.stripes[0].color].join();
+                    expect(pairs).toContain(colors);
+                    drawn.add(colors);
+                    return { colors, place: [hung.x, hung.y, hung.width, hung.height] };
+                });
+                // two banners of other colors, of the same size at the same place
+                expect(banners[0].colors).not.toBe(banners[1].colors);
+                expect(banners[0].place).toEqual(banners[1].place);
+            }
+        }
+        // every pair of colors, across seeds
+        for (const seed of SEEDS) {
+            for (const name of ['banner-wall-1', 'banner-wall-2']) {
+                const [, hung] = generateSet({ seed, ambiance: 'dungeon' }).textures[name].patches;
+                const banner = hung.patch as {
+                    fabric: { color: string };
+                    border: { stripes: { color: string }[] };
+                };
+                drawn.add([banner.fabric.color, banner.border.stripes[0].color].join());
+            }
+        }
+        expect(drawn.size).toBe(pairs.length);
+    });
+
+    it('hangs very aged decorations in caves', () => {
+        for (const seed of SEEDS.slice(0, 50)) {
+            expect(drawTheme({ seed, ambiance: 'cave' }).theme.decor.age).toBeGreaterThanOrEqual(
+                0.85,
+            );
+        }
+        expect(() =>
+            generateSet({ seed: 1, ambiance: 'cave', theme: { decor: { age: 2 } } }),
+        ).toThrow(/theme\.decor/);
+    });
+
+    it('keeps every edge of the banner walls those of the plain wall', () => {
+        for (const ambiance of Object.keys(ambiances)) {
+            for (const seed of SEEDS.slice(0, 5)) {
+                const set = generateSet({ seed, ambiance, size: [32, 64] });
+                const render = (name: string) =>
+                    renderTexture(set.textures[name], createMemoryLoader({}));
+                const plain = render('plain-wall');
+                const hung = render('banner-wall-1');
+                for (let y = 0; y < plain.height; y++) {
+                    for (const x of [0, plain.width - 1]) {
+                        expect(hung.getPixel(x, y)).toBe(plain.getPixel(x, y));
+                    }
+                }
+                for (let x = 0; x < plain.width; x++) {
+                    expect(hung.getPixel(x, plain.height - 1)).toBe(
+                        plain.getPixel(x, plain.height - 1),
+                    );
+                }
+            }
+        }
+    });
+
+    it('glazes the window of interiors, framed by beams, with plain curtains one time in two', () => {
+        let curtained = 0;
+        for (const seed of SEEDS) {
+            const { textures } = generateSet({ seed, ambiance: 'interior' });
+            const window = textures['small-window'];
+            expect(window.seed).toBe(textures['plain-wall'].seed);
+            const templates = window.patches.map((p) => (p.patch as { template: string }).template);
+            expect(templates.slice(0, 7)).toEqual([
+                'planks',
+                'opening',
+                'window',
+                'woodbeam',
+                'woodbeam',
+                'woodbeam',
+                'woodbeam',
+            ]);
+            const [, opening, glazed, left, right, top, bottom] = window.patches;
+            expect(opening).toMatchObject({ x: 15, y: 20, width: 70, height: 60 });
+            expect(opening.patch).toMatchObject({ back: { mode: 'cut' } });
+            expect(glazed.anchor).toEqual({ to: 'window', at: 'opening' });
+            // the beams around the edges of the opening
+            expect(left.x! + left.width!).toBeCloseTo(15);
+            expect(right.x).toBe(85);
+            expect(top.y! + top.height!).toBeCloseTo(20);
+            expect(bottom.y).toBe(80);
+            const curtains = window.patches.slice(7);
+            if (curtains.length > 0) {
+                ++curtained;
+                expect(curtains).toHaveLength(2);
+                const [a, b] = curtains.map(
+                    (c) =>
+                        c.patch as {
+                            template: string;
+                            fabric: { color: string };
+                            border: { stripes: unknown[] };
+                            pattern: { kind: string };
+                        },
+                );
+                expect(a.template).toBe('banner');
+                // plain and of a single color, the same for both
+                expect(a.border.stripes).toEqual([]);
+                expect(a.pattern.kind).toBe('none');
+                expect(b.fabric.color).toBe(a.fabric.color);
+                // on both sides of the window, inside the opening
+                expect(curtains[0].x).toBe(15);
+                expect(curtains[1].x! + curtains[1].width!).toBe(85);
+            }
+        }
+        expect(curtained / SEEDS.length).toBeGreaterThan(0.35);
+        expect(curtained / SEEDS.length).toBeLessThan(0.65);
+        // the room behind shows through the glass
+        const set = generateSet({ seed: 3, ambiance: 'interior' });
+        const t = renderTexture(set.textures['small-window'], createMemoryLoader({}));
+        expect(t.getPixel(24, 50) & 0xff).toBeGreaterThan(0);
+        expect(t.getPixel(24, 50) & 0xff).toBeLessThan(128);
+    });
+
+    it('closes the way of interiors with four wooden posts and a rail across them', () => {
+        for (const seed of SEEDS.slice(0, 20)) {
+            const { textures } = generateSet({ seed, ambiance: 'interior' });
+            const way = textures['barred-way'];
+            expect(way.seed).toBe(textures['plain-wall'].seed);
+            const templates = way.patches.map((p) => (p.patch as { template: string }).template);
+            expect(templates).toEqual([
+                'planks',
+                'opening',
+                'woodbeam',
+                'woodbeam',
+                'woodbeam',
+                'woodbeam',
+                'woodbeam',
+            ]);
+            const posts = way.patches.slice(2, 6);
+            for (const post of posts) {
+                expect(post.patch).toMatchObject({ direction: 'vertical' });
+                expect(post).toMatchObject({ y: 0, height: 100, width: 10 });
+            }
+            expect(posts.map((p) => p.x)).toEqual([7.5, 32.5, 57.5, 82.5]);
+            expect(way.patches[6]).toMatchObject({ x: 0, y: 66, width: 100, height: 10 });
+        }
+        // transparent between the posts, above the rail
+        const set = generateSet({ seed: 1, ambiance: 'interior' });
+        const t = renderTexture(set.textures['barred-way'], createMemoryLoader({}));
+        expect(t.getPixel(13, 40) & 0xff).toBe(0);
+        expect(t.getPixel(8, 40) & 0xff).toBe(255);
+        expect(t.getPixel(13, 90) & 0xff).toBe(255);
     });
 
     it('gives each ambiance at most one variant of each texture', () => {

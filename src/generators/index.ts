@@ -5,6 +5,7 @@ import { beam } from './beam';
 import { bookshelf } from './bookshelf';
 import { breach } from './breach';
 import { bricks } from './bricks';
+import { burn } from './burn';
 import { cavewall } from './cavewall';
 import { chain } from './chain';
 import { cobweb } from './cobweb';
@@ -39,6 +40,7 @@ export {
     bookshelf,
     breach,
     bricks,
+    burn,
     cavewall,
     chain,
     cobweb,
@@ -81,6 +83,7 @@ export { beamSchema, beamWear } from './beam';
 export { bookshelfSchema, bookshelfWear } from './bookshelf';
 export { breachSchema } from './breach';
 export { bricksSchema } from './bricks';
+export { burnSchema } from './burn';
 export { cavewallSchema } from './cavewall';
 export { chainSchema, chainWear } from './chain';
 export { cobwebSchema, cobwebWear } from './cobweb';
@@ -129,6 +132,7 @@ export type { BeamParams, BeamWear } from './beam';
 export type { BookshelfParams, BookshelfWear } from './bookshelf';
 export type { BreachParams } from './breach';
 export type { BricksParams } from './bricks';
+export type { BurnParams } from './burn';
 export type { CavewallParams } from './cavewall';
 export type { ChainParams, ChainWear } from './chain';
 export type { CobwebParams, CobwebWear } from './cobweb';
@@ -194,6 +198,7 @@ export const generators: Record<string, TextureGenerator> = Object.fromEntries(
         glassWindow,
         cobweb,
         splatter,
+        burn,
         glyph,
         parchment,
         banner,

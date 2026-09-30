@@ -13,7 +13,7 @@ const SLOT_WIDTH = 10;
 export const doorFrame: TextureRecipe = {
     name: 'door-frame',
     description: 'the plain wall, with a door slot running down its middle',
-    ambiances: ['dungeon', 'cave'],
+    ambiances: ['dungeon', 'cave', 'interior'],
     build(theme, seed, size) {
         const [width, height] = size;
         const slot = Math.round((SLOT_WIDTH / width) * 10000) / 100;

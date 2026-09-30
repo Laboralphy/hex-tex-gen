@@ -10,7 +10,7 @@ export { expandPath } from './core/params';
 export { Texture } from './core/Texture';
 export type { AnchorPoint, Corner } from './core/Texture';
 export { hash, hashRange, hashSeed } from './core/hash';
-export { circularDistance, clamp, firstPixel, mod } from './core/math';
+export { circularDistance, clamp, firstPixel, mod, smoothstep } from './core/math';
 export { createGradient, mixRGBA, sample, shade, shadeRGBA } from './core/palette';
 export {
     ageParam,
@@ -53,15 +53,24 @@ export {
     alcoveBackground,
     ambiances,
     archAlcove,
+    bannerWall1,
+    bannerWall2,
     barredWayCave,
     barredWayDungeon,
+    barredWayInterior,
     breachedWall,
+    burntWallCave,
+    burntWallDungeon,
+    burntWallInterior,
     cave,
     caveAlcove,
     caveWindow,
+    columnAlcove,
     doorFrame,
+    interiorWindow,
     drawTheme,
     dungeon,
+    interior,
     generateSet,
     plainWall,
     recipes,
@@ -100,6 +109,8 @@ export {
     breachSchema,
     bricks,
     bricksSchema,
+    burn,
+    burnSchema,
     cavewall,
     cavewallSchema,
     chain,
@@ -187,6 +198,7 @@ export type {
     BaseParams,
     Category,
     BricksParams,
+    BurnParams,
     CavewallParams,
     ChainParams,
     ChainWear,

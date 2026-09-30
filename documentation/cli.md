@@ -53,13 +53,13 @@ hex-tex-gen set -s 42 -a cave -o cave-textures
 Generates a [texture set](texture-sets.md): every texture of the set is written as a
 texture file and its PNG image, in a directory.
 
-| Option                  | Description                                                   |
-| ----------------------- | ------------------------------------------------------------- |
-| `-o, --output <dir>`    | output directory; `set-<seed>` by default                     |
-| `-s, --seed <n>`        | seed of the set; a random one by default (printed)            |
-| `-a, --ambiance <name>` | ambiance: `dungeon` or `cave`; drawn from the seed by default |
-| `-w, --width <px>`      | width of the textures, in pixels; 64 by default               |
-| `-H, --height <px>`     | height of the textures, in pixels; 128 by default             |
+| Option                  | Description                                                               |
+| ----------------------- | ------------------------------------------------------------------------- |
+| `-o, --output <dir>`    | output directory; `set-<seed>` by default                                 |
+| `-s, --seed <n>`        | seed of the set; a random one by default (printed)                        |
+| `-a, --ambiance <name>` | ambiance: `dungeon`, `cave` or `interior`; drawn from the seed by default |
+| `-w, --width <px>`      | width of the textures, in pixels; 64 by default                           |
+| `-H, --height <px>`     | height of the textures, in pixels; 128 by default                         |
 
 ## `<template>`: a template with its defaults
 

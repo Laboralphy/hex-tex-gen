@@ -1,0 +1,30 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 128],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "bricks"
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "burn",
+        "base": {
+          "width": 0.6
+        },
+        "plume": {
+          "height": 1
+        }
+      },
+      "x": 3.125,
+      "y": 10,
+      "width": 93.75,
+      "height": 85,
+      "wrap": false
+    }
+  ]
+}

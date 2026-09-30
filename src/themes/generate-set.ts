@@ -30,6 +30,11 @@ export function drawTheme({ seed, ambiance, theme }: GenerateSetOptions): {
     }
     checkPatchParams({ template, params, source: 'theme.wall' });
     checkPatchParams({ template: 'splatter', params: { liquid: merged.liquid }, source: 'theme' });
+    checkPatchParams({
+        template: 'banner',
+        params: { age: merged.decor.age },
+        source: 'theme.decor',
+    });
     return { ambiance: name, theme: merged };
 }
 

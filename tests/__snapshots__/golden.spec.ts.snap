@@ -112,6 +112,16 @@ exports[`golden examples > brick-variants/11-mossy-ruin.json 1`] = `"64x64 c9728
 
 exports[`golden examples > brick-variants/12-mossy-sparse.json 1`] = `"64x64 6d0849d8488813c71313610731a99d2b75a780d9cad75ce0e2a2f95086b2c5f6"`;
 
+exports[`golden examples > burn-variants/1-torch-on-ashlar.json 1`] = `"64x128 68093fe7e94f4cb26bdc3d6bcb5642ace8c4709ab9eb1fd69ed46fa668ec29b3"`;
+
+exports[`golden examples > burn-variants/2-bonfire-on-bricks.json 1`] = `"64x128 35b4bdf9163eaf6781f524ed55c7cd37c53884a7666d0d97b77576b03e5ee472"`;
+
+exports[`golden examples > burn-variants/3-draft-on-fieldstone.json 1`] = `"64x128 a110f4938cf94895383ff523f4dd2d89004d529738186d488257d22d3bedbdab"`;
+
+exports[`golden examples > burn-variants/4-old-soot-on-cavewall.json 1`] = `"64x128 f0be16eb18225a527241dbeb2279c04825ac536c1eaaf4dd59899a6f454cca34"`;
+
+exports[`golden examples > burn-variants/5-heat-tinted-metal.json 1`] = `"64x128 31b97122d1674a222d6abfb4c9ffc57b100fe391943e6971a34f1e8a79b587f5"`;
+
 exports[`golden examples > castle-wall.json 1`] = `"128x128 437e2280d1682c99fce2110e119eb2445c82fbbe0e24dc9955501ea1c3316cb2"`;
 
 exports[`golden examples > cavewall-variants/1-default.json 1`] = `"64x64 67ee1b598f2472be9d7e25448880e303ac9300facc932869be411f138d178013"`;
@@ -294,27 +304,27 @@ exports[`golden examples > plank-variants/13-mossy-rows.json 1`] = `"64x64 23a32
 
 exports[`golden examples > plank-variants/14-old-barn.json 1`] = `"64x64 6be7fbcd612035e7ecfc836b9b3e5150b9d50334592e3d3cd7718e2bc832fd93"`;
 
-exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-base.json 1`] = `"64x96 7d9f54fe6a58c776afb3d6a855658377331ccf4c8695c219b94b3028a21b4662"`;
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-base.json 1`] = `"64x96 4bd379f7b9c7faef12b41f122bd7df62faa8d899d487300c302bba89897ee556"`;
 
-exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-bevel-size.json 1`] = `"64x96 305b9c66e161999298eb85e88448bb77fe899db0b66c8c521f6ceb2c1ad0bb10"`;
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-bevel-size.json 1`] = `"64x96 f26d3320223551252f88a4bb7fb416ef907192f469d800fe338b43d77dcf20cf"`;
 
-exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-bond-running.json 1`] = `"64x96 81325b65f0f130ccd7a652c17a68d5acc2d0ef23b7c2f1e64280e31ca489f7f5"`;
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-bond-running.json 1`] = `"64x96 7c787a819959870ad3ac10e38910f1e0410b8f7267884e6408f051d399faf022"`;
 
-exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-bond-stack.json 1`] = `"64x96 02c33490af726fba184c2e49a499cf3c8d0cfb795ed0f9d31e569ab905b79fd6"`;
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-bond-stack.json 1`] = `"64x96 7a7a6216672d398434c6d08dd3e9ecc00425cb0d6b9399b3734127fa4c23a5c6"`;
 
-exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-brick-size-range.json 1`] = `"64x96 162d49750336890fed232260e333e98dcd3e50a71eae93807494ea794bb40ada"`;
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-brick-size-range.json 1`] = `"64x96 5618e3dac5f1d65c79cf0b1f47d03de74d075c9a7a954e59be087caea702ae32"`;
 
-exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-color.json 1`] = `"64x96 f1ebdd7c1db14737e2038ae3fc40b707797249874119d86987aedbf6911a7f52"`;
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-color.json 1`] = `"64x96 7d6e8f55d8e8832afa33676bceb24ac6d4ae898f9b5b5a04893ee007aa94bf5d"`;
 
-exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-contrast.json 1`] = `"64x96 b5ddbe0ce799332e986495a637178a3452e534bb83b7ebef6b44523c655f1e4e"`;
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-contrast.json 1`] = `"64x96 04b231757408f1b1521073e2f2d60d88834ac513066606e9b04b51975344db7f"`;
 
-exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-more-row-height-variation.json 1`] = `"64x96 120f072235b9082ba93894fa1885f3bd7096d032b211966171f08d742a27399b"`;
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-more-row-height-variation.json 1`] = `"64x96 7981c04ef99eee054f9e6e1ddcf45f0aeb8a896cf1fbc2a48c1cc20c6c94f05a"`;
 
-exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-more-rows.json 1`] = `"64x96 2a2e95187a2688cc6c97348733d259fbc754dff15c370aba2d9daa653d6c82b4"`;
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-more-rows.json 1`] = `"64x96 d83037cd7934b695188a7c155c4f4f539d423c1dd173eb0e991b9459755072dd"`;
 
-exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-mortar-size.json 1`] = `"64x96 84ffc15a5551c3460d3f73c3e38c6ef618ead88d8d711a26d39eb8704b175c9e"`;
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-mortar-size.json 1`] = `"64x96 21a5fe280fd45ced3476d8c3c67f7c5c47df6e0160eaa78287d837a61cde1d6d"`;
 
-exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-mortar-size-color.json 1`] = `"64x96 ccd2e6b40627288005e0ecc30991063ac3266c91f895d73fc60dd9623b17f9ae"`;
+exports[`golden examples > seeded-generation/ashlar/dungeon-plain-wall-mortar-size-color.json 1`] = `"64x96 f4e481e7e4777c70731466f0b6b94e1e9396230936b1fe77d0b8fd6d63739ca6"`;
 
 exports[`golden examples > shield-variants/1-heater-cross.json 1`] = `"48x48 4b943d2f5ae6dfe43f879ed3b729f93f4e5f07dabf61761b7cd4bfcfa016328b"`;
 
@@ -404,8 +414,11 @@ exports[`golden sets > cave, seed 1 1`] = `
 {
   "alcove-background": "64x128 8cd049fa5902b321ddc5f47910b96ffc579575d9ccfb6f29477534a0b6231251",
   "arch-alcove": "64x128 6b52644e1fa0ed34d30f3b5fddced64b8e30b768be518dd3592a914bc17356a5",
+  "banner-wall-1": "64x128 324a2ea3d8fe1b9ef26b839e71557d32a53f76b02cd977f9192131083e322a1c",
+  "banner-wall-2": "64x128 456ac73638fc9dfa2195b8255cfaef46ae9bb27ac849530fa512a91eac4062a0",
   "barred-way": "64x128 51bdb5e4bbeafa44d3aeeb937eaae7d1905783e1e9ced4afb481198b9ce2bc0f",
   "breached-wall": "64x128 67091d46e6f56000629644cbd47b6edcd985716b360ad06dd9e4f334a7cc2101",
+  "burnt-wall": "64x128 ace846ba1f8dbed82cb5624234811db363ce82e5eac49a15c4a12a5eaf792017",
   "door-frame": "64x128 5a4d6fd1c5a79f8bf6acc5e8ac1352c297e0891fce6ab9f1d89c277a31475f7f",
   "plain-wall": "64x128 b67acb9d90037d2a30735e257bf54f9c5d130d67cbcc1ca9121d2089fef0c4af",
   "small-window": "64x128 b46d641f4cbde998da28c79373b3f40e0b42208e229449502a71baf392adbd0c",
@@ -417,8 +430,11 @@ exports[`golden sets > cave, seed 2 1`] = `
 {
   "alcove-background": "64x128 0a2435aa39f067045c1c2bdcb28d7ff3750b1b4e59d55b48d422fec0e55fbda6",
   "arch-alcove": "64x128 16e00eeff4971e9158bd65a41aeb55dd7dd172ec00df49eb016a4d23a5169b83",
+  "banner-wall-1": "64x128 aa3e86d353e6eeff0f012e6dfe1364287623936ee556e66694af822b97ab54f8",
+  "banner-wall-2": "64x128 b2076290a0989c5f8bea438c51f23d3a6c4a62055006f8c3433e81375db3a831",
   "barred-way": "64x128 13dfe69434644d96e899e6edb18fb644ec9c909c862555b053f216e0b181b38e",
   "breached-wall": "64x128 3d9d0210f59be773b81767f57883da1454a0dba1d9e835d32262d8f9370c9f32",
+  "burnt-wall": "64x128 fe81b6a2d082881ce05271cc64c95a57b458b2ccee7142ce20c757a3ef4e645b",
   "door-frame": "64x128 72aaf944df9479033fb8f4d33204782ec85256407224b01ce12b5159fd566473",
   "plain-wall": "64x128 71abfc0b45e86c7096d492998112a0f01e934527f3cdf9064e582b70ad1eb3b5",
   "small-window": "64x128 009bbd7af84799b378592abab83c0c63c8fa1193d92734990184336280f59099",
@@ -430,8 +446,11 @@ exports[`golden sets > cave, seed 3 1`] = `
 {
   "alcove-background": "64x128 d1a93c9dff9e23e8e816781d25b99022ec3c3d74f52d971c9213d350850df860",
   "arch-alcove": "64x128 03f3020f602b498d6c805308f7c0ce9463a78ed71b91b2c43d2fd9585422b429",
+  "banner-wall-1": "64x128 1807dc1c077386440aaea1e6cf2ccde46322a9513bf74c63cdd1784268eb42b2",
+  "banner-wall-2": "64x128 bf8385d2225910c0e0ba221b9204aebbf8854002c4926a3fd277a2c2c9d88d5f",
   "barred-way": "64x128 0a43e1c37c33c639013162486e3ca7fea3ea05a0337ff911d9cac81632f1ae53",
   "breached-wall": "64x128 dbf64925ccce9c56db0f7a41751077f7c66d9b27ceeff655e0c5ca119f745174",
+  "burnt-wall": "64x128 7c0fa021acebac0f10ea330aa8fc69b92c0d474a06d522fbc1ba86c0c5438da5",
   "door-frame": "64x128 71a720fe3df25e131535037d0500bf9d9901c06d0497e3c92f604b77a5b25056",
   "plain-wall": "64x128 206dd250c66d48fa14c4ff4e6bf20ab1cb1cb1e3c8ee915e4a328b6bf9f7fc8c",
   "small-window": "64x128 a4ce43798ee5cf5534b9bc62e0261470272657aab467171f39463ec2cdfbba43",
@@ -443,8 +462,11 @@ exports[`golden sets > dungeon, seed 1 1`] = `
 {
   "alcove-background": "64x128 a5e6653821572ce751d03ee03f2d539edb8695d5c656bad4c220c63fd2901dea",
   "arch-alcove": "64x128 3f2af6fba2079b3f40b4460370d710c06238a9a4aec8f100bf7ec82e0f3bfdd1",
+  "banner-wall-1": "64x128 d72506a72dbf37dbf3559232d717f5b8a956606447bab3b04f08b0ade5d2e704",
+  "banner-wall-2": "64x128 4bd3574a6ea33dcb90a23f36f2f66106fc302146806c3546bfc5d95572f60a6c",
   "barred-way": "64x128 f2882b75114b6647efa2ebe1363100e260d49b4990243d358a0ba315aa4ca439",
   "breached-wall": "64x128 0328bfce5f2bf31910f74ba5541659e1602bfb985cd373997e7ff140a54e997e",
+  "burnt-wall": "64x128 4474df14fb8db9a2a8bc2d8a07e0a5c12a6007172101bf41cbfcc8d41cfbe1b7",
   "door-frame": "64x128 a81fc50c3d6298a77f869844303ab98aed37037aeb92495c3c0b0b3b8e0352bb",
   "plain-wall": "64x128 41b84b9ebf1fd8443a758d1960574687d42c62eb780fd3130df9b679a3b4b87a",
   "small-window": "64x128 7b33df0b3cbc296c96b406aedde0884d17fc373715354ad8aae7d47801df3a3d",
@@ -456,8 +478,11 @@ exports[`golden sets > dungeon, seed 2 1`] = `
 {
   "alcove-background": "64x128 33464a7975a85724dc50627a21206ede9fcb0b8a0963f5e02fc269da02521599",
   "arch-alcove": "64x128 0993c62a9b305e5992e4c442a7aabb102818cb0844819fbe0eb5d644802fe1a7",
+  "banner-wall-1": "64x128 f542e4ca95ca0f95a492c8ec6a34202a2f1c7d7d23381524dd303e350ccdb8a8",
+  "banner-wall-2": "64x128 eafcdd5307ca51859268ecf16107888729a8a21504e23e268a8a63c85d0c8e5b",
   "barred-way": "64x128 eefc6736247c474a2fdb976748d59c7159e0cc6d1bc353fdfa4e5ac982430532",
   "breached-wall": "64x128 4ac915dc2db16f1f14747bd8712e09d86cbd2c76a7082f6464c50b2f9f6af872",
+  "burnt-wall": "64x128 2b87d44d6cd3d114692a82ff8978d9df26176f3fa5b16b8085ad14bd988447bf",
   "door-frame": "64x128 2d21bd732db274a08112e6ab21a552797aae279564e853faa58a77c0eeff5c12",
   "plain-wall": "64x128 b34521dd67ba82be3069af05c74abcddc65e5f57d3c9a6e05ca92d8e4e02a251",
   "small-window": "64x128 2c7e0c30a912371be7a1dd3248ed0f3ded963e4ee2d70a5e9420b58a794d3814",
@@ -469,12 +494,60 @@ exports[`golden sets > dungeon, seed 3 1`] = `
 {
   "alcove-background": "64x128 02a0248bb231f50753909d4d6de6c2be7663f58a66eecd97b2a80e3ea8ff945b",
   "arch-alcove": "64x128 f7cdbbe1b68638cb072a24761658426d92b2fecf6b413106c230f45ae13cc668",
+  "banner-wall-1": "64x128 eeed8cc8430a48ebf02c3499a1c68f788cea37b05e52313fc9cc2b934151282a",
+  "banner-wall-2": "64x128 7e26b6af10fcf17e9bd7b0c726c13eeb641fb75a5d84cb4ec7f3f39dfa16fc6d",
   "barred-way": "64x128 36ee34e6830d9e344aedf87aeefe6e843343cd88ef024aca425ace65cd7fb566",
   "breached-wall": "64x128 f5d9d77dbe0c1cd778e3f5f2ef909452462a2396b046af1ba0728759d6ff2d6d",
+  "burnt-wall": "64x128 9bb27a08f3c202d563068f89dde61c899cfdad6557735e501fec7cbe02989ce3",
   "door-frame": "64x128 335f4eea14501073c78dc879a6f21c516280fce35f2ef38d806e3977efc35990",
   "plain-wall": "64x128 d2eae8c35e26d22fb594609853efd1f3cc9b489f17969b7377af0e18a95a1c95",
   "small-window": "64x128 9a93906d0a6930568d67ae42e2a49efaf3489a7baafeb996acc45e4e2f315e07",
   "splattered-wall": "64x128 6550fe4ca0210ed912253ec3506da8f3f7ca307fc562b35a200340fce462938c",
+}
+`;
+
+exports[`golden sets > interior, seed 1 1`] = `
+{
+  "alcove-background": "64x128 14ca2260be77c2c929e1d65b39809bd5ed73a4966e3edcb1237bf40d9a6ed1b1",
+  "arch-alcove": "64x128 544917fdc794411788658aa2bd546b1baa35bec9ada90fa70af569a9e9ca5690",
+  "banner-wall-1": "64x128 dd66b5564a039e9f734e5372b1544f88e151f1ad335b67c2340ef01b854e3c1a",
+  "banner-wall-2": "64x128 b3389f17c9bbec44a59933adf16ffb7a8ae4ab68f8039813c488c5d878abfea6",
+  "barred-way": "64x128 d5b7ec9ea8a2e87eb09ebb814c91f0e19e5198216bc5e3e0c40ea48cb2521adb",
+  "burnt-wall": "64x128 b865453e4fa5242eb19027110bc0d08e006d90da9f15272e379db9e624f1fde7",
+  "door-frame": "64x128 cd4c3ec71c0d7242b1373f9c8c84528ec809c4a9b3bfc47013af9233e84c9a77",
+  "plain-wall": "64x128 75ecc2e31034a15340e8886fe51e19e28b44f2f641e697b589a21c425ba4cd7c",
+  "small-window": "64x128 a0a3a505fe313d7bf04a9063eae73ac96549a99e3c03741a9890b1be6637410c",
+  "splattered-wall": "64x128 44272950483ef8f8f5f9cee6f48df9ca2aeea225d8b03ca951fcc71d740ea371",
+}
+`;
+
+exports[`golden sets > interior, seed 2 1`] = `
+{
+  "alcove-background": "64x128 d16c9a382e5567d1911d39d8c84e5f2b037735a095dc8591596501ae0aa286cc",
+  "arch-alcove": "64x128 d4aadebdbaf092e9c59b5b5d5bd82ad4ae3b0dff341b18f77597b551cbca5827",
+  "banner-wall-1": "64x128 53835449fde6bc8216ebd5bd4cdb1d81c4482652aa38c51049d98d3f21241605",
+  "banner-wall-2": "64x128 c8ecbf01de49e0dbe4e67beeb9bbfba7f140ea0221ed6090ed33302a66c98761",
+  "barred-way": "64x128 684afde9048b82b8f6b0e16313a9824567768cadff50b102ad4b66434d26bc9f",
+  "burnt-wall": "64x128 4d16bf78d13b54fd08330ea9580272ecbd2c0ef6b84283645a26da0bb6afbf35",
+  "door-frame": "64x128 36478977e449be8cc2f14299b4a2ff8dc1a663eb44f2805bbf3137f4f6e35ff7",
+  "plain-wall": "64x128 44be615308d0ab22f3035f41fcba06cb79d1fbd95f1c05f0d9916f66c2315062",
+  "small-window": "64x128 f98e609f1c830314903284796c0897384482344ad0ac585e569cb9834ba2a931",
+  "splattered-wall": "64x128 8c37a7510c6530ef6ce174826476aee7223068553e3a97396bfc1ab5e6535792",
+}
+`;
+
+exports[`golden sets > interior, seed 3 1`] = `
+{
+  "alcove-background": "64x128 ad20781d023d1c0b33e2fc8c5fbab09883670152ee3764ef6e8b4e127d430a0d",
+  "arch-alcove": "64x128 9134bfbb0722bcc22c05be79679409e27b6f47aa5c227fb181872e50959ed113",
+  "banner-wall-1": "64x128 9915e58a8df8990ec2af0779c55975e8a599eece54d04d790c7f4ee197f72a66",
+  "banner-wall-2": "64x128 3a819974f2df58577f569ee45ad099173df674231c016b4a03cfc5905abaae03",
+  "barred-way": "64x128 16f6b7bf8f70766370a570cf1108099ddd23f18e2e446cf80848e9e4be5114ec",
+  "burnt-wall": "64x128 e6443dc6e7d09c291fb0e2ff2a670ee1d24b45b2ae262fb6016fa95a56c17a91",
+  "door-frame": "64x128 852cb7614fed5d49e9d8bce9ddee05799bbe500207e59826aac895d2ac6da06d",
+  "plain-wall": "64x128 041ffb071e4ff967c2e919efeac86006c30500364cde5de7879df2bb9bc4910e",
+  "small-window": "64x128 0fe242778f2d51a44d9cb3f7955574344e94defb086192df618a6927067a28a0",
+  "splattered-wall": "64x128 34fbb7002327a534077df6dceb116dff7e5336db29d4a15516ed57053f629f0b",
 }
 `;
 
@@ -491,6 +564,8 @@ exports[`golden templates > bookshelf 1`] = `"64x64 8a977660c78afed3d1ce22c88d3d
 exports[`golden templates > breach 1`] = `"32x32 95c54601080f957b52d49e0b19d65e9138eab2223477da3f5984fce901fc551d"`;
 
 exports[`golden templates > bricks 1`] = `"64x64 9cfeb86f23c82c0359744b56af2fb4a5661ec6652df2a89e60dcdfd18f2ce3d4"`;
+
+exports[`golden templates > burn 1`] = `"48x64 2427741e692fad759ca54e4653e889926a9a9c00c2d294de29944e873d295539"`;
 
 exports[`golden templates > cavewall 1`] = `"64x64 653c2319dbaae8a3d0f59f7636c578be3a65d1eb18897645bc1f6aaa5fcacef2"`;
 

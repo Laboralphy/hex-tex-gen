@@ -8,7 +8,7 @@ import type { TextureRecipe } from '../types';
 export const plainWall: TextureRecipe = {
     name: 'plain-wall',
     description: 'the wall of the theme, alone',
-    ambiances: ['dungeon', 'cave'],
+    ambiances: ['dungeon', 'cave', 'interior'],
     build(theme, seed, size) {
         return {
             size,

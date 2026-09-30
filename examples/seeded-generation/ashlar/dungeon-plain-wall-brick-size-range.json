@@ -1,8 +1,6 @@
 {
-  "size": [
-    64,
-    96
-  ],
+  "$schema": "../../../schemas/texture.schema.json",
+  "size": [64, 96],
   "seed": 1234,
   "patches": [
     {
@@ -10,12 +8,11 @@
       "patch": {
         "template": "ashlar",
         "blocks": {
-          "width": [
-            12,
-            40
-          ]
+          "width": [12, 40]
         }
-      }
+      },
+      "width": 100,
+      "height": 100
     }
   ]
 }

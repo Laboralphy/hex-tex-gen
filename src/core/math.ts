@@ -14,6 +14,14 @@ export function clamp(value: number, min = 0, max = 1): number {
 }
 
 /**
+ * Smooth Hermite step: 0 below `edge0`, 1 above `edge1`, a smooth S curve between them.
+ */
+export function smoothstep(edge0: number, edge1: number, value: number): number {
+    const t = clamp((value - edge0) / (edge1 - edge0));
+    return t * t * (3 - 2 * t);
+}
+
+/**
  * The signed shortest offset from `b` to `a` on a circle of the given length: in
  * [-length / 2, length / 2), so that positions wrapping around a tile stay close.
  */

@@ -1,8 +1,6 @@
 {
-  "size": [
-    64,
-    96
-  ],
+  "$schema": "../../../schemas/texture.schema.json",
+  "size": [64, 96],
   "seed": 1234,
   "patches": [
     {
@@ -10,14 +8,11 @@
       "patch": {
         "template": "ashlar",
         "stone": {
-          "palette": [
-            "#1b2d2e",
-            "#3d5a5b",
-            "#608888",
-            "#82b5b5"
-          ]
+          "palette": ["#1b2d2e", "#3d5a5b", "#608888", "#82b5b5"]
         }
-      }
+      },
+      "width": 100,
+      "height": 100
     }
   ]
 }

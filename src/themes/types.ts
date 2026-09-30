@@ -15,6 +15,11 @@ export type Theme = {
     wall: ThemePatch;
     /** the liquid splashed on the walls: the `liquid` parameters of `splatter` */
     liquid: Record<string, unknown>;
+    /** the decorations hung on the walls, such as banners */
+    decor: {
+        /** how worn the decorations are, in [0, 1]: 0 new, 1 ruined */
+        age: number;
+    };
 };
 
 /**
@@ -24,6 +29,7 @@ export type Theme = {
 export type ThemeOverrides = {
     wall?: Record<string, unknown>;
     liquid?: Record<string, unknown>;
+    decor?: { age?: number };
 };
 
 /**
