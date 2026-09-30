@@ -4239,6 +4239,332 @@
               "type": "string"
             },
             "template": {
+              "const": "breach",
+              "description": "Hole broken through a wall: a jagged outline, a beveled rim and earth behind"
+            },
+            "seed": {
+              "description": "seed of this patch, unless the placement sets one",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "size": {
+              "default": [32, 32],
+              "description": "own size of the patch, cracks included",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "hole": {
+              "description": "the outline of the hole",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "shape": {
+                  "default": "burst",
+                  "description": "burst: a jagged hole, from round, punched by a ram, to a star of shards, blown by an explosion; gash: parallel slashes tapering at both ends, torn by a claw; fissure: a long zigzag split, widest in its middle, opened by a quake; pocks: small holes scattered around, left by catapult shots; collapse: a bite out of the top of the wall, rubble heaped at its foot; bore: a clean round tunnel, dug by a giant worm; slits: narrow vertical arrow slits hacked into the wall",
+                  "essential": true,
+                  "type": "string",
+                  "enum": ["burst", "gash", "fissure", "pocks", "collapse", "bore", "slits"]
+                },
+                "size": {
+                  "default": 0.8,
+                  "description": "span of the hole, as a share of the patch; the rest is left to the cracks",
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 1
+                },
+                "jaggedness": {
+                  "default": 0.35,
+                  "description": "irregularity of the outline, in [0, 1]: 0 for a smooth one; a burst turns from a round hole into a star of shards",
+                  "essential": true,
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "spikes": {
+                  "default": 7,
+                  "description": "burst or pocks only: shards of wall jutting into each hole, around its outline",
+                  "type": "integer",
+                  "minimum": 2,
+                  "maximum": 9007199254740991
+                },
+                "count": {
+                  "default": 3,
+                  "description": "gash, pocks or slits only: number of slashes, holes or slits",
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "angle": {
+                  "default": 60,
+                  "description": "gash or fissure only: direction of the strokes, in degrees: 0 to the right, 90 downwards",
+                  "type": "number"
+                },
+                "width": {
+                  "default": 0.2,
+                  "description": "gash, fissure or slits only: thickness of a stroke at its widest, as a share of the smaller side of the patch",
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 1
+                },
+                "cross": {
+                  "default": false,
+                  "description": "slits only: a horizontal slit across each one, for crossbows",
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            },
+            "depth": {
+              "default": 4,
+              "description": "thickness of the broken wall seen inside the hole, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "bevel": {
+              "default": 1,
+              "description": "width of the worn lip of the wall face around the hole, in pixels (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "rim": {
+              "description": "the broken edge of the wall, inside the hole and on its lip, the light coming from the top-left",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "light": {
+                  "default": 0.45,
+                  "description": "lightening of the broken faces turned to the light, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "dark": {
+                  "default": 0.7,
+                  "description": "darkening of the broken faces turned away from it, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "falloff": {
+                  "default": 0.45,
+                  "description": "extra darkness of the broken faces towards the back, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "grain": {
+                  "default": 0.3,
+                  "description": "roughness of the broken faces: random brightness between pixels, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "shadow": {
+              "description": "shadow of the broken edge on the earth at the back of the hole",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "offset": {
+                  "default": 3,
+                  "description": "shadow cast to the bottom-right, in pixels; 0 for none (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "opacity": {
+                  "default": 0.55,
+                  "description": "darkness of the shadow, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "recess": {
+                  "default": 0.25,
+                  "description": "darkening of the whole earth, set back behind the wall, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "rubble": {
+              "description": "stones fallen at the foot of the hole, lit from the top-left",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "amount": {
+                  "description": "height of the heap of rubble at the foot of each piece of the hole, as a share of its height, in [0, 1]; when unset, 0.4 for a collapse, none otherwise",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "size": {
+                  "default": 3,
+                  "description": "size of the stones of the rubble, in pixels (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "palette": {
+                  "default": ["#2c2a26", "#4c4943", "#6e6a62", "#918c82"],
+                  "description": "colors of the stones of the rubble, from darkest to lightest",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "kind": "color"
+                  },
+                  "kind": "palette"
+                }
+              },
+              "additionalProperties": false
+            },
+            "cracks": {
+              "description": "cracks in the wall around the hole, their lower edge catching the light",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "count": {
+                  "default": 5,
+                  "description": "cracks running from the hole into the wall",
+                  "essential": true,
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "length": {
+                  "default": [0.3, 0.9],
+                  "description": "[min, max] length of a crack, as a share of the room between the hole and the patch edge",
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "darkness": {
+                  "default": 0.6,
+                  "description": "darkness of the cracks, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "dirt": {
+              "description": "the earth filling the back of the hole: blotches, clods and pebbles, with its own palette",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "palette": {
+                  "default": ["#2e2217", "#4a3726", "#654b33", "#80623f"],
+                  "description": "colors of the earth, from darkest to lightest",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "kind": "color"
+                  },
+                  "kind": "palette"
+                },
+                "blotches": {
+                  "default": 4,
+                  "description": "large blotches across the patch (layout: scales with the patch)",
+                  "scale": "layout",
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "contrast": {
+                  "default": 0.6,
+                  "description": "spread of the blotches over the palette",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "clods": {
+                  "default": 8,
+                  "description": "lighter lumps of earth per 32 × 32 pixels",
+                  "type": "number",
+                  "minimum": 0
+                },
+                "pebbles": {
+                  "default": 3,
+                  "description": "pebbles per 32 × 32 pixels",
+                  "type": "number",
+                  "minimum": 0
+                },
+                "grain": {
+                  "default": 0.14,
+                  "description": "random brightness variation between pixels, in [0, 1] (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "wetness": {
+                  "default": 0,
+                  "description": "damp earth, darker, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false,
+          "title": "breach",
+          "description": "Hole broken through a wall: a jagged outline, a beveled rim and earth behind",
+          "required": ["template"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "$schema": {
+              "description": "JSON Schema of this file, for editors",
+              "type": "string"
+            },
+            "extends": {
+              "description": "parent patch file, relative to this file, deep-merged under this one",
+              "type": "string"
+            },
+            "template": {
               "const": "stoneslab",
               "description": "Large stone slab set in mortar, over any wall: room for an inscription or a switch"
             },

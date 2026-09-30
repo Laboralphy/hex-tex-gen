@@ -56,6 +56,30 @@ exports[`golden examples > bookshelf-variants/7-tall-dark-wood.json 1`] = `"64x1
 
 exports[`golden examples > bookshelf-variants/8-blue-and-red.json 1`] = `"64x64 b14a45ba39db1ccf9ad679ba0a30dae1f219a145c8172037203308f7f65df4af"`;
 
+exports[`golden examples > breach-variants/1-ram-on-ashlar.json 1`] = `"64x96 05ba456be7778bd2a96284d299ee4488368d1d91dd1ec5a7923ee56ce06a5c9b"`;
+
+exports[`golden examples > breach-variants/2-blast-in-bricks.json 1`] = `"64x96 786675f339762d3027f9bfd26bd409eb69392d8bac44fc1c29a5476aa0ae5b2d"`;
+
+exports[`golden examples > breach-variants/3-wide-breach-in-fieldstone.json 1`] = `"64x96 4fb4cbd5c390c00f5899b6cf6b7760512a1f5fefc5f3a277b3b8b8826437dec5"`;
+
+exports[`golden examples > breach-variants/4-breach-in-a-cave.json 1`] = `"64x96 1aa5811dd0ee950a9ba2db9781ec132ea1efc06e00b68ce7fdccbb79dbb7faac"`;
+
+exports[`golden examples > breach-variants/5-claw-gashes-in-bricks.json 1`] = `"64x96 c67cce4fd16a6e7a9384e09af04f6b0e1e580db38fbf5aefae2c7707e9596291"`;
+
+exports[`golden examples > breach-variants/6-fissure-in-fieldstone.json 1`] = `"64x96 37fb595249300e82c733ffb507d5ea709b915e91865a567633adba2934fa55d4"`;
+
+exports[`golden examples > breach-variants/7-catapult-pocks-in-ashlar.json 1`] = `"64x96 98b5af43620f7a3812eeb5335cf45bbcefc2720f4c94daa2e4d1c246d0b73a0f"`;
+
+exports[`golden examples > breach-variants/8-collapse-in-ashlar.json 1`] = `"64x96 dc691a0a779786a9d7551d3aac32e992ff0e13b1a1f39d65f4f21ff3201ca508"`;
+
+exports[`golden examples > breach-variants/9-bore-in-fieldstone.json 1`] = `"64x96 a0dcce0577e21fa0cf71e88719f6fd0dc6f85bafff1bb3538d94b6015b3696ab"`;
+
+exports[`golden examples > breach-variants/10-arrow-slits-in-bricks.json 1`] = `"64x96 8162c11a09f60d4dda93b0f0cc8a6b7e05e87b9288461a1db18490436f46f876"`;
+
+exports[`golden examples > breach-variants/11-crossbow-slit-in-ashlar.json 1`] = `"64x96 73ebe2eec12d9e03c4bfc44081c9ca7b79c40edaeb714272fdab1720b6b54983"`;
+
+exports[`golden examples > breach-variants/12-burst-with-rubble.json 1`] = `"64x96 238cc095ca93d82d699b6a9cad0b2bd34ee77ee4eb09f756962a50720d59438d"`;
+
 exports[`golden examples > brick-anchor-ratio/ratio-0.5.json 1`] = `"64x64 8e2a415b7768bdfa97f6a960ec5f9bbd04313116de89367bd36f4d08cac29d08"`;
 
 exports[`golden examples > brick-anchor-ratio/ratio-0.25.json 1`] = `"64x64 c31a8f40d9985ce86f3a5c64d06b2767fec53f1825bbf5c1a2313d3d19dc88af"`;
@@ -378,43 +402,79 @@ exports[`golden examples > wrap-variants/2-kept-inside.json 1`] = `"64x96 f5e45f
 
 exports[`golden sets > cave, seed 1 1`] = `
 {
+  "alcove-background": "64x128 8cd049fa5902b321ddc5f47910b96ffc579575d9ccfb6f29477534a0b6231251",
+  "arch-alcove": "64x128 6b52644e1fa0ed34d30f3b5fddced64b8e30b768be518dd3592a914bc17356a5",
+  "barred-way": "64x128 51bdb5e4bbeafa44d3aeeb937eaae7d1905783e1e9ced4afb481198b9ce2bc0f",
+  "breached-wall": "64x128 67091d46e6f56000629644cbd47b6edcd985716b360ad06dd9e4f334a7cc2101",
+  "door-frame": "64x128 5a4d6fd1c5a79f8bf6acc5e8ac1352c297e0891fce6ab9f1d89c277a31475f7f",
   "plain-wall": "64x128 b67acb9d90037d2a30735e257bf54f9c5d130d67cbcc1ca9121d2089fef0c4af",
-  "splattered-wall": "64x128 edf96ddd90802b88038ba8b2b93a139c85a6f573bfd465ac1edb66a6b49df6c6",
+  "small-window": "64x128 b46d641f4cbde998da28c79373b3f40e0b42208e229449502a71baf392adbd0c",
+  "splattered-wall": "64x128 78309a0a7898885052b3ccba2ef31638eb5d6b982397634ecb9f95335b83d6c7",
 }
 `;
 
 exports[`golden sets > cave, seed 2 1`] = `
 {
+  "alcove-background": "64x128 0a2435aa39f067045c1c2bdcb28d7ff3750b1b4e59d55b48d422fec0e55fbda6",
+  "arch-alcove": "64x128 16e00eeff4971e9158bd65a41aeb55dd7dd172ec00df49eb016a4d23a5169b83",
+  "barred-way": "64x128 13dfe69434644d96e899e6edb18fb644ec9c909c862555b053f216e0b181b38e",
+  "breached-wall": "64x128 3d9d0210f59be773b81767f57883da1454a0dba1d9e835d32262d8f9370c9f32",
+  "door-frame": "64x128 72aaf944df9479033fb8f4d33204782ec85256407224b01ce12b5159fd566473",
   "plain-wall": "64x128 71abfc0b45e86c7096d492998112a0f01e934527f3cdf9064e582b70ad1eb3b5",
-  "splattered-wall": "64x128 686fcb150f48a7ac0f345e47ea854d9fddfd33d98357915c7cc0ee67f6be7deb",
+  "small-window": "64x128 009bbd7af84799b378592abab83c0c63c8fa1193d92734990184336280f59099",
+  "splattered-wall": "64x128 a3d457490cfe598799ff8853db09db3783abe7f2f6b13efbaf7f37e60252075b",
 }
 `;
 
 exports[`golden sets > cave, seed 3 1`] = `
 {
+  "alcove-background": "64x128 d1a93c9dff9e23e8e816781d25b99022ec3c3d74f52d971c9213d350850df860",
+  "arch-alcove": "64x128 03f3020f602b498d6c805308f7c0ce9463a78ed71b91b2c43d2fd9585422b429",
+  "barred-way": "64x128 0a43e1c37c33c639013162486e3ca7fea3ea05a0337ff911d9cac81632f1ae53",
+  "breached-wall": "64x128 dbf64925ccce9c56db0f7a41751077f7c66d9b27ceeff655e0c5ca119f745174",
+  "door-frame": "64x128 71a720fe3df25e131535037d0500bf9d9901c06d0497e3c92f604b77a5b25056",
   "plain-wall": "64x128 206dd250c66d48fa14c4ff4e6bf20ab1cb1cb1e3c8ee915e4a328b6bf9f7fc8c",
-  "splattered-wall": "64x128 54aba1e8c54751d1c0fbe3c407dc3a9c24e1a03632c5c52dd4799a30f6674c75",
+  "small-window": "64x128 a4ce43798ee5cf5534b9bc62e0261470272657aab467171f39463ec2cdfbba43",
+  "splattered-wall": "64x128 0a79e6426a9eb81d69bb4f699cd99c4f2bad350a68d1317f46827815e0d10fc5",
 }
 `;
 
 exports[`golden sets > dungeon, seed 1 1`] = `
 {
+  "alcove-background": "64x128 a5e6653821572ce751d03ee03f2d539edb8695d5c656bad4c220c63fd2901dea",
+  "arch-alcove": "64x128 3f2af6fba2079b3f40b4460370d710c06238a9a4aec8f100bf7ec82e0f3bfdd1",
+  "barred-way": "64x128 f2882b75114b6647efa2ebe1363100e260d49b4990243d358a0ba315aa4ca439",
+  "breached-wall": "64x128 0328bfce5f2bf31910f74ba5541659e1602bfb985cd373997e7ff140a54e997e",
+  "door-frame": "64x128 a81fc50c3d6298a77f869844303ab98aed37037aeb92495c3c0b0b3b8e0352bb",
   "plain-wall": "64x128 41b84b9ebf1fd8443a758d1960574687d42c62eb780fd3130df9b679a3b4b87a",
-  "splattered-wall": "64x128 9e06aa798c28bdfa7363578103bc631ee1240dd5f68b32b0b1374dcdeb9b73ab",
+  "small-window": "64x128 7b33df0b3cbc296c96b406aedde0884d17fc373715354ad8aae7d47801df3a3d",
+  "splattered-wall": "64x128 aaec7cafd97c7d4556a9de29e6e9f8c2971c08db64f7b3a5df903afc193c1572",
 }
 `;
 
 exports[`golden sets > dungeon, seed 2 1`] = `
 {
+  "alcove-background": "64x128 33464a7975a85724dc50627a21206ede9fcb0b8a0963f5e02fc269da02521599",
+  "arch-alcove": "64x128 0993c62a9b305e5992e4c442a7aabb102818cb0844819fbe0eb5d644802fe1a7",
+  "barred-way": "64x128 eefc6736247c474a2fdb976748d59c7159e0cc6d1bc353fdfa4e5ac982430532",
+  "breached-wall": "64x128 4ac915dc2db16f1f14747bd8712e09d86cbd2c76a7082f6464c50b2f9f6af872",
+  "door-frame": "64x128 2d21bd732db274a08112e6ab21a552797aae279564e853faa58a77c0eeff5c12",
   "plain-wall": "64x128 b34521dd67ba82be3069af05c74abcddc65e5f57d3c9a6e05ca92d8e4e02a251",
-  "splattered-wall": "64x128 26454a6e17e61bf005912430032c2a44e303e4c7dc815372a1452cfd34c9cee3",
+  "small-window": "64x128 2c7e0c30a912371be7a1dd3248ed0f3ded963e4ee2d70a5e9420b58a794d3814",
+  "splattered-wall": "64x128 605026d3bb12f4ec1fa17a074d407a7d9ffc956300bcd19ed21ba453bce640b2",
 }
 `;
 
 exports[`golden sets > dungeon, seed 3 1`] = `
 {
+  "alcove-background": "64x128 02a0248bb231f50753909d4d6de6c2be7663f58a66eecd97b2a80e3ea8ff945b",
+  "arch-alcove": "64x128 f7cdbbe1b68638cb072a24761658426d92b2fecf6b413106c230f45ae13cc668",
+  "barred-way": "64x128 36ee34e6830d9e344aedf87aeefe6e843343cd88ef024aca425ace65cd7fb566",
+  "breached-wall": "64x128 f5d9d77dbe0c1cd778e3f5f2ef909452462a2396b046af1ba0728759d6ff2d6d",
+  "door-frame": "64x128 335f4eea14501073c78dc879a6f21c516280fce35f2ef38d806e3977efc35990",
   "plain-wall": "64x128 d2eae8c35e26d22fb594609853efd1f3cc9b489f17969b7377af0e18a95a1c95",
-  "splattered-wall": "64x128 2267b84e0d53e6d5ab9f993895acfdeae1b6bed3dda2f35c881df11fef548ca6",
+  "small-window": "64x128 9a93906d0a6930568d67ae42e2a49efaf3489a7baafeb996acc45e4e2f315e07",
+  "splattered-wall": "64x128 6550fe4ca0210ed912253ec3506da8f3f7ca307fc562b35a200340fce462938c",
 }
 `;
 
@@ -427,6 +487,8 @@ exports[`golden templates > bars 1`] = `"32x48 a48474ea48916bd422efafefbdbe4d8e5
 exports[`golden templates > beam 1`] = `"64x9 2c7421ec2505ad5659cf9d50a3213da66f68c564f8b089002bccdd0ddef4e3b3"`;
 
 exports[`golden templates > bookshelf 1`] = `"64x64 8a977660c78afed3d1ce22c88d3dc430bf3c049955c9b560e1b187860f2e31f0"`;
+
+exports[`golden templates > breach 1`] = `"32x32 95c54601080f957b52d49e0b19d65e9138eab2223477da3f5984fce901fc551d"`;
 
 exports[`golden templates > bricks 1`] = `"64x64 9cfeb86f23c82c0359744b56af2fb4a5661ec6652df2a89e60dcdfd18f2ce3d4"`;
 

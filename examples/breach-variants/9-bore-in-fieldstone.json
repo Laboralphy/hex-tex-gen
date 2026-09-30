@@ -1,0 +1,28 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 96],
+  "seed": 11,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": {
+        "template": "fieldstone"
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "breach",
+        "hole": {
+          "shape": "bore"
+        }
+      },
+      "x": 6.25,
+      "y": 20,
+      "width": 87.5,
+      "height": 58.33,
+      "wrap": false
+    }
+  ]
+}

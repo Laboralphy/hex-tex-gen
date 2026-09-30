@@ -1035,6 +1035,61 @@ transparent elsewhere. Anchor it on the \`corners\` of an [\`opening\`](opening.
   back is transparent; a \`thread.alpha\` below 1 makes them translucent pixels.
 - As it ages, the web tears (\`torn\`: threads missing, spokes stopping short) and gathers
   \`dust\`: greyer threads, and a matted sheet filling the apex.`,
+    breach: `## Usage
+
+\`breach\` is an overlay: a hole broken through the wall, transparent around it.
+\`hole.shape\` picks what broke it:
+
+- \`burst\`: one jagged hole, from round, punched by a siege ram, to a star of
+  \`hole.spikes\` shards jutting into it, blown by an explosion (\`hole.jaggedness\`);
+- \`gash\`: \`hole.count\` parallel slashes, bowed and tapering at both ends, torn by a
+  dragon's claw, running along \`hole.angle\`, \`hole.width\` thick; they draw closer and
+  thinner when they do not fit;
+- \`fissure\`: one long split along \`hole.angle\`, widest in its middle, zigzagging as
+  the wall gave way, the more so as it gets jagged;
+- \`pocks\`: \`hole.count\` small jagged holes scattered apart, left by catapult shots;
+- \`collapse\`: a bite out of the wall from the top of the patch down, widest at the top,
+  rubble heaped at its foot: place it at the top of the texture;
+- \`bore\`: a clean round tunnel, as dug by a giant worm, dark at its far end, its
+  lower-right side lit by the light coming in;
+- \`slits\`: \`hole.count\` narrow vertical arrow slits hacked into the wall, \`hole.width\`
+  thick, a round hole at both ends, crossed by a horizontal slit with \`hole.cross\`.
+
+Lay it over any wall:
+
+\`\`\`json
+{
+  "size": [64, 96],
+  "patches": [
+    { "patch": { "template": "ashlar" }, "width": 100, "height": 100 },
+    {
+      "patch": { "template": "breach", "hole": { "jaggedness": 0.6 } },
+      "x": 12.5, "y": 25, "width": 75, "height": 50, "wrap": false
+    }
+  ]
+}
+\`\`\`
+
+- The hole is centered in the patch and spans \`hole.size\` of it, scaling with it; the
+  rest is left to the cracks.
+- The light comes from the top-left: the broken wall inside the hole, \`depth\` pixels
+  thick, and the worn lip around it, \`bevel\` pixels wide, are lit where they face up and
+  left, at the bottom-right of the hole, and in shadow at its top-left. They shade the
+  wall below, whose stones show through; \`rim.grain\` roughens them into a fracture.
+  The broken wall takes at most half the depth of each piece of the hole, so that a
+  narrow slash, a split or a small pock still shows the earth.
+- The earth behind the wall fills the rest of the hole, with its own \`dirt.palette\` and
+  the parameters of [\`dirt\`](dirt.md). It is set back (\`shadow.recess\`) and in the
+  shadow of the broken edge above it (\`shadow.offset\`, \`shadow.opacity\`).
+- \`rubble\` heaps stones at the foot of each piece of the hole, lit from the top-left,
+  \`rubble.size\` pixels large, of \`rubble.palette\`: \`rubble.amount\` is the height of
+  the heap, 0.4 of the hole for a collapse and none for the other shapes when unset.
+- \`cracks.count\` cracks run from the outline into the wall, their lower edge catching
+  the light: all around a burst, a pock or a bore, from the tips of gashes, fissures and
+  slits, from the corners and the foot of a collapse. Nothing crosses the edges of the patch: keep the placement inside the
+  texture, with \`"wrap": false\`, for a wall laid next to others.
+- The \`bottom\` anchor is the lowest point of the earth below the center: where rubble
+  rests. See [\`examples/breach-variants\`](../../examples/breach-variants).`,
     splatter: `## Usage
 
 \`splatter\` is an overlay: a splash of liquid, transparent elsewhere. Every stain is a

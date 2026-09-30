@@ -16,7 +16,8 @@ import type { TextureRecipe } from '../types';
 
 /**
  * The plain wall of the set, same stones included, with one to three splashes of the
- * liquid of the theme: laid next to the plain wall, it looks like the same wall.
+ * liquid of the theme, kept inside the texture: laid next to the plain wall, it looks like
+ * the same wall.
  */
 export const splatteredWall: TextureRecipe = {
     name: 'splattered-wall',
@@ -29,8 +30,19 @@ export const splatteredWall: TextureRecipe = {
             { length: pickInt(1, 3, own, SALT_SPLATTER_COUNT) },
             (_, i): Placement => {
                 const splash = hashSeed(own, i);
-                // square splashes, from half the texture width to the whole of it
-                const side = pickFloat(0.5, 1, splash, SALT_SPLATTER_SIZE) * width;
+                // square splashes, from half the texture width to the whole of it but for a
+                // pixel on each side, placed a pixel away from the edges at least: no drop
+                // reaches an edge where the wall meets another texture
+                const side = Math.min(
+                    pickFloat(0.5, 1, splash, SALT_SPLATTER_SIZE) * width,
+                    width - 2,
+                    height - 2,
+                );
+                const w = Math.round((side / width) * 10000) / 100;
+                const h = Math.round((side / height) * 10000) / 100;
+                const [mx, my] = [100 / width, 100 / height];
+                const place = (share: number, span: number, margin: number) =>
+                    Math.round((margin + share * Math.max(0, 100 - span - 2 * margin)) * 100) / 100;
                 return {
                     patch: {
                         template: 'splatter',
@@ -40,10 +52,12 @@ export const splatteredWall: TextureRecipe = {
                         },
                         liquid: theme.liquid,
                     },
-                    x: pickFloat(0, 100, splash, SALT_SPLATTER_X),
-                    y: pickFloat(0, 100, splash, SALT_SPLATTER_Y),
-                    width: Math.round((side / width) * 10000) / 100,
-                    height: Math.round((side / height) * 10000) / 100,
+                    x: place(pickFloat(0, 1, splash, SALT_SPLATTER_X), w, mx),
+                    y: place(pickFloat(0, 1, splash, SALT_SPLATTER_Y), h, my),
+                    width: w,
+                    height: h,
+                    // never wrapped around, should rounding push it past an edge
+                    wrap: false,
                     seed: hashSeed(splash, SALT_SPLATTER_SEED),
                 };
             },

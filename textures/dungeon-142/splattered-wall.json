@@ -1,0 +1,85 @@
+{
+  "size": [
+    64,
+    96
+  ],
+  "seed": 806283648,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": {
+        "template": "ashlar",
+        "rows": {
+          "count": 5,
+          "heightVariation": 0.03
+        },
+        "blocks": {
+          "width": [
+            19,
+            31
+          ],
+          "bond": "stack"
+        },
+        "mortar": {
+          "size": 2,
+          "color": "#151517"
+        },
+        "bevel": {
+          "size": 3
+        },
+        "stone": {
+          "palette": [
+            "#19191b",
+            "#313134",
+            "#4b4a4e",
+            "#67676b"
+          ],
+          "contrast": 1.23
+        },
+        "age": 0.62
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "splatter",
+        "direction": {
+          "angle": 208,
+          "bias": 0.41
+        },
+        "liquid": {
+          "color": "#3a1510",
+          "alpha": 0.76,
+          "gloss": 0.07
+        }
+      },
+      "x": 13.17,
+      "y": 19.21,
+      "width": 82,
+      "height": 54.67,
+      "wrap": false,
+      "seed": 2432963007
+    },
+    {
+      "patch": {
+        "template": "splatter",
+        "direction": {
+          "angle": 292,
+          "bias": 0.48
+        },
+        "liquid": {
+          "color": "#3a1510",
+          "alpha": 0.76,
+          "gloss": 0.07
+        }
+      },
+      "x": 15.77,
+      "y": 44.71,
+      "width": 66,
+      "height": 44,
+      "wrap": false,
+      "seed": 2562997497
+    }
+  ]
+}

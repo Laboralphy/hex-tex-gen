@@ -1,0 +1,59 @@
+{
+  "size": [
+    64,
+    96
+  ],
+  "seed": 3202465843,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": {
+        "template": "ashlar",
+        "rows": {
+          "count": 6,
+          "heightVariation": 0.55
+        },
+        "blocks": {
+          "width": [
+            12,
+            24
+          ],
+          "bond": "random"
+        },
+        "mortar": {
+          "size": 2,
+          "color": "#1b1e19"
+        },
+        "bevel": {
+          "size": 1
+        },
+        "stone": {
+          "palette": [
+            "#22251f",
+            "#3d4237",
+            "#595f51",
+            "#79806d"
+          ],
+          "contrast": 0.96
+        },
+        "age": 0.16
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "inset",
+      "patch": {
+        "template": "opening",
+        "back": {
+          "mode": "shade"
+        }
+      },
+      "x": 0,
+      "y": 0,
+      "width": 100,
+      "height": 100,
+      "wrap": false
+    }
+  ]
+}

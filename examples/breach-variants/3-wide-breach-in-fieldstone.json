@@ -1,0 +1,33 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 96],
+  "seed": 7,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": {
+        "template": "fieldstone"
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "breach",
+        "hole": {
+          "size": 0.9,
+          "jaggedness": 0.5
+        },
+        "dirt": {
+          "palette": ["#1e1a14", "#3a3226", "#57493a", "#6f604c"],
+          "pebbles": 8
+        }
+      },
+      "x": 0,
+      "y": 20,
+      "width": 100,
+      "height": 60,
+      "wrap": false
+    }
+  ]
+}

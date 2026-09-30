@@ -1,0 +1,107 @@
+{
+  "size": [
+    64,
+    96
+  ],
+  "seed": 806283648,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": {
+        "template": "ashlar",
+        "rows": {
+          "count": 5,
+          "heightVariation": 0.03
+        },
+        "blocks": {
+          "width": [
+            19,
+            31
+          ],
+          "bond": "stack"
+        },
+        "mortar": {
+          "size": 2,
+          "color": "#151517"
+        },
+        "bevel": {
+          "size": 3
+        },
+        "stone": {
+          "palette": [
+            "#19191b",
+            "#313134",
+            "#4b4a4e",
+            "#67676b"
+          ],
+          "contrast": 1.23
+        },
+        "age": 0.62
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "alcove",
+      "patch": {
+        "template": "opening",
+        "open": [
+          "bottom"
+        ],
+        "arch": {
+          "shape": "pointed"
+        },
+        "back": {
+          "mode": "cut"
+        }
+      },
+      "x": 20,
+      "y": 5,
+      "width": 60,
+      "height": 95,
+      "wrap": false
+    },
+    {
+      "patch": {
+        "template": "column",
+        "order": "doric",
+        "marble": {
+          "palette": [
+            "#19191b",
+            "#313134",
+            "#4b4a4e",
+            "#67676b"
+          ]
+        },
+        "age": 0.62
+      },
+      "x": 0,
+      "y": 0,
+      "width": 15,
+      "height": 100,
+      "wrap": false,
+      "seed": 2380218365
+    },
+    {
+      "patch": {
+        "template": "column",
+        "order": "doric",
+        "marble": {
+          "palette": [
+            "#19191b",
+            "#313134",
+            "#4b4a4e",
+            "#67676b"
+          ]
+        },
+        "age": 0.62
+      },
+      "x": 85,
+      "y": 0,
+      "width": 15,
+      "height": 100,
+      "wrap": false,
+      "seed": 2750770363
+    }
+  ]
+}

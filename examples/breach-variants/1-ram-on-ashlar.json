@@ -1,0 +1,32 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 96],
+  "seed": 7,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": {
+        "template": "ashlar"
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "breach",
+        "hole": {
+          "jaggedness": 0,
+          "size": 0.8
+        },
+        "cracks": {
+          "count": 3
+        }
+      },
+      "x": 12.5,
+      "y": 25,
+      "width": 75,
+      "height": 50,
+      "wrap": false
+    }
+  ]
+}

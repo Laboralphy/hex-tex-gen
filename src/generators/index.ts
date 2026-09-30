@@ -3,6 +3,7 @@ import { banner } from './banner';
 import { bars } from './bars';
 import { beam } from './beam';
 import { bookshelf } from './bookshelf';
+import { breach } from './breach';
 import { bricks } from './bricks';
 import { cavewall } from './cavewall';
 import { chain } from './chain';
@@ -36,6 +37,7 @@ export {
     bars,
     beam,
     bookshelf,
+    breach,
     bricks,
     cavewall,
     chain,
@@ -77,6 +79,7 @@ export { bannerSchema, bannerWear, hangingSchema, renderHanging } from './banner
 export { barsSchema, barsWear } from './bars';
 export { beamSchema, beamWear } from './beam';
 export { bookshelfSchema, bookshelfWear } from './bookshelf';
+export { breachSchema } from './breach';
 export { bricksSchema } from './bricks';
 export { cavewallSchema } from './cavewall';
 export { chainSchema, chainWear } from './chain';
@@ -124,6 +127,7 @@ export type { BannerParams, BannerWear, HangingDefaults, HangingPattern } from '
 export type { BarsParams, BarsWear } from './bars';
 export type { BeamParams, BeamWear } from './beam';
 export type { BookshelfParams, BookshelfWear } from './bookshelf';
+export type { BreachParams } from './breach';
 export type { BricksParams } from './bricks';
 export type { CavewallParams } from './cavewall';
 export type { ChainParams, ChainWear } from './chain';
@@ -180,6 +184,7 @@ export const generators: Record<string, TextureGenerator> = Object.fromEntries(
         bookshelf,
         moss,
         opening,
+        breach,
         stoneslab,
         column,
         entablature,

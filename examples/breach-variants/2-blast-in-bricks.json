@@ -1,0 +1,33 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 96],
+  "seed": 7,
+  "patches": [
+    {
+      "id": "wall",
+      "patch": {
+        "template": "bricks"
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "patch": {
+        "template": "breach",
+        "hole": {
+          "jaggedness": 0.85,
+          "spikes": 9,
+          "size": 0.85
+        },
+        "cracks": {
+          "count": 9
+        }
+      },
+      "x": 0,
+      "y": 16.67,
+      "width": 100,
+      "height": 66.67,
+      "wrap": false
+    }
+  ]
+}
