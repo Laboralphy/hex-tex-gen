@@ -5,3 +5,4 @@ coverage
 .vitest
 .idea
 examples/**/*.png
+textures
