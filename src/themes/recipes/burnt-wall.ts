@@ -16,6 +16,7 @@ import {
     SALT_PLAIN_WALL,
 } from '../salts';
 import type { TextureRecipe } from '../types';
+import { wallPatches } from './plain-wall';
 
 /** a percentage of the texture, rounded to two decimals */
 const percent = (share: number) => Math.round(share * 10000) / 100;
@@ -43,7 +44,7 @@ function burntWall(ambiance: string, soot: Soot, description: string): TextureRe
                 // the seed of the plain wall: the same stones under the soot
                 seed: hashSeed(seed, SALT_PLAIN_WALL),
                 patches: [
-                    { id: 'wall', patch: theme.wall, width: 100, height: 100 },
+                    ...wallPatches(theme),
                     {
                         patch: {
                             template: 'burn',

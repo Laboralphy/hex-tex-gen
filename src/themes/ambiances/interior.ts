@@ -23,6 +23,9 @@ import {
 } from '../salts';
 import type { Ambiance } from '../types';
 
+/** height of the entablature along the floor, in percent of the texture */
+const TRIM = 15;
+
 /** wood colors of interiors, from darkest to lightest */
 const WOOD_PALETTES = [
     ['#3a2412', '#5e3b1f', '#7d5230', '#9c6b40'], // oak
@@ -47,6 +50,7 @@ export const interior: Ambiance = {
         });
         // panels running the whole height, or planks of different lengths
         const full = pickFloat(0, 1, seed, SALT_PLANK_FULL) < 0.4;
+        const decorAge = pickFloat(0, 0.25, seed, SALT_DECOR_AGE);
         return {
             wall: {
                 template: 'planks',
@@ -85,7 +89,18 @@ export const interior: Ambiance = {
                 ],
                 seed,
             ),
-            decor: { age: pickFloat(0, 0.25, seed, SALT_DECOR_AGE) },
+            decor: { age: decorAge },
+            // an entablature along the floor, so that the walls stand out of it, of the
+            // colors of the wall
+            trim: {
+                id: 'trim',
+                patch: { template: 'entablature', marble: { palette }, age: decorAge },
+                x: 0,
+                y: 100 - TRIM,
+                width: 100,
+                height: TRIM,
+                wrap: false,
+            },
         };
     },
 };

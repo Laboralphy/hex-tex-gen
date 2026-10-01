@@ -8,7 +8,20 @@ import { burntWallCave, burntWallDungeon, burntWallInterior } from './burnt-wall
 import { caveAlcove } from './cave-alcove';
 import { caveWindow } from './cave-window';
 import { columnAlcove } from './column-alcove';
+import { debug } from './debug';
 import { doorFrame } from './door-frame';
+import {
+    caveDoorDouble,
+    caveDoorSingle,
+    dungeonDoorDouble,
+    dungeonDoorSingle,
+    interiorDoorDouble,
+    interiorDoorSingle,
+    metalDoorDouble,
+    metalDoorSingle,
+} from './doors';
+import { ceiling, ceilingOpening, floor, floorSplattered } from './flats';
+import { metalShelves, metalTable, stoneAltar, woodenShelves, woodenTable } from './furniture';
 import { interiorWindow } from './interior-window';
 import { plainWall } from './plain-wall';
 import { smallWindow } from './small-window';
@@ -23,7 +36,20 @@ export { burntWallCave, burntWallDungeon, burntWallInterior } from './burnt-wall
 export { caveAlcove } from './cave-alcove';
 export { caveWindow } from './cave-window';
 export { columnAlcove } from './column-alcove';
+export { debug, mainPalette } from './debug';
 export { doorFrame } from './door-frame';
+export {
+    caveDoorDouble,
+    caveDoorSingle,
+    dungeonDoorDouble,
+    dungeonDoorSingle,
+    interiorDoorDouble,
+    interiorDoorSingle,
+    metalDoorDouble,
+    metalDoorSingle,
+} from './doors';
+export { ceiling, ceilingOpening, floor, floorSplattered, ground } from './flats';
+export { metalShelves, metalTable, stoneAltar, woodenShelves, woodenTable } from './furniture';
 export { interiorWindow } from './interior-window';
 export { plainWall } from './plain-wall';
 export { smallWindow } from './small-window';
@@ -53,4 +79,22 @@ export const recipes: TextureRecipe[] = [
     barredWayInterior,
     bannerWall1,
     bannerWall2,
+    woodenTable,
+    stoneAltar,
+    metalTable,
+    woodenShelves,
+    metalShelves,
+    floor,
+    floorSplattered,
+    ceiling,
+    ceilingOpening,
+    dungeonDoorSingle,
+    dungeonDoorDouble,
+    caveDoorSingle,
+    caveDoorDouble,
+    interiorDoorSingle,
+    interiorDoorDouble,
+    metalDoorSingle,
+    metalDoorDouble,
+    debug,
 ];

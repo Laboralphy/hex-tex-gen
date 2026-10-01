@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
     ambiances,
     createMemoryLoader,
+    mainPalette,
     recipes,
     drawTheme,
     generateSet,
@@ -16,6 +17,18 @@ const withBreach = (seed: number) => (seed % 2 ? 'dungeon' : 'cave');
 const SEEDS = Array.from({ length: 200 }, (_, i) => i * 7919 + 1);
 
 describe('generateSet', () => {
+    it('builds each texture when it is first read, then keeps it', () => {
+        const set = generateSet({ seed: 42 });
+        const descriptor = Object.getOwnPropertyDescriptor(set.textures, 'floor')!;
+        expect(descriptor.get).toBeDefined();
+        expect(descriptor.enumerable).toBe(true);
+        // the same definition read twice; every texture listed and serialized
+        expect(set.textures.floor).toBe(set.textures.floor);
+        expect(Object.keys(JSON.parse(JSON.stringify(set.textures)))).toEqual(
+            Object.keys(set.textures),
+        );
+    });
+
     it('gives the same set for the same seed', () => {
         expect(generateSet({ seed: 42 })).toEqual(generateSet({ seed: 42 }));
     });
@@ -89,10 +102,11 @@ describe('generateSet', () => {
             const splattered = textures['splattered-wall'];
             expect(splattered.seed).toBe(plain.seed);
             expect(splattered.patches[0]).toEqual(plain.patches[0]);
-            expect(splattered.patches.length).toBeGreaterThanOrEqual(2);
-            expect(splattered.patches.length).toBeLessThanOrEqual(4);
+            const splashes = splattered.patches.filter((p) => p.id !== 'wall' && p.id !== 'trim');
+            expect(splashes.length).toBeGreaterThanOrEqual(1);
+            expect(splashes.length).toBeLessThanOrEqual(3);
             // no splash wraps around an edge: the wall still meets the plain wall
-            for (const splash of splattered.patches.slice(1)) {
+            for (const splash of splashes) {
                 expect(splash.wrap).toBe(false);
                 expect(Math.min(splash.x!, splash.y!)).toBeGreaterThan(0);
                 expect(splash.x! + splash.width!).toBeLessThan(100);
@@ -122,7 +136,9 @@ describe('generateSet', () => {
             const burnt = textures['burnt-wall'];
             expect(burnt.seed).toBe(plain.seed);
             expect(burnt.patches[0]).toEqual(plain.patches[0]);
-            const [, mark] = burnt.patches;
+            const mark = burnt.patches.find(
+                (p) => (p.patch as { template: string }).template === 'burn',
+            )!;
             expect(mark).toMatchObject({ patch: { template: 'burn' }, wrap: false });
             expect(mark.x! + mark.width!).toBeLessThanOrEqual(100);
             expect(mark.y! + mark.height!).toBeCloseTo(100);
@@ -186,7 +202,9 @@ describe('generateSet', () => {
             const frame = textures['door-frame'];
             expect(frame.seed).toBe(textures['plain-wall'].seed);
             expect(frame.patches[0]).toEqual(textures['plain-wall'].patches[0]);
-            const [, slot] = frame.patches;
+            const slot = frame.patches.find(
+                (p) => (p.patch as { template: string }).template === 'slot',
+            )!;
             expect(slot).toMatchObject({ patch: { template: 'slot' }, y: 0, height: 100 });
             expect(slot.x! + slot.width! / 2).toBeCloseTo(50, 1);
         }
@@ -428,7 +446,9 @@ describe('generateSet', () => {
                 const banners = ['banner-wall-1', 'banner-wall-2'].map((name) => {
                     const texture = textures[name];
                     expect(texture.seed).toBe(textures['plain-wall'].seed);
-                    const [, hung] = texture.patches;
+                    const hung = texture.patches.find(
+                        (p) => (p.patch as { template: string }).template === 'banner',
+                    )!;
                     expect(hung.wrap).toBe(false);
                     const banner = hung.patch as {
                         fabric: { color: string };
@@ -500,8 +520,9 @@ describe('generateSet', () => {
             const window = textures['small-window'];
             expect(window.seed).toBe(textures['plain-wall'].seed);
             const templates = window.patches.map((p) => (p.patch as { template: string }).template);
-            expect(templates.slice(0, 7)).toEqual([
+            expect(templates.slice(0, 8)).toEqual([
                 'planks',
+                'entablature',
                 'opening',
                 'window',
                 'woodbeam',
@@ -509,7 +530,7 @@ describe('generateSet', () => {
                 'woodbeam',
                 'woodbeam',
             ]);
-            const [, opening, glazed, left, right, top, bottom] = window.patches;
+            const [, , opening, glazed, left, right, top, bottom] = window.patches;
             expect(opening).toMatchObject({ x: 15, y: 20, width: 70, height: 60 });
             expect(opening.patch).toMatchObject({ back: { mode: 'cut' } });
             expect(glazed.anchor).toEqual({ to: 'window', at: 'opening' });
@@ -518,7 +539,8 @@ describe('generateSet', () => {
             expect(right.x).toBe(85);
             expect(top.y! + top.height!).toBeCloseTo(20);
             expect(bottom.y).toBe(80);
-            const curtains = window.patches.slice(7);
+            // after the wall, its trim, the opening, the glass and the four beams
+            const curtains = window.patches.slice(8);
             if (curtains.length > 0) {
                 ++curtained;
                 expect(curtains).toHaveLength(2);
@@ -581,6 +603,315 @@ describe('generateSet', () => {
         expect(t.getPixel(13, 90) & 0xff).toBe(255);
     });
 
+    it('furnishes every ambiance with tables and an altar, alone on transparent textures', () => {
+        for (const ambiance of Object.keys(ambiances)) {
+            const { textures, theme } = generateSet({ seed: 3, ambiance });
+            for (const name of ['wooden-table', 'metal-table', 'stone-altar']) {
+                const texture = textures[name];
+                expect(texture.background, name).toBe('#0000');
+                // no wall: the engine draws it behind; a cobweb hangs under the top
+                for (const placement of texture.patches.filter((p) => p.id !== 'cobweb')) {
+                    expect(placement.patch, name).toMatchObject({ age: theme.decor.age });
+                    expect(placement.y, name).toBeGreaterThanOrEqual(50);
+                }
+            }
+            // a table: two legs, then a top across the whole width at mid-height
+            for (const [name, template] of [
+                ['wooden-table', 'woodbeam'],
+                ['metal-table', 'beam'],
+            ]) {
+                const [left, right, top] = textures[name].patches.filter((p) => p.id !== 'cobweb');
+                expect(top).toMatchObject({ patch: { template }, x: 0, y: 50, width: 100 });
+                for (const leg of [left, right]) {
+                    expect(leg.patch).toMatchObject({ template, direction: 'vertical' });
+                    expect(leg.y! + leg.height!).toBeCloseTo(100, 1);
+                    expect(leg.width!).toBeLessThan(15);
+                }
+                expect(left.x).toBe(10);
+                expect(right.x! + right.width!).toBeCloseTo(90, 1);
+            }
+            const [metalLeg] = textures['metal-table'].patches.filter((p) => p.id !== 'cobweb');
+            expect(metalLeg.patch).toMatchObject({ profile: 'flat' });
+            // an altar: a slab from mid-height to the floor, a pointed crimson cloth on it
+            const [slab, cloth] = textures['stone-altar'].patches;
+            expect(slab).toMatchObject({
+                patch: { template: 'stoneslab' },
+                x: 0,
+                y: 50,
+                width: 100,
+                height: 50,
+            });
+            expect(cloth.patch).toMatchObject({
+                template: 'banner',
+                shape: { base: 'point' },
+                fabric: { color: '#8c1028' },
+                rod: { enabled: false },
+            });
+        }
+        // transparent above the table, and between its legs
+        const set = generateSet({ seed: 3, ambiance: 'dungeon', size: [64, 128] });
+        const texture = renderTexture(set.textures['wooden-table'], createMemoryLoader({}));
+        const alpha = (x: number, y: number) => texture.getPixel(x, y) & 0xff;
+        expect(alpha(32, 20)).toBe(0);
+        expect(alpha(32, 110)).toBe(0);
+        expect(alpha(32, 68)).toBe(255);
+    });
+
+    it('sets full-height shelves against the darkened wall, in wood and in metal', () => {
+        for (const ambiance of Object.keys(ambiances)) {
+            const { textures, theme } = generateSet({ seed: 3, ambiance });
+            for (const [name, template] of [
+                ['wooden-shelves', 'woodbeam'],
+                ['metal-shelves', 'beam'],
+            ]) {
+                const shelves = textures[name];
+                expect(shelves.seed, name).toBe(textures['plain-wall'].seed);
+                expect(shelves.patches[0]).toEqual(textures['plain-wall'].patches[0]);
+                const [, back, ...beams] = shelves.patches.filter((p) => p.id !== 'cobweb');
+                // darker than the back of an alcove
+                expect(back).toMatchObject({
+                    patch: { template: 'opening', back: { mode: 'shade', shade: 0.75 } },
+                    x: 0,
+                    y: 0,
+                    width: 100,
+                    height: 100,
+                });
+                const [s0, s30, s60, s90, left, right] = beams;
+                for (const [shelf, y] of [
+                    [s0, 0],
+                    [s30, 30],
+                    [s60, 60],
+                    [s90, 90],
+                ] as const) {
+                    expect(shelf).toMatchObject({ x: 0, y, width: 100, height: 10 });
+                }
+                expect(left).toMatchObject({ x: 0, y: 0, width: 15, height: 100 });
+                expect(right).toMatchObject({ x: 85, y: 0, width: 15, height: 100 });
+                for (const beam of beams) {
+                    expect(beam.patch).toMatchObject({ template, age: theme.decor.age });
+                }
+            }
+        }
+        // darker than the alcove background, behind the shelves
+        const set = generateSet({ seed: 3, ambiance: 'dungeon', size: [64, 128] });
+        const render = (name: string) => renderTexture(set.textures[name], createMemoryLoader({}));
+        const [alcove, shelves] = [render('alcove-background'), render('wooden-shelves')];
+        let [a, s] = [0, 0];
+        for (let y = 14; y < 38; ++y) {
+            for (let x = 15; x < 49; ++x) {
+                a += alcove.getPixel(x, y) >>> 24;
+                s += shelves.getPixel(x, y) >>> 24;
+            }
+        }
+        expect(s).toBeLessThan(a);
+    });
+
+    it('spins cobwebs on furniture as often as the decorations are worn', () => {
+        const furniture = ['wooden-table', 'metal-table', 'wooden-shelves', 'metal-shelves'];
+        const share: Record<string, number> = {};
+        for (const ambiance of Object.keys(ambiances)) {
+            let [webs, ages] = [0, 0];
+            for (const seed of SEEDS.slice(0, 100)) {
+                const { textures, theme } = generateSet({ seed, ambiance });
+                ages += theme.decor.age;
+                for (const name of furniture) {
+                    const web = textures[name].patches.find((p) => p.id === 'cobweb');
+                    if (!web) {
+                        continue;
+                    }
+                    ++webs;
+                    const corner = (web.patch as { corner: string }).corner;
+                    expect(web.patch).toMatchObject({ template: 'cobweb', age: theme.decor.age });
+                    expect(['top-left', 'top-right']).toContain(corner);
+                    // drawn before the beams, which cover its edges
+                    expect(textures[name].patches.indexOf(web)).toBeLessThan(
+                        textures[name].patches.findIndex((p) =>
+                            ['woodbeam', 'beam'].includes(
+                                (p.patch as { template: string }).template,
+                            ),
+                        ),
+                    );
+                    // on the side it radiates from
+                    expect(web.x! + web.width! / 2 < 50).toBe(corner === 'top-left');
+                }
+            }
+            share[ambiance] = webs / (100 * furniture.length);
+            // about as often as the age, on average
+            expect(share[ambiance]).toBeCloseTo(ages / 100, 1);
+        }
+        expect(share.cave).toBeGreaterThan(share.dungeon);
+        expect(share.dungeon).toBeGreaterThan(share.interior);
+    });
+
+    it('draws a debug texture: the main palette and the ages of the theme', () => {
+        for (const ambiance of Object.keys(ambiances)) {
+            const { textures, theme } = generateSet({ seed: 3, ambiance });
+            const debug = textures.debug;
+            const palette = mainPalette(theme);
+            expect(palette.length).toBeGreaterThan(1);
+            const fills = debug.patches.map(
+                (p) => (p.patch as { back: { color: string } }).back.color,
+            );
+            // a swatch per color, from the darkest
+            expect(fills.slice(0, palette.length)).toEqual(palette);
+            // the bars, filled up to the ages, out of 84 percent
+            const filled = debug.patches.filter((p) => p.width! > 2 && p.width! < 84);
+            expect(filled.map((p) => p.width)).toEqual([
+                Math.round(84 * (theme.wall.age as number) * 100) / 100,
+                Math.round(84 * theme.decor.age * 100) / 100,
+            ]);
+        }
+    });
+
+    it('lays square floors and ceilings, darker than the wall, from seeds of their own', () => {
+        const material = { dungeon: 'ashlar', cave: 'dirt', interior: 'planks' };
+        for (const ambiance of Object.keys(ambiances)) {
+            const { textures } = generateSet({ seed: 3, ambiance, size: [32, 48] });
+            const [plain, floor, splattered, ceiling, hatch] = [
+                'plain-wall',
+                'floor',
+                'floor-splattered',
+                'ceiling',
+                'ceiling-opening',
+            ].map((name) => textures[name]);
+            for (const flat of [floor, splattered, ceiling, hatch]) {
+                expect(flat.size).toEqual([32, 32]);
+            }
+            expect(floor.patches[0].patch).toMatchObject({
+                template: material[ambiance as keyof typeof material],
+            });
+            // stones or planks of their own
+            expect(floor.seed).not.toBe(plain.seed);
+            expect(ceiling.seed).not.toBe(floor.seed);
+            // the same floor under the splashes, kept inside it; the same ceiling around the
+            // hatch
+            expect(splattered.seed).toBe(floor.seed);
+            expect(splattered.patches[0]).toEqual(floor.patches[0]);
+            for (const splash of splattered.patches.slice(1)) {
+                expect(splash).toMatchObject({ patch: { template: 'splatter' }, wrap: false });
+            }
+            expect(hatch.seed).toBe(ceiling.seed);
+            expect(hatch.patches[0]).toEqual(ceiling.patches[0]);
+            expect(hatch.patches[1]).toMatchObject({
+                patch: { template: 'opening', back: { mode: 'color' } },
+                x: 25,
+                y: 25,
+                width: 50,
+                height: 50,
+            });
+            // the wall, then the floor a little darker, then the ceiling darker still
+            // the wall alone, without the trim of interiors: what the ground is measured against
+            const alone = { ...plain, patches: plain.patches.slice(0, 1) };
+            const lightness = (name: string) => {
+                const definition = name === 'wall-alone' ? alone : textures[name];
+                const t = renderTexture(definition, createMemoryLoader({}));
+                let sum = 0;
+                for (let i = 0; i < t.data.length; i += 4) {
+                    sum += t.data[i] + t.data[i + 1] + t.data[i + 2];
+                }
+                return sum / (t.width * t.height);
+            };
+            const [low, high] = ['floor', 'ceiling'].map(lightness);
+            const wall = lightness('wall-alone');
+            expect(low / wall, ambiance).toBeCloseTo(0.8, 1);
+            expect(high / wall, ambiance).toBeCloseTo(0.6, 1);
+        }
+    });
+
+    it('runs an entablature along the floor of interior walls, right after the wall', () => {
+        const trimmed = [
+            'plain-wall',
+            'splattered-wall',
+            'burnt-wall',
+            'banner-wall-1',
+            'banner-wall-2',
+            'small-window',
+            'door-frame',
+        ];
+        for (const seed of SEEDS.slice(0, 10)) {
+            const { textures, theme } = generateSet({ seed, ambiance: 'interior' });
+            const palette = mainPalette(theme);
+            expect(theme.trim).toMatchObject({
+                patch: { template: 'entablature', marble: { palette }, age: theme.decor.age },
+                x: 0,
+                y: 85,
+                width: 100,
+                height: 15,
+                wrap: false,
+            });
+            for (const name of trimmed) {
+                expect(textures[name].patches[1], name).toEqual(theme.trim);
+            }
+            // not in the other textures, which show the wall otherwise or not at all
+            for (const name of ['alcove-background', 'barred-way', 'wooden-shelves', 'floor']) {
+                expect(
+                    textures[name].patches.some((p) => p.id === 'trim'),
+                    name,
+                ).toBe(false);
+            }
+        }
+        // no trim in dungeons and caves
+        for (const ambiance of ['dungeon', 'cave']) {
+            const { textures, theme } = generateSet({ seed: 1, ambiance });
+            expect(theme.trim).toBeUndefined();
+            expect(textures['plain-wall'].patches).toHaveLength(1);
+        }
+    });
+
+    it('hangs single and double doors of the style of each ambiance, metal ones in dungeons', () => {
+        const styles = { interior: 'fancy', dungeon: 'solid', cave: 'rough' };
+        for (const ambiance of Object.keys(ambiances)) {
+            for (const seed of SEEDS.slice(0, 10)) {
+                const { textures, theme } = generateSet({ seed, ambiance, size: [64, 96] });
+                const doors = Object.keys(textures).filter(
+                    (n) => n.includes('door-s') || n.includes('door-d'),
+                );
+                expect(doors.sort()).toEqual(
+                    ambiance === 'dungeon'
+                        ? ['door-double', 'door-single', 'metal-door-double', 'metal-door-single']
+                        : ['door-double', 'door-single'],
+                );
+                for (const name of doors) {
+                    const [door] = textures[name].patches;
+                    const metal = name.startsWith('metal');
+                    expect(textures[name].patches).toHaveLength(1);
+                    expect(door).toMatchObject({ width: 100, height: 100 });
+                    expect(door.patch).toMatchObject({
+                        template: 'door',
+                        size: [64, 96],
+                        kind: name.endsWith('single') ? 'single' : 'double',
+                        // a single door opens from right to left
+                        hinge: 'left',
+                        material: metal ? 'metal' : 'wood',
+                        age: theme.decor.age,
+                    });
+                    if (!metal) {
+                        expect(door.patch).toMatchObject({
+                            style: styles[ambiance as keyof typeof styles],
+                        });
+                    }
+                }
+            }
+        }
+        // interior doors: the wood of the wall, darker, so that their panels stand out
+        const lightness = (css: string) => {
+            const [r, g, b] = [1, 3, 5].map((i) => parseInt(css.slice(i, i + 2), 16));
+            return r + g + b;
+        };
+        for (const seed of SEEDS.slice(0, 10)) {
+            const { textures } = generateSet({ seed, ambiance: 'interior' });
+            const wall = textures['plain-wall'].patches[0].patch as { wood: { palette: string[] } };
+            const door = textures['door-single'].patches[0].patch as {
+                wood: { palette: string[] };
+            };
+            const darkest = Math.max(...door.wood.palette.map(lightness));
+            expect(darkest).toBeLessThan(lightness(wall.wood.palette[1]));
+        }
+        // the single and the double door of a set are not drawn alike
+        const { textures } = generateSet({ seed: 7, ambiance: 'dungeon' });
+        expect(textures['door-single'].seed).not.toBe(textures['door-double'].seed);
+    });
+
     it('gives each ambiance at most one variant of each texture', () => {
         for (const ambiance of Object.keys(ambiances)) {
             const names = recipes.filter((r) => r.ambiances.includes(ambiance)).map((r) => r.name);
@@ -600,7 +931,9 @@ describe('generateSet', () => {
             const set = generateSet({ seed: 3, ambiance, size: [32, 64] });
             for (const [name, definition] of Object.entries(set.textures)) {
                 const texture = renderTexture(definition, createMemoryLoader({}));
-                expect([texture.width, texture.height], name).toEqual([32, 64]);
+                // floors and ceilings are squares as wide as the walls
+                const flat = name.startsWith('floor') || name.startsWith('ceiling');
+                expect([texture.width, texture.height], name).toEqual(flat ? [32, 32] : [32, 64]);
             }
         }
     });

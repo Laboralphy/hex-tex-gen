@@ -11,6 +11,7 @@ import {
 } from '../salts';
 import type { TextureRecipe } from '../types';
 import { beamWood } from './wood';
+import { wallPatches } from './plain-wall';
 
 /** the opening, in percent of the texture */
 const OPENING = { x: 15, y: 20, width: 70, height: 60 };
@@ -112,7 +113,7 @@ export const interiorWindow: TextureRecipe = {
             // the seed of the plain wall: the same planks around the window
             seed: hashSeed(seed, SALT_PLAIN_WALL),
             patches: [
-                { id: 'wall', patch: theme.wall, width: 100, height: 100 },
+                ...wallPatches(theme),
                 {
                     id: 'window',
                     patch: { template: 'opening', depth: DEPTH, back: { mode: 'cut' } },

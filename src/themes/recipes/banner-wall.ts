@@ -15,6 +15,7 @@ import {
     SALT_PLAIN_WALL,
 } from '../salts';
 import type { TextureRecipe, Theme } from '../types';
+import { wallPatches } from './plain-wall';
 
 /** the banner, in percent of the texture */
 const BANNER = { x: 20, y: 15, width: 60, height: 70 };
@@ -108,10 +109,7 @@ function bannerWall(index: number): TextureRecipe {
                 size,
                 // the seed of the plain wall: the same stones behind the banner
                 seed: hashSeed(seed, SALT_PLAIN_WALL),
-                patches: [
-                    { id: 'wall', patch: theme.wall, width: 100, height: 100 },
-                    banner(theme, seed, index),
-                ],
+                patches: [...wallPatches(theme), banner(theme, seed, index)],
             };
         },
     };

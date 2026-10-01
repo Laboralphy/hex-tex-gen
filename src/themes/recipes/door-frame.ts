@@ -1,6 +1,7 @@
 import { hashSeed } from '../../core/hash';
 import { SALT_DOOR_FRAME, SALT_PLAIN_WALL } from '../salts';
 import type { TextureRecipe } from '../types';
+import { wallPatches } from './plain-wall';
 
 /** own width of the slot, in pixels: its strips keep theirs, the gap takes the rest */
 const SLOT_WIDTH = 10;
@@ -22,7 +23,7 @@ export const doorFrame: TextureRecipe = {
             // the seed of the plain wall: the same stones on each side of the slot
             seed: hashSeed(seed, SALT_PLAIN_WALL),
             patches: [
-                { id: 'wall', patch: theme.wall, width: 100, height: 100 },
+                ...wallPatches(theme),
                 {
                     id: 'slot',
                     patch: {

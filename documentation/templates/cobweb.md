@@ -14,12 +14,13 @@ Own size: 16 × 16 pixels. Parameters marked **layout** are expressed at this si
 
 ### General
 
-| Parameter | Type                            | Default    | Scale | Description                                                                          |
-| --------- | ------------------------------- | ---------- | ----- | ------------------------------------------------------------------------------------ |
-| `size`    | [width, height] of integers > 0 | `[16, 16]` | —     | own size of the web, from its corner, in pixels                                      |
-| `age`     | number in [0, 1]                | `0.3`      | —     | overall aging, from 0 (fresh) to 1 (abandoned): sets every wear parameter left unset |
-| `torn`    | number in [0, 1]                | from `age` | —     | share of the threads torn away, in [0, 1]                                            |
-| `dust`    | number in [0, 1]                | from `age` | —     | dust caught in the web, in [0, 1]: greyer threads and a matted sheet in the corner   |
+| Parameter | Type                            | Default      | Scale | Description                                                                                                                                       |
+| --------- | ------------------------------- | ------------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `size`    | [width, height] of integers > 0 | `[16, 16]`   | —     | own size of the web, from its corner, in pixels                                                                                                   |
+| `corner`  | string                          | `"top-left"` | —     | corner of the patch the web radiates from; leave it top-left when anchored with "mirror", which turns the web into the corner of its anchor point |
+| `age`     | number in [0, 1]                | `0.3`        | —     | overall aging, from 0 (fresh) to 1 (abandoned): sets every wear parameter left unset                                                              |
+| `torn`    | number in [0, 1]                | from `age`   | —     | share of the threads torn away, in [0, 1]                                                                                                         |
+| `dust`    | number in [0, 1]                | from `age`   | —     | dust caught in the web, in [0, 1]: greyer threads and a matted sheet in the corner                                                                |
 
 ### `spokes`
 

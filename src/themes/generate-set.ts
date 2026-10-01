@@ -1,4 +1,5 @@
 import { checkPatchParams } from '../compose/patch';
+import type { TextureDefinition } from '../compose/types';
 import { deepMerge } from '../core/object-fusion';
 import { generators } from '../generators';
 import { ambiances } from './ambiances';
@@ -41,15 +42,21 @@ export function drawTheme({ seed, ambiance, theme }: GenerateSetOptions): {
 /**
  * Generates a set of textures sharing one theme from a single seed: two seeds give two
  * sets of a different look, the same seed always gives the same set. The textures are
- * texture definitions, to render with `renderTexture` or to save as texture files.
+ * texture definitions, to render with `renderTexture` or to save as texture files; each
+ * one is built when it is first read.
  */
 export function generateSet(options: GenerateSetOptions): TextureSet {
     const { ambiance, theme } = drawTheme(options);
     const size = options.size ?? [64, 128];
-    const textures = Object.fromEntries(
-        recipes
-            .filter((recipe) => recipe.ambiances.includes(ambiance))
-            .map((recipe) => [recipe.name, recipe.build(theme, options.seed, size)]),
-    );
+    // each texture is built when it is first read, then kept: a caller reading a few of
+    // them does not pay for the others, such as the floors measured against the walls
+    const textures: Record<string, TextureDefinition> = {};
+    for (const recipe of recipes.filter((r) => r.ambiances.includes(ambiance))) {
+        let built: TextureDefinition | undefined;
+        Object.defineProperty(textures, recipe.name, {
+            enumerable: true,
+            get: () => (built ??= recipe.build(theme, options.seed, size)),
+        });
+    }
     return { seed: options.seed, ambiance, theme, textures };
 }

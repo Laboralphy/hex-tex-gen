@@ -60,6 +60,12 @@ export const cobwebSchema = z.strictObject({
         })
         .prefault({})
         .describe('threads, one pixel thick'),
+    corner: z
+        .enum(['top-left', 'top-right', 'bottom-left', 'bottom-right'])
+        .default('top-left')
+        .describe(
+            'corner of the patch the web radiates from; leave it top-left when anchored with "mirror", which turns the web into the corner of its anchor point',
+        ),
     age: ageParam({ noun: 'aging', young: 'fresh', old: 'abandoned' }),
     torn: ratio().optional().describe(`share of the threads torn away, in [0, 1];${FROM_AGE}`),
     dust: ratio()
@@ -232,6 +238,9 @@ export const cobweb = defineGenerator({
                 texture.setPixel(x, y, shade(color, grain * falloff));
             }
         }
-        return texture;
+        // drawn from the top-left corner, then turned into its own: a cobweb is evenly lit
+        return p.corner === 'top-left'
+            ? texture
+            : texture.mirrored(p.corner.endsWith('right'), p.corner.startsWith('bottom'));
     },
 });

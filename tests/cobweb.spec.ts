@@ -37,6 +37,24 @@ describe('cobweb', () => {
         expect(threads(t, 0, 8, 1, 32)).toBeGreaterThan(0);
     });
 
+    it('radiates from the corner it is given, the same web mirrored', () => {
+        const web = cobweb.generate({ seed: 1 });
+        const { width: w, height: h } = web;
+        for (const [corner, mx, my] of [
+            ['top-right', true, false],
+            ['bottom-left', false, true],
+            ['bottom-right', true, true],
+        ] as const) {
+            const turned = cobweb.generate({ seed: 1, corner });
+            for (let y = 0; y < h; ++y) {
+                for (let x = 0; x < w; ++x) {
+                    const [tx, ty] = [mx ? w - 1 - x : x, my ? h - 1 - y : y];
+                    expect(turned.getPixel(tx, ty), corner).toBe(web.getPixel(x, y));
+                }
+            }
+        }
+    });
+
     it('draws 1-pixel threads at any size', () => {
         // a larger web has longer threads, not thicker ones
         const small = threads(cobweb.generate({ seed: 3, age: 0 }));

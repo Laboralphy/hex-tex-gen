@@ -1,4 +1,4 @@
-import type { TextureDefinition } from '../compose/types';
+import type { Placement, TextureDefinition } from '../compose/types';
 
 /**
  * A patch definition used by a theme: a template name and its parameters, as in a patch
@@ -20,6 +20,11 @@ export type Theme = {
         /** how worn the decorations are, in [0, 1]: 0 new, 1 ruined */
         age: number;
     };
+    /**
+     * a band laid over the wall right after it, in the textures showing the plain wall:
+     * the entablature along the floor of interiors; none in other ambiances
+     */
+    trim?: Placement;
 };
 
 /**

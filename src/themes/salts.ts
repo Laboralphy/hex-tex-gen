@@ -81,6 +81,12 @@ export const SALT_WINDOW_COLUMNS = 146;
 export const SALT_WINDOW_ROWS = 147;
 export const SALT_CURTAINS = 148;
 export const SALT_CURTAIN_COLOR = 149;
+export const SALT_COBWEB = 150;
+export const SALT_COBWEB_SIDE = 151;
+export const SALT_COBWEB_SHELF = 152;
+export const SALT_DOOR_BANDS = 153;
+export const SALT_DOOR_HANDLE = 154;
+export const SALT_DOOR_PANELS = 155;
 
 // seeds of the textures of a set, one per recipe
 export const SALT_PLAIN_WALL = 1000;
@@ -98,3 +104,14 @@ export const SALT_COLUMN_ALCOVE = 1012;
 export const SALT_BANNER_WALL = 1013;
 export const SALT_INTERIOR_WINDOW = 1014;
 export const SALT_INTERIOR_BARRED_WAY = 1015;
+export const SALT_WOODEN_TABLE = 1016;
+export const SALT_STONE_ALTAR = 1017;
+export const SALT_METAL_TABLE = 1018;
+export const SALT_WOODEN_SHELVES = 1019;
+export const SALT_METAL_SHELVES = 1020;
+export const SALT_FLOOR = 1021;
+export const SALT_FLOOR_SPLATTERED = 1022;
+export const SALT_CEILING = 1023;
+export const SALT_CEILING_OPENING = 1024;
+export const SALT_DOOR = 1025;
+export const SALT_METAL_DOOR = 1026;
