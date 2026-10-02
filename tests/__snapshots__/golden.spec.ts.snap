@@ -360,6 +360,16 @@ exports[`golden examples > splatter-variants/4-dry-blood-on-floor.json 1`] = `"6
 
 exports[`golden examples > splatter-variants/5-water-on-metal.json 1`] = `"64x64 4e3afecf363aa74599170315a24a3a1ac1c245874bfdf928056f15dcaab3c1b7"`;
 
+exports[`golden examples > stainedglass-variants/1-chapel-on-ashlar.json 1`] = `"64x128 d90c0a1292c64adc354ce4f9f4af0a2ce909afc62df985ee4d42ff8239a55770"`;
+
+exports[`golden examples > stainedglass-variants/2-mosaic-on-bricks.json 1`] = `"64x128 f3ed42709cf7a859dc88bc6151d072ab90dd7d6a436200e3b995a77325212004"`;
+
+exports[`golden examples > stainedglass-variants/3-round-on-fieldstone.json 1`] = `"64x128 00d6f7ecb66db657c5baf05237b605bf688f715b860d2e0e8518a706fe002427"`;
+
+exports[`golden examples > stainedglass-variants/4-flat-barred-on-stone.json 1`] = `"64x128 7848c8ab2fef494ab1e720b904995399dba1f59b2bbd05fd5c590d1e184f5b6a"`;
+
+exports[`golden examples > stainedglass-variants/5-violet-and-amber.json 1`] = `"64x128 4d7cf26c961684fedfb492175796f8acc122b043c4c0a2bb22640404fc648fd1"`;
+
 exports[`golden examples > stoneslab-variants/1-on-ashlar.json 1`] = `"64x64 7d5f1536d0fe2ba4187b90abd97aeede4f84fd192eba997cdd5e87d2667b325c"`;
 
 exports[`golden examples > stoneslab-variants/2-on-bricks.json 1`] = `"64x64 ca54205c6228f59926116cfd52602a66260866a164d6e0d0570cff2deb1ccd67"`;
@@ -420,13 +430,13 @@ exports[`golden sets > cave, seed 1 1`] = `
   "breached-wall": "64x128 67091d46e6f56000629644cbd47b6edcd985716b360ad06dd9e4f334a7cc2101",
   "burnt-wall": "64x128 ace846ba1f8dbed82cb5624234811db363ce82e5eac49a15c4a12a5eaf792017",
   "ceiling": "64x64 a0bbb307850dbf1302f206bac874b1df4e13caf245492d3451f01d30257285f4",
-  "ceiling-opening": "64x64 2af4d93fda49cf82e2731d7efee7445ab78e84bed6a1220b63d7a516122edb08",
+  "ceiling-opening": "64x64 2721a27ed63c031c966bda19fa5b217112230d504688aac6fea4d2bc400a88e9",
   "debug": "64x128 df0f198018e784383a5c8cb744b5b8df33db1d9e110ce62e1dc9a7f9a37f89bd",
   "door-double": "64x128 0c6cf49e8cd3ed0155f428e385d07b03076bba0a9dd83c6ba1e47194f592e273",
   "door-frame": "64x128 5a4d6fd1c5a79f8bf6acc5e8ac1352c297e0891fce6ab9f1d89c277a31475f7f",
   "door-single": "64x128 4344174c014c87a4799e115e8a092e03c67352edf2d76962390c179016da173f",
-  "floor": "64x64 668e13a152c3d8cac7a9e081f8ecc8cb1718846ab87753363467019e7b1cff38",
-  "floor-splattered": "64x64 e09b4de1c70022c3f00f81783f5fb3cd005eb9ae27f576ff437e15da08dac1e6",
+  "floor": "64x64 2ffa162e353b70c8c58af8c2f867e62cbaa751fa28722f38ce18b57318e0de36",
+  "floor-splattered": "64x64 c461d8bd9adf5ddc05a6abb033ec882d2569971e4085aad952a5c9611d278a64",
   "metal-shelves": "64x128 2dd2ce89fe04d0ee739b81813c8d830a9ee7077f3a229bc6caaeebc593c27526",
   "metal-table": "64x128 27028d7db9633e7d28f727a4a7505805ff72e8780f4ac9b96718f4cee0ee9ab6",
   "plain-wall": "64x128 b67acb9d90037d2a30735e257bf54f9c5d130d67cbcc1ca9121d2089fef0c4af",
@@ -448,13 +458,13 @@ exports[`golden sets > cave, seed 2 1`] = `
   "breached-wall": "64x128 3d9d0210f59be773b81767f57883da1454a0dba1d9e835d32262d8f9370c9f32",
   "burnt-wall": "64x128 fe81b6a2d082881ce05271cc64c95a57b458b2ccee7142ce20c757a3ef4e645b",
   "ceiling": "64x64 24ac7922bdc06243a685f6b44b8f0185064926516371b44429d2e1d41dc2f0a6",
-  "ceiling-opening": "64x64 8dbc5f22cfc6ba8a21931a40afb8f385a709f083805ba6565eb2b0d966a69f8c",
+  "ceiling-opening": "64x64 9a10ece4ff790db5df78a21803b65d2af4472bcb40591124193160dd52f1dbda",
   "debug": "64x128 515e1bcc504cb7da346bbf989087c874fb6797315504684eddcd2610e3715dcb",
   "door-double": "64x128 e4bf72d165234e566155d483f5ddd50b3856a07a4c3619c02d9f0a901f827bab",
   "door-frame": "64x128 72aaf944df9479033fb8f4d33204782ec85256407224b01ce12b5159fd566473",
   "door-single": "64x128 1dab29ffd79647b7b517ebc42e834410ae94c4948fbeaad38aae730958e442e9",
-  "floor": "64x64 824d03482a045ab9ad877a2277c47537789387915314000aadbffce94473a337",
-  "floor-splattered": "64x64 5ded214059222d623c1881ae2cd436ab81e4a85b7c11d0e12ad743bed367b242",
+  "floor": "64x64 1c418849d44b16fce680a731b7e615d5ec81b6788d24f95677b3f0aedf93bd60",
+  "floor-splattered": "64x64 73143397ea10032dcf3b4c0630b54d8f7fa113f443dc48f1d5a96b5ee24d2b14",
   "metal-shelves": "64x128 4de9bb1d0c65079ed81c416f4c11b575baa70b93ec21e1efdfabede9ea046856",
   "metal-table": "64x128 bf435f5e9692427679dc3c9fd1c86a16e9cf1065a9f26c2ad1e5235c1ffaac97",
   "plain-wall": "64x128 71abfc0b45e86c7096d492998112a0f01e934527f3cdf9064e582b70ad1eb3b5",
@@ -476,13 +486,13 @@ exports[`golden sets > cave, seed 3 1`] = `
   "breached-wall": "64x128 dbf64925ccce9c56db0f7a41751077f7c66d9b27ceeff655e0c5ca119f745174",
   "burnt-wall": "64x128 7c0fa021acebac0f10ea330aa8fc69b92c0d474a06d522fbc1ba86c0c5438da5",
   "ceiling": "64x64 3978c3e418fba68dca77c5eb053f302c1c3d7d3b8831ee58343bc5e7c90b1b6a",
-  "ceiling-opening": "64x64 af1b76c59800233fc6272b08c8f039c5395f60e579c0242a73af96dcec3ea5fe",
+  "ceiling-opening": "64x64 ca6c5a0040c9c6e00b4a660ddabaf02ce227d99df49e7f74a1b52a7c2b972467",
   "debug": "64x128 b633fb50a67eee161af423c5bd7d515ef9d83c41d6531dd520d0a5dcfe3e4761",
   "door-double": "64x128 4f62355530b4370c11e8ea5c583eca4b9404a088d4220a195dd71ea53ac94858",
   "door-frame": "64x128 71a720fe3df25e131535037d0500bf9d9901c06d0497e3c92f604b77a5b25056",
   "door-single": "64x128 dbfd092f532cc81b2560ac57f944af36619c4de14a8bc32c334c6580e91c4aef",
-  "floor": "64x64 8d2916ae2f9592c66d784772e00a40b16fb1a7763cbf2399e7ab09bcfd952750",
-  "floor-splattered": "64x64 47f2cd78f19e8934f1c228b834075b2bcdbc3ad1ba50f99864e58e2f5ae07113",
+  "floor": "64x64 9e6e56cca16c9e9e27a3990582295a6974e6a611138317774224286db6e93d83",
+  "floor-splattered": "64x64 d64f39f7ac818f1b5a3b2c1e1b2689677d9fb99fd4344d010619c90146683c9c",
   "metal-shelves": "64x128 a54d921f3fa41753feb35a7f7cb075eb054520c77f8f2a4ab9ca5226fa40b53a",
   "metal-table": "64x128 8e71739b29c86dae2f4077169cfcd1a07dee690592a2d475617638ebed458a87",
   "plain-wall": "64x128 206dd250c66d48fa14c4ff4e6bf20ab1cb1cb1e3c8ee915e4a328b6bf9f7fc8c",
@@ -720,6 +730,8 @@ exports[`golden templates > shield 1`] = `"24x32 79ad3a6690dd294b36cd32f065434e8
 exports[`golden templates > slot 1`] = `"10x64 7a88847c0e209ba47696fc87d33b8df43fa4dcadb421c69982fb2427f362d1e1"`;
 
 exports[`golden templates > splatter 1`] = `"32x32 654ae4db089bf43c0f5bd1fb6f855f41a4742e23c306a03183ff921f117ccda3"`;
+
+exports[`golden templates > stainedglass 1`] = `"32x48 33a4c7e68fa5db15b4a0e47985d44d9146e06a78e691e67200c0b0165e8fd207"`;
 
 exports[`golden templates > stoneslab 1`] = `"32x24 dda995904c95416ccb3d00bde5327521201c9f8f3ba88ca840e2c99bd493367e"`;
 

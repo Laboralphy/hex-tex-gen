@@ -87,6 +87,10 @@ export const SALT_COBWEB_SHELF = 152;
 export const SALT_DOOR_BANDS = 153;
 export const SALT_DOOR_HANDLE = 154;
 export const SALT_DOOR_PANELS = 155;
+export const SALT_CEILING_BREACH_SHAPE = 156;
+export const SALT_CEILING_BREACH_SIZE = 157;
+export const SALT_CEILING_BREACH_JAGGEDNESS = 158;
+export const SALT_CEILING_BREACH_CRACKS = 159;
 
 // seeds of the textures of a set, one per recipe
 export const SALT_PLAIN_WALL = 1000;
@@ -115,3 +119,4 @@ export const SALT_CEILING = 1023;
 export const SALT_CEILING_OPENING = 1024;
 export const SALT_DOOR = 1025;
 export const SALT_METAL_DOOR = 1026;
+export const SALT_CAVE_CEILING_BREACH = 1027;

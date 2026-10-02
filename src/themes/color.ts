@@ -38,3 +38,22 @@ export function darken(css: string, factor: number): string {
     const { h, s, l, a } = Rainbow.convertToHSLA(Rainbow.parse(css));
     return Rainbow.renderHex6(Rainbow.fromHSLA({ h, s, l: clamp(l * factor), a }));
 }
+
+/**
+ * A palette blended towards another one, color by color, as hex colors.
+ * @param t in [0, 1]: 0 gives `from`, 1 gives `to`
+ */
+export function blendPalette(from: readonly string[], to: readonly string[], t: number): string[] {
+    return from.map((css, i) => {
+        const a = Rainbow.convertToRGBA(Rainbow.parse(css));
+        const b = Rainbow.convertToRGBA(Rainbow.parse(to[Math.min(i, to.length - 1)]));
+        return Rainbow.renderHex6(
+            Rainbow.fromRGBA({
+                r: a.r + (b.r - a.r) * t,
+                g: a.g + (b.g - a.g) * t,
+                b: a.b + (b.b - a.b) * t,
+                a: a.a,
+            }),
+        );
+    });
+}

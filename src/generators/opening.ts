@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { hashSeed } from '../core/hash';
 import { color, DETAIL, ratio, size } from '../core/schema';
 import { Texture, type AnchorPoint } from '../core/Texture';
+import { ARCH_RISE, archDistance } from './common/arch';
 import { defineGenerator } from './define';
 
 /** shading of a reveal: negative darkens, positive lightens */
@@ -91,46 +92,6 @@ export type OpeningParams = z.output<typeof openingSchema>;
 
 const SALT_NOISE = 1;
 
-/** default rise of each arch, as a share of the width */
-const RISE = { round: 0.5, pointed: 0.8 };
-
-/**
- * Distance from a point to the curve of an arch, positive inside, and the direction the
- * curve faces there: its outward normal, from the opening towards the wall.
- * @param spring y of the springing line, where the arch starts
- * @returns undefined below the springing line, where the sides go on
- */
-function archDistance(
-    shape: 'round' | 'pointed',
-    width: number,
-    spring: number,
-    x: number,
-    y: number,
-): { d: number; nx: number; ny: number } | undefined {
-    if (y >= spring) {
-        return undefined;
-    }
-    const half = width / 2;
-    if (shape === 'round') {
-        // an ellipse through both springers and the crown
-        const ex = (x - half) / half;
-        const ey = (y - spring) / spring;
-        const r = Math.hypot(ex, ey);
-        const n = Math.hypot(ex / half, ey / spring) || 1;
-        return { d: (1 - r) * Math.min(half, spring), nx: ex / half / n, ny: ey / spring / n };
-    }
-    // two arcs, each centered beyond the axis, meeting at the apex
-    const c = Math.max(0, (spring * spring - half * half) / width);
-    const radius = half + c;
-    const arcs = [half + c, half - c].map((cx) => {
-        const dx = x - cx;
-        const dy = y - spring;
-        const r = Math.hypot(dx, dy) || 1;
-        return { d: radius - r, nx: dx / r, ny: dy / r };
-    });
-    return arcs[0].d < arcs[1].d ? arcs[0] : arcs[1];
-}
-
 /**
  * A rectangular opening dug into the wall below: shaded reveals, and a back that is cut
  * out, darkened or filled. Windows, bars or fences placed afterwards on its anchors fill
@@ -176,7 +137,7 @@ export const opening = defineGenerator({
         // an arch: the springing line lies its rise below the top
         const shape = p.open.includes('top') ? 'flat' : p.arch.shape;
         const spring =
-            shape === 'flat' ? 0 : Math.min(height, (p.arch.rise ?? RISE[shape]) * width);
+            shape === 'flat' ? 0 : Math.min(height, (p.arch.rise ?? ARCH_RISE[shape]) * width);
         for (let y = 0; y < height; ++y) {
             for (let x = 0; x < width; ++x) {
                 const u = x / width;

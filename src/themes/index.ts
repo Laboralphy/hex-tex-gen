@@ -15,6 +15,7 @@ export {
     caveAlcove,
     caveWindow,
     ceiling,
+    ceilingBreach,
     ceilingOpening,
     columnAlcove,
     debug,

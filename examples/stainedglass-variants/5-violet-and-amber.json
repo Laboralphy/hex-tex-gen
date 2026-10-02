@@ -1,0 +1,51 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 128],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "ashlar",
+        "stone": {
+          "palette": ["#2a2826", "#4a4744", "#6c6862", "#8e8981"]
+        }
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "hole",
+      "patch": {
+        "template": "opening",
+        "depth": 3,
+        "arch": {
+          "shape": "pointed"
+        },
+        "back": {
+          "mode": "cut"
+        }
+      },
+      "x": 21.875,
+      "y": 12.5,
+      "width": 56.25,
+      "height": 68.75,
+      "wrap": false
+    },
+    {
+      "patch": {
+        "template": "stainedglass",
+        "size": [30, 82],
+        "glass": {
+          "colors": ["#5a2a8a", "#d08a20", "#2a4fb0", "#8a1a3a"],
+          "alpha": 0.75
+        }
+      },
+      "anchor": {
+        "to": "hole",
+        "at": "opening"
+      },
+      "width": 46.875,
+      "height": 64.0625
+    }
+  ]
+}

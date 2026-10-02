@@ -20,7 +20,7 @@ import {
     metalDoorDouble,
     metalDoorSingle,
 } from './doors';
-import { ceiling, ceilingOpening, floor, floorSplattered } from './flats';
+import { ceiling, ceilingBreach, ceilingOpening, floor, floorSplattered } from './flats';
 import { metalShelves, metalTable, stoneAltar, woodenShelves, woodenTable } from './furniture';
 import { interiorWindow } from './interior-window';
 import { plainWall } from './plain-wall';
@@ -48,7 +48,7 @@ export {
     metalDoorDouble,
     metalDoorSingle,
 } from './doors';
-export { ceiling, ceilingOpening, floor, floorSplattered, ground } from './flats';
+export { ceiling, ceilingBreach, ceilingOpening, floor, floorSplattered, ground } from './flats';
 export { metalShelves, metalTable, stoneAltar, woodenShelves, woodenTable } from './furniture';
 export { interiorWindow } from './interior-window';
 export { plainWall } from './plain-wall';
@@ -88,6 +88,7 @@ export const recipes: TextureRecipe[] = [
     floorSplattered,
     ceiling,
     ceilingOpening,
+    ceilingBreach,
     dungeonDoorSingle,
     dungeonDoorDouble,
     caveDoorSingle,

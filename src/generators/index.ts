@@ -26,6 +26,7 @@ import { sand } from './sand';
 import { shield } from './shield';
 import { slot } from './slot';
 import { splatter } from './splatter';
+import { stainedglass } from './stainedglass';
 import { stoneslab } from './stoneslab';
 import { tapestry } from './tapestry';
 import { glassWindow } from './window';
@@ -61,6 +62,7 @@ export {
     shield,
     slot,
     splatter,
+    stainedglass,
     stoneslab,
     tapestry,
     glassWindow,
@@ -110,6 +112,7 @@ export { sandSchema } from './sand';
 export { shieldSchema, shieldWear } from './shield';
 export { slotSchema, slotWear } from './slot';
 export { splatterSchema } from './splatter';
+export { STAINED_GLASS_COLORS, stainedglassSchema } from './stainedglass';
 export { stoneslabSchema, stoneslabWear } from './stoneslab';
 export { tapestrySchema } from './tapestry';
 export { windowSchema, windowWear } from './window';
@@ -153,6 +156,7 @@ export type { SandParams } from './sand';
 export type { ShieldParams, ShieldWear } from './shield';
 export type { SlotParams, SlotWear } from './slot';
 export type { SplatterParams } from './splatter';
+export type { StainedglassParams } from './stainedglass';
 export type { StoneslabParams } from './stoneslab';
 export type { TapestryParams } from './tapestry';
 export type { WindowParams, WindowWear } from './window';
@@ -196,6 +200,7 @@ export const generators: Record<string, TextureGenerator> = Object.fromEntries(
         bars,
         chain,
         glassWindow,
+        stainedglass,
         cobweb,
         splatter,
         burn,

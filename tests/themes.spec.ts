@@ -792,13 +792,18 @@ describe('generateSet', () => {
             }
             expect(hatch.seed).toBe(ceiling.seed);
             expect(hatch.patches[0]).toEqual(ceiling.patches[0]);
-            expect(hatch.patches[1]).toMatchObject({
-                patch: { template: 'opening', back: { mode: 'color' } },
-                x: 25,
-                y: 25,
-                width: 50,
-                height: 50,
-            });
+            expect(hatch.patches[1]).toMatchObject(
+                ambiance === 'cave'
+                    ? // no opening in the ceiling of a cave, but a breach
+                      { patch: { template: 'breach' }, x: 20, y: 20, width: 60, height: 60 }
+                    : {
+                          patch: { template: 'opening', back: { mode: 'color' } },
+                          x: 25,
+                          y: 25,
+                          width: 50,
+                          height: 50,
+                      },
+            );
             // the wall, then the floor a little darker, then the ceiling darker still
             // the wall alone, without the trim of interiors: what the ground is measured against
             const alone = { ...plain, patches: plain.patches.slice(0, 1) };
@@ -816,6 +821,33 @@ describe('generateSet', () => {
             expect(low / wall, ambiance).toBeCloseTo(0.8, 1);
             expect(high / wall, ambiance).toBeCloseTo(0.6, 1);
         }
+    });
+
+    it('lays a floor of brown earth in caves, whatever the color of their stones', () => {
+        for (const seed of SEEDS.slice(0, 12)) {
+            const { textures } = generateSet({ seed, ambiance: 'cave', size: [32, 48] });
+            const t = renderTexture(textures.floor, createMemoryLoader({}));
+            let [r, b] = [0, 0];
+            for (let i = 0; i < t.data.length; i += 4) {
+                r += t.data[i];
+                b += t.data[i + 2];
+            }
+            // brown: clearly more red than blue
+            expect(r / b, `seed ${seed}`).toBeGreaterThan(1.25);
+        }
+    });
+
+    it('breaks the ceiling of caves with a breach, without rubble, never from an edge', () => {
+        const shapes = new Set<string>();
+        for (const seed of SEEDS.slice(0, 40)) {
+            const { textures } = generateSet({ seed, ambiance: 'cave' });
+            const [, breach] = textures['ceiling-opening'].patches;
+            const patch = breach.patch as { hole: { shape: string }; rubble: { amount: number } };
+            expect(patch.rubble.amount).toBe(0);
+            expect(breach.wrap).toBe(false);
+            shapes.add(patch.hole.shape);
+        }
+        expect([...shapes].sort()).toEqual(['bore', 'burst', 'fissure', 'pocks']);
     });
 
     it('runs an entablature along the floor of interior walls, right after the wall', () => {

@@ -6342,6 +6342,178 @@
               "type": "string"
             },
             "template": {
+              "const": "stainedglass",
+              "description": "Stained glass window: pieces of colored glass held by lead, under an arch"
+            },
+            "seed": {
+              "description": "seed of this patch, unless the placement sets one",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "size": {
+              "default": [32, 48],
+              "description": "own size of the patch in pixels; layout values are expressed at this size",
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "arch": {
+              "description": "arch closing the top of the window",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "shape": {
+                  "default": "pointed",
+                  "description": "top of the window: flat, a rectangle; round, a semicircular or elliptical arch; pointed, a gothic arch of two arcs meeting at its apex",
+                  "type": "string",
+                  "enum": ["flat", "round", "pointed"]
+                },
+                "rise": {
+                  "description": "height of the arch above its springing line, as a share of the width of the window; 0.5 for round arches, 0.8 for pointed ones by default",
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 2
+                }
+              },
+              "additionalProperties": false
+            },
+            "cells": {
+              "description": "pieces of glass, laid as the cells of a Voronoi diagram",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "count": {
+                  "default": 16,
+                  "description": "number of pieces of glass across the patch",
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "variation": {
+                  "default": 0.3,
+                  "description": "spread of the sizes of the pieces, in [0, 1]: 0 for pieces alike",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "glass": {
+              "description": "the colored glass",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "colors": {
+                  "default": ["#b3202a", "#e0b030", "#2a4fb0", "#2f8a3a"],
+                  "description": "colors of the pieces, each piece of one of them drawn at random",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "kind": "color"
+                  },
+                  "kind": "palette"
+                },
+                "alpha": {
+                  "default": 0.85,
+                  "description": "alpha of the glass, in [0, 1]: lower lets more of the back show",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "shade": {
+                  "default": 0.25,
+                  "description": "random brightness variation between pieces, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "light": {
+                  "default": 0.3,
+                  "description": "light coming through the top of the window, in [0, 1]",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "grain": {
+                  "default": 0.08,
+                  "description": "random brightness variation between pixels, in [0, 1] (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "lead": {
+              "description": "the lead holding the pieces",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "width": {
+                  "default": 1,
+                  "description": "width of the lead between the pieces, in pixels; 0 for none (detail: real pixels, does not scale)",
+                  "scale": "detail",
+                  "type": "number",
+                  "minimum": 0
+                },
+                "color": {
+                  "default": "#1c1a18",
+                  "description": "color of the lead",
+                  "type": "string",
+                  "kind": "color"
+                }
+              },
+              "additionalProperties": false
+            },
+            "frame": {
+              "default": 2,
+              "description": "width of the lead frame along the outline, in pixels; 0 for none (detail: real pixels, does not scale)",
+              "scale": "detail",
+              "type": "number",
+              "minimum": 0
+            },
+            "bars": {
+              "default": 2,
+              "description": "horizontal iron bars across the window, below its arch",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "additionalProperties": false,
+          "title": "stainedglass",
+          "description": "Stained glass window: pieces of colored glass held by lead, under an arch",
+          "required": ["template"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "$schema": {
+              "description": "JSON Schema of this file, for editors",
+              "type": "string"
+            },
+            "extends": {
+              "description": "parent patch file, relative to this file, deep-merged under this one",
+              "type": "string"
+            },
+            "template": {
               "const": "cobweb",
               "description": "Spider web in a corner, torn and dusty with age: anchor it on opening corners"
             },

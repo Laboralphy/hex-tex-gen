@@ -1,0 +1,47 @@
+{
+  "$schema": "../../schemas/texture.schema.json",
+  "size": [64, 128],
+  "seed": 1234,
+  "patches": [
+    {
+      "patch": {
+        "template": "fieldstone"
+      },
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "hole",
+      "patch": {
+        "template": "opening",
+        "depth": 3,
+        "arch": {
+          "shape": "round"
+        },
+        "back": {
+          "mode": "cut"
+        }
+      },
+      "x": 21.875,
+      "y": 12.5,
+      "width": 56.25,
+      "height": 68.75,
+      "wrap": false
+    },
+    {
+      "patch": {
+        "template": "stainedglass",
+        "size": [30, 82],
+        "arch": {
+          "shape": "round"
+        }
+      },
+      "anchor": {
+        "to": "hole",
+        "at": "opening"
+      },
+      "width": 46.875,
+      "height": 64.0625
+    }
+  ]
+}
