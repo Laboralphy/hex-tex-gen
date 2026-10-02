@@ -66,7 +66,7 @@ export function splashes(theme: Theme, own: number, size: [number, number]): Pla
 export const splatteredWall: TextureRecipe = {
     name: 'splattered-wall',
     description: 'the plain wall, splashed with the liquid of the theme',
-    ambiances: ['dungeon', 'cave', 'interior'],
+    ambiances: ['dungeon', 'cave', 'interior', 'church'],
     build(theme, seed, size) {
         return {
             size,

@@ -12,6 +12,7 @@ import {
     SALT_BANNER_STRIPE,
     SALT_BANNER_TAILS,
     SALT_BANNER_WALL,
+    SALT_NICHE_WALL,
     SALT_PLAIN_WALL,
 } from '../salts';
 import type { TextureRecipe, Theme } from '../types';
@@ -19,6 +20,15 @@ import { wallPatches } from './plain-wall';
 
 /** the banner, in percent of the texture */
 const BANNER = { x: 20, y: 15, width: 60, height: 70 };
+
+/** the niche of churches, small and narrow, between the entablatures, in percent */
+const NICHE = { x: 35, y: 25, width: 30, height: 50 };
+
+/** width of the reveals of the niche, in pixels */
+const NICHE_DEPTH = 3;
+
+/** darkening of the back of the niche, in [0, 1] */
+const NICHE_SHADE = 0.8;
 
 /** the patterns of the fabric, and how often each is drawn */
 const PATTERNS = [
@@ -96,14 +106,16 @@ function banner(theme: Theme, seed: number, index: number): Placement {
 }
 
 /**
- * The plain wall of the set, same stones or planks included, with a banner hanging in its
- * middle, of its own colors and shape, as worn as the decorations of the theme.
+ * The plain wall of the set, same stones or planks included, with a decoration in its
+ * middle, as worn as the decorations of the theme: a banner hanging, of its own colors and
+ * shape.
+ * @param ambiances the ambiances hanging this banner
  */
-function bannerWall(index: number): TextureRecipe {
+function decoWall(index: number, ambiances: string[]): TextureRecipe {
     return {
-        name: `banner-wall-${index + 1}`,
+        name: `deco-wall-${index + 1}`,
         description: 'the plain wall, with a banner of heraldic colors hanging in its middle',
-        ambiances: ['dungeon', 'cave', 'interior'],
+        ambiances,
         build(theme, seed, size) {
             return {
                 size,
@@ -115,8 +127,41 @@ function bannerWall(index: number): TextureRecipe {
     };
 }
 
-/** the plain wall with the first banner of the set */
-export const bannerWall1 = bannerWall(0);
+/** the plain wall with the first banner of the set; a niche in churches */
+export const decoWall1 = decoWall(0, ['dungeon', 'cave', 'interior']);
 
 /** the plain wall with the second banner of the set, of other colors than the first */
-export const bannerWall2 = bannerWall(1);
+export const decoWall2 = decoWall(1, ['dungeon', 'cave', 'interior', 'church']);
+
+/**
+ * The first decorated wall of churches: the plain wall, same stones and entablatures
+ * included, with a small and narrow niche under a pointed arch, its back the wall in
+ * shadow. It has the name of the first banner wall of the other ambiances.
+ */
+export const nicheWall: TextureRecipe = {
+    name: 'deco-wall-1',
+    description: 'the plain wall, with a small and narrow niche under a pointed arch, dark',
+    ambiances: ['church'],
+    build(theme, seed, size) {
+        return {
+            size,
+            // the seed of the plain wall: the same stones around the niche
+            seed: hashSeed(seed, SALT_PLAIN_WALL),
+            patches: [
+                ...wallPatches(theme),
+                {
+                    id: 'niche',
+                    patch: {
+                        template: 'opening',
+                        depth: NICHE_DEPTH,
+                        arch: { shape: 'pointed' },
+                        back: { mode: 'shade', shade: NICHE_SHADE },
+                    },
+                    ...NICHE,
+                    wrap: false,
+                    seed: hashSeed(seed, SALT_NICHE_WALL),
+                },
+            ],
+        };
+    },
+};

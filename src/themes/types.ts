@@ -21,10 +21,11 @@ export type Theme = {
         age: number;
     };
     /**
-     * a band laid over the wall right after it, in the textures showing the plain wall:
-     * the entablature along the floor of interiors; none in other ambiances
+     * bands laid over the wall right after it, in the textures showing the plain wall: the
+     * entablature along the floor of interiors, the entablatures along the top and the
+     * bottom of churches; none in other ambiances
      */
-    trim?: Placement;
+    trim?: Placement[];
 };
 
 /**

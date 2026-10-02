@@ -36,7 +36,7 @@ function doorWood(theme: Theme): { wood?: { palette: string[] } } {
 }
 
 /** the doors of each ambiance: fancy panelled doors in interiors, rough planks in caves */
-const STYLES = { interior: 'fancy', dungeon: 'solid', cave: 'rough' } as const;
+const STYLES = { interior: 'fancy', dungeon: 'solid', cave: 'rough', church: 'solid' } as const;
 
 /**
  * A door filling the whole texture, as wide and high as the walls, as worn as the
@@ -119,10 +119,11 @@ function woodenDoors(ambiance: keyof typeof STYLES): TextureRecipe[] {
     );
 }
 
-/** the wooden doors of dungeons, caves and interiors */
+/** the wooden doors of dungeons, caves, interiors and churches */
 export const [dungeonDoorSingle, dungeonDoorDouble] = woodenDoors('dungeon');
 export const [caveDoorSingle, caveDoorDouble] = woodenDoors('cave');
 export const [interiorDoorSingle, interiorDoorDouble] = woodenDoors('interior');
+export const [churchDoorSingle, churchDoorDouble] = woodenDoors('church');
 
 /** the metal doors of dungeons, single and double */
 export const [metalDoorSingle, metalDoorDouble] = (['single', 'double'] as const).map((leaves) =>

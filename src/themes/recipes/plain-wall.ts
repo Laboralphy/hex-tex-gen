@@ -8,10 +8,7 @@ import type { Theme, TextureRecipe } from '../types';
  * when the theme has one, such as the entablature along the floor of interiors.
  */
 export function wallPatches(theme: Theme): Placement[] {
-    return [
-        { id: 'wall', patch: theme.wall, width: 100, height: 100 },
-        ...(theme.trim ? [theme.trim] : []),
-    ];
+    return [{ id: 'wall', patch: theme.wall, width: 100, height: 100 }, ...(theme.trim ?? [])];
 }
 
 /**
@@ -20,7 +17,7 @@ export function wallPatches(theme: Theme): Placement[] {
 export const plainWall: TextureRecipe = {
     name: 'plain-wall',
     description: 'the wall of the theme, alone',
-    ambiances: ['dungeon', 'cave', 'interior'],
+    ambiances: ['dungeon', 'cave', 'interior', 'church'],
     build(theme, seed, size) {
         return {
             size,

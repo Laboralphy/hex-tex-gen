@@ -11,15 +11,11 @@
       "height": 100
     },
     {
-      "id": "hole",
       "patch": {
-        "template": "opening",
-        "depth": 3,
+        "template": "stainedglass",
+        "size": [36, 88],
         "arch": {
           "shape": "round"
-        },
-        "back": {
-          "mode": "cut"
         }
       },
       "x": 21.875,
@@ -27,21 +23,6 @@
       "width": 56.25,
       "height": 68.75,
       "wrap": false
-    },
-    {
-      "patch": {
-        "template": "stainedglass",
-        "size": [30, 82],
-        "arch": {
-          "shape": "round"
-        }
-      },
-      "anchor": {
-        "to": "hole",
-        "at": "opening"
-      },
-      "width": 46.875,
-      "height": 64.0625
     }
   ]
 }

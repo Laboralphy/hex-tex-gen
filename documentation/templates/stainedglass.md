@@ -14,11 +14,24 @@ Own size: 32 × 48 pixels. Parameters marked **layout** are expressed at this si
 
 ### General
 
-| Parameter | Type                            | Default    | Scale  | Description                                                               |
-| --------- | ------------------------------- | ---------- | ------ | ------------------------------------------------------------------------- |
-| `size`    | [width, height] of integers > 0 | `[32, 48]` | —      | own size of the patch in pixels; layout values are expressed at this size |
-| `frame`   | number ≥ 0                      | `2`        | detail | width of the lead frame along the outline, in pixels; 0 for none          |
-| `bars`    | integer ≥ 0                     | `2`        | —      | horizontal iron bars across the window, below its arch                    |
+| Parameter | Type                            | Default    | Scale  | Description                                                                   |
+| --------- | ------------------------------- | ---------- | ------ | ----------------------------------------------------------------------------- |
+| `size`    | [width, height] of integers > 0 | `[32, 48]` | —      | own size of the patch in pixels; layout values are expressed at this size     |
+| `depth`   | integer ≥ 0                     | `2`        | detail | width of the reveals around the window, the inner faces of the cut, in pixels |
+| `frame`   | number ≥ 0                      | `2`        | detail | width of the lead frame along the outline, in pixels; 0 for none              |
+| `bars`    | integer ≥ 0                     | `2`        | —      | horizontal iron bars across the window, below its arch                        |
+
+### `reveals`
+
+Inner faces of the cut: the wall below, shaded; from -1 (black) to 1 (white), the light coming from the top-left.
+
+| Parameter         | Type              | Default | Scale | Description                                               |
+| ----------------- | ----------------- | ------- | ----- | --------------------------------------------------------- |
+| `reveals.top`     | number in [-1, 1] | `-0.6`  | —     | shading of the top reveal, in shadow                      |
+| `reveals.left`    | number in [-1, 1] | `-0.45` | —     | shading of the left reveal, in shadow                     |
+| `reveals.right`   | number in [-1, 1] | `0.2`   | —     | shading of the right reveal, lit                          |
+| `reveals.bottom`  | number in [-1, 1] | `0.3`   | —     | shading of the bottom reveal (the sill), lit              |
+| `reveals.falloff` | number in [0, 1]  | `0.2`   | —     | extra darkness of the reveals towards the back, in [0, 1] |
 
 ### `arch`
 
@@ -64,8 +77,8 @@ The lead holding the pieces.
 `stainedglass` is an overlay: a window of colored glass, transparent outside its arch.
 Pieces of glass laid as the cells of a Voronoi diagram, each of a color of
 `glass.colors`, are held by lead, inside a lead frame following the outline, crossed by
-horizontal iron bars. Lay it in an opening of the same arch, cut through, on its
-`opening` anchor:
+horizontal iron bars, set in shaded reveals. The window cuts its own hole: lay it on any
+wall, and its translucent glass shows what lies behind the wall, not the stones:
 
 ```json
 {
@@ -73,27 +86,21 @@ horizontal iron bars. Lay it in an opening of the same arch, cut through, on its
   "patches": [
     { "patch": { "template": "ashlar" }, "width": 100, "height": 100 },
     {
-      "id": "hole",
-      "patch": { "template": "opening", "depth": 3, "arch": { "shape": "pointed" } },
+      "patch": { "template": "stainedglass", "size": [36, 88] },
       "x": 21.875,
       "y": 12.5,
       "width": 56.25,
-      "height": 68.75
-    },
-    {
-      "patch": { "template": "stainedglass", "size": [30, 82] },
-      "anchor": { "to": "hole", "at": "opening" },
-      "width": 46.875,
-      "height": 64.0625
+      "height": 68.75,
+      "wrap": false
     }
   ]
 }
 ```
 
-- The window takes the size of the back of the opening: the opening less its reveals,
-  `depth` pixels on each side.
-- `arch.shape` is pointed by default, round or flat; give the opening the same.
-- `glass.alpha` below 1 lets what lies behind a cut opening show through the glass;
+- The patch is the whole window, its reveals included: `depth` pixels of the wall
+  around the glass, shaded as by [`opening`](opening.md), 0 for glass flush with the wall.
+- `arch.shape` is pointed by default, round or flat.
+- `glass.alpha` sets how much of what lies behind shows through the glass;
   `cells.count` sets how many pieces, `bars` how many iron bars. See
   [`examples/stainedglass-variants`](../../examples/stainedglass-variants).
 

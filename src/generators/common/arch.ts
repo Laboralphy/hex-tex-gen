@@ -1,6 +1,9 @@
 /** default rise of each arch, as a share of the width */
 export const ARCH_RISE = { round: 0.5, pointed: 0.8 };
 
+/** a point under an arch: its distance to the curve and the direction the curve faces */
+export type ArchPoint = { d: number; nx: number; ny: number };
+
 /**
  * Distance from a point to the curve of an arch, positive inside, and the direction the
  * curve faces there: its outward normal, from the opening towards the wall.
@@ -13,7 +16,7 @@ export function archDistance(
     spring: number,
     x: number,
     y: number,
-): { d: number; nx: number; ny: number } | undefined {
+): ArchPoint | undefined {
     if (y >= spring) {
         return undefined;
     }

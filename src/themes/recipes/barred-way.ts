@@ -5,6 +5,7 @@ import {
     SALT_BARRED_WAY,
     SALT_BEAM_PROFILE,
     SALT_CAVE_BARRED_WAY,
+    SALT_CHURCH_BARRED_WAY,
     SALT_INTERIOR_BARRED_WAY,
     SALT_PLAIN_WALL,
 } from '../salts';
@@ -22,6 +23,9 @@ const POST = 10;
 
 /** the wooden rail of interiors, across the posts, in percent of the texture */
 const RAIL = { x: 0, y: 66, width: 100, height: 10 };
+
+/** the top of the low wall of churches, in percent of the texture height */
+const PARAPET = 50;
 
 /**
  * The wall, cut through as a whole but for its reveals along the edges: shared by every
@@ -181,6 +185,44 @@ export const barredWayInterior: TextureRecipe = {
                     wrap: false,
                     seed: hashSeed(own, 4),
                 },
+            ],
+        };
+    },
+};
+
+/**
+ * A way closed by a low wall in a church: the plain wall, same stones included, cut
+ * through above mid-height, transparent, the entablature of the top of the walls moved
+ * down to cap the low wall, the one of the bottom kept. It has the name of the barred way
+ * of dungeons.
+ */
+export const barredWayChurch: TextureRecipe = {
+    name: 'barred-way',
+    description: 'the plain wall cut through above mid-height, a low wall capped by an entablature',
+    ambiances: ['church'],
+    build(theme, seed, size) {
+        const own = hashSeed(seed, SALT_CHURCH_BARRED_WAY);
+        return {
+            size,
+            // the seed of the plain wall: the same stones in the low wall
+            seed: hashSeed(seed, SALT_PLAIN_WALL),
+            patches: [
+                { id: 'wall', patch: theme.wall, width: 100, height: 100 },
+                {
+                    id: 'way',
+                    // no reveals: the entablature caps the cut
+                    patch: { template: 'opening', depth: 0, back: { mode: 'cut' } },
+                    x: 0,
+                    y: 0,
+                    width: 100,
+                    height: PARAPET,
+                    wrap: false,
+                    seed: own,
+                },
+                // the entablature of the top caps the low wall, the one of the bottom stays
+                ...(theme.trim ?? []).map((trim) =>
+                    trim.y === 0 ? { ...trim, id: 'coping', y: PARAPET } : trim,
+                ),
             ],
         };
     },

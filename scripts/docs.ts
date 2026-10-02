@@ -1123,8 +1123,8 @@ singed stone surrounds it all. Lay it over a wall:
 \`stainedglass\` is an overlay: a window of colored glass, transparent outside its arch.
 Pieces of glass laid as the cells of a Voronoi diagram, each of a color of
 \`glass.colors\`, are held by lead, inside a lead frame following the outline, crossed by
-horizontal iron bars. Lay it in an opening of the same arch, cut through, on its
-\`opening\` anchor:
+horizontal iron bars, set in shaded reveals. The window cuts its own hole: lay it on any
+wall, and its translucent glass shows what lies behind the wall, not the stones:
 
 \`\`\`json
 {
@@ -1132,23 +1132,17 @@ horizontal iron bars. Lay it in an opening of the same arch, cut through, on its
   "patches": [
     { "patch": { "template": "ashlar" }, "width": 100, "height": 100 },
     {
-      "id": "hole",
-      "patch": { "template": "opening", "depth": 3, "arch": { "shape": "pointed" } },
-      "x": 21.875, "y": 12.5, "width": 56.25, "height": 68.75
-    },
-    {
-      "patch": { "template": "stainedglass", "size": [30, 82] },
-      "anchor": { "to": "hole", "at": "opening" },
-      "width": 46.875, "height": 64.0625
+      "patch": { "template": "stainedglass", "size": [36, 88] },
+      "x": 21.875, "y": 12.5, "width": 56.25, "height": 68.75, "wrap": false
     }
   ]
 }
 \`\`\`
 
-- The window takes the size of the back of the opening: the opening less its reveals,
-  \`depth\` pixels on each side.
-- \`arch.shape\` is pointed by default, round or flat; give the opening the same.
-- \`glass.alpha\` below 1 lets what lies behind a cut opening show through the glass;
+- The patch is the whole window, its reveals included: \`depth\` pixels of the wall
+  around the glass, shaded as by [\`opening\`](opening.md), 0 for glass flush with the wall.
+- \`arch.shape\` is pointed by default, round or flat.
+- \`glass.alpha\` sets how much of what lies behind shows through the glass;
   \`cells.count\` sets how many pieces, \`bars\` how many iron bars. See
   [\`examples/stainedglass-variants\`](../../examples/stainedglass-variants).`,
     splatter: `## Usage

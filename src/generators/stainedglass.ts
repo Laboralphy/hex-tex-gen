@@ -6,19 +6,28 @@ import { color, DETAIL, palette, ratio, size } from '../core/schema';
 import { Texture } from '../core/Texture';
 import { ARCH_RISE, archDistance } from './common/arch';
 import { PowerDiagram } from './common/PowerDiagram';
+import { revealShade, revealsSchema } from './common/reveals';
 import { defineGenerator } from './define';
 
 /** the colors of stained glass by default: red, yellow, blue and green */
 export const STAINED_GLASS_COLORS = ['#b3202a', '#e0b030', '#2a4fb0', '#2f8a3a'];
 
 /**
- * Parameters of the stained glass template. The whole patch is the window: place it over
- * an opening of the same arch, on its `opening` anchor.
+ * Parameters of the stained glass template. The whole patch is the window, reveals
+ * included: place it on any wall, it cuts its own hole.
  */
 export const stainedglassSchema = z.strictObject({
     size: size()
         .default([32, 48])
         .describe('own size of the patch in pixels; layout values are expressed at this size'),
+    depth: z
+        .number()
+        .int()
+        .min(0)
+        .default(2)
+        .describe('width of the reveals around the window, the inner faces of the cut, in pixels')
+        .meta(DETAIL),
+    reveals: revealsSchema(),
     arch: z
         .strictObject({
             shape: z
@@ -110,7 +119,8 @@ const SALT_GRAIN = 4;
 /**
  * A stained glass window: pieces of colored glass laid as the cells of a Voronoi diagram,
  * held by lead, inside a lead frame following the outline of a pointed, round or flat
- * arch, crossed by horizontal iron bars. The glass is translucent; the patch is
+ * arch, crossed by horizontal iron bars, set in shaded reveals. The window cuts the wall
+ * below, so that its translucent glass shows what lies behind the wall; the patch is
  * transparent outside the window.
  */
 export const stainedglass = defineGenerator({
@@ -132,25 +142,44 @@ export const stainedglass = defineGenerator({
         );
         const colors = p.glass.colors.map((c) => Rainbow.convertToRGBA(Rainbow.parse(c)));
         const lead = Rainbow.parse(p.lead.color);
-        // the bars, evenly spaced between the springing line and the bottom
+        const depth = p.depth;
+        // the bars, evenly spaced between the springing line and the sill
+        const bottom = height - depth;
         const bars = Array.from(
             { length: p.bars },
-            (_, i) => spring + ((height - spring) * (i + 1)) / (p.bars + 1),
+            (_, i) => spring + ((bottom - spring) * (i + 1)) / (p.bars + 1),
         );
         const bar = Math.max(1, p.lead.width);
 
         const texture = new Texture(width, height);
+        const cut = new Uint8Array(width * height);
         for (let y = 0; y < height; ++y) {
             for (let x = 0; x < width; ++x) {
                 const [wx, wy] = [x + 0.5, y + 0.5];
-                // distance to the outline, positive inside
+                // distance to each edge of the outline, positive inside
                 const arch =
                     shape === 'flat' ? undefined : archDistance(shape, width, spring, wx, wy);
-                const d = Math.min(wx, width - wx, height - wy, arch ? arch.d : wy);
+                const sides = {
+                    top: shape === 'flat' ? wy : arch ? arch.d : Infinity,
+                    left: wx,
+                    right: width - wx,
+                    bottom: height - wy,
+                };
+                const d = Math.min(sides.top, sides.left, sides.right, sides.bottom);
                 if (d <= 0) {
                     continue;
                 }
-                if (d <= p.frame || bars.some((b) => Math.abs(wy - b) <= bar / 2)) {
+                if (d < depth) {
+                    texture.setPixel(
+                        x,
+                        y,
+                        Rainbow.fromRGBA(revealShade(p.reveals, sides, arch, depth)),
+                    );
+                    continue;
+                }
+                // the window, inside the reveals, erases the wall below
+                cut[y * width + x] = 1;
+                if (d - depth <= p.frame || bars.some((b) => Math.abs(wy - b) <= bar / 2)) {
                     texture.setPixel(x, y, lead);
                     continue;
                 }
@@ -176,6 +205,7 @@ export const stainedglass = defineGenerator({
                 );
             }
         }
+        texture.cut = cut;
         return texture;
     },
 });

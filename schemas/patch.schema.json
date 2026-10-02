@@ -6198,6 +6198,57 @@
           "minItems": 2,
           "maxItems": 2
         },
+        "depth": {
+          "default": 2,
+          "description": "width of the reveals around the window, the inner faces of the cut, in pixels (detail: real pixels, does not scale)",
+          "scale": "detail",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "reveals": {
+          "description": "inner faces of the cut: the wall below, shaded; from -1 (black) to 1 (white), the light coming from the top-left",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "top": {
+              "default": -0.6,
+              "description": "shading of the top reveal, in shadow",
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "left": {
+              "default": -0.45,
+              "description": "shading of the left reveal, in shadow",
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "right": {
+              "default": 0.2,
+              "description": "shading of the right reveal, lit",
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "bottom": {
+              "default": 0.3,
+              "description": "shading of the bottom reveal (the sill), lit",
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "falloff": {
+              "default": 0.2,
+              "description": "extra darkness of the reveals towards the back, in [0, 1]",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
         "arch": {
           "description": "arch closing the top of the window",
           "default": {},

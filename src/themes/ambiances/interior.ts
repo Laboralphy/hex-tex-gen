@@ -92,15 +92,17 @@ export const interior: Ambiance = {
             decor: { age: decorAge },
             // an entablature along the floor, so that the walls stand out of it, of the
             // colors of the wall
-            trim: {
-                id: 'trim',
-                patch: { template: 'entablature', marble: { palette }, age: decorAge },
-                x: 0,
-                y: 100 - TRIM,
-                width: 100,
-                height: TRIM,
-                wrap: false,
-            },
+            trim: [
+                {
+                    id: 'trim',
+                    patch: { template: 'entablature', marble: { palette }, age: decorAge },
+                    x: 0,
+                    y: 100 - TRIM,
+                    width: 100,
+                    height: TRIM,
+                    wrap: false,
+                },
+            ],
         };
     },
 };

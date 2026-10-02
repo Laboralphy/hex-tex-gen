@@ -68,7 +68,7 @@ function bar(y: number, value: number, color: string, pixel: number): Placement[
 export const debug: TextureRecipe = {
     name: 'debug',
     description: 'the main palette of the theme as swatches, and its ages as progress bars',
-    ambiances: ['dungeon', 'cave', 'interior'],
+    ambiances: ['dungeon', 'cave', 'interior', 'church'],
     build(theme, seed, size) {
         const palette = mainPalette(theme);
         const { x, y, width, height } = SWATCHES;

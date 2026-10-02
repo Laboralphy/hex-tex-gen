@@ -25,6 +25,15 @@ const LEG = 8;
 /** distance of the legs from the sides, in percent of the texture width */
 const INSET = 10;
 
+/** height of the apron of a wooden table, under its top, in percent of the texture width */
+const APRON = 18;
+
+/** margin of the panel inset in the apron, in pixels */
+const PANEL_MARGIN = 2;
+
+/** darkening of the panel inset in the apron, in [0, 1]: a slightly darker tint */
+const PANEL_SHADE = 0.18;
+
 /** the altar cloth, in percent of the texture */
 const CLOTH = { x: 30, y: TOP, width: 40, height: 40 };
 
@@ -74,9 +83,11 @@ function cobweb(
 /**
  * A table: a top running the whole width from the middle of the texture down, two legs
  * standing under it a little in from the sides, beams of a template, alone on a
- * transparent texture.
+ * transparent texture. With an apron, a thick plank runs between the legs under the top,
+ * a panel inset in it, slightly darker.
  * @param beam the template of the beams and their parameters
  * @param legs extra parameters of the legs
+ * @param apron whether a plank runs between the legs, under the top
  */
 function table(
     name: string,
@@ -84,11 +95,12 @@ function table(
     salt: number,
     beam: Record<string, unknown>,
     legs: Record<string, unknown> = {},
+    apron = false,
 ): TextureRecipe {
     return {
         name,
         description,
-        ambiances: ['dungeon', 'cave', 'interior'],
+        ambiances: ['dungeon', 'cave', 'interior', 'church'],
         build(theme, seed, size) {
             const own = hashSeed(seed, salt);
             const [width, height] = size;
@@ -115,17 +127,62 @@ function table(
                 seed: hashSeed(own, k),
             });
             const legWidth = (leg / width) * 100;
+            // the apron, right under the top, its ends joined into the legs, which hide them
+            const plank = Math.max(1, Math.round((APRON / 100) * width));
+            const plankHeight = round2((plank / height) * 100);
+            const [plankLeft, plankRight] = [INSET + legWidth / 2, 100 - INSET - legWidth / 2];
+            // the panel, between the legs
+            const [panelLeft, panelRight] = [INSET + legWidth, 100 - INSET - legWidth];
+            const plankTop = round2(TOP + topHeight);
+            const [marginX, marginY] = [
+                (PANEL_MARGIN / width) * 100,
+                (PANEL_MARGIN / height) * 100,
+            ];
+            const aprons: Placement[] = apron
+                ? [
+                      {
+                          id: 'apron',
+                          patch: {
+                              ...beam,
+                              ...age,
+                              size: [Math.round(((plankRight - plankLeft) / 100) * width), plank],
+                          },
+                          x: round2(plankLeft),
+                          y: plankTop,
+                          width: round2(plankRight - plankLeft),
+                          height: plankHeight,
+                          wrap: false,
+                          seed: hashSeed(own, 3),
+                      },
+                      {
+                          // the panel, recessed: the plank a little darker, bevelled
+                          id: 'panel',
+                          patch: {
+                              template: 'opening',
+                              depth: 1,
+                              back: { mode: 'shade', shade: PANEL_SHADE },
+                          },
+                          x: round2(panelLeft + marginX),
+                          y: round2(plankTop + marginY),
+                          width: round2(panelRight - panelLeft - 2 * marginX),
+                          height: round2(plankHeight - 2 * marginY),
+                          wrap: false,
+                      },
+                  ]
+                : [];
             return {
                 size,
                 // nothing but the furniture: the engine draws the wall behind it
                 background: '#0000',
                 seed: own,
                 patches: [
-                    // under the top, against the inner side of a leg, towards the center
+                    // under the top, or the apron, against the inner side of a leg, towards
+                    // the center
                     ...cobweb(own, theme.decor.age, size, (side) => ({
                         x: side === 'left' ? INSET + legWidth / 2 : 100 - INSET - legWidth / 2,
-                        y: TOP + topHeight / 2,
+                        y: apron ? TOP + topHeight + plankHeight : TOP + topHeight / 2,
                     })),
+                    ...aprons,
                     upright(INSET, 0),
                     upright(100 - INSET - legWidth, 1),
                     {
@@ -143,12 +200,14 @@ function table(
     };
 }
 
-/** a wooden table: a sawn top on two legs */
+/** a wooden table: a sawn top on two legs, a thick apron between them, a panel inset in it */
 export const woodenTable = table(
     'wooden-table',
-    'a wooden table, its top across the whole width, on two legs, on a transparent texture',
+    'a wooden table, its top across the whole width, on two legs joined by a panelled apron, on a transparent texture',
     SALT_WOODEN_TABLE,
     { template: 'woodbeam', profile: 'squared' },
+    {},
+    true,
 );
 
 /** a metal table: a riveted girder on two straps */
@@ -168,7 +227,7 @@ export const metalTable = table(
 export const stoneAltar: TextureRecipe = {
     name: 'stone-altar',
     description: 'a stone altar under a crimson cloth ending in a point, on a transparent texture',
-    ambiances: ['dungeon', 'cave', 'interior'],
+    ambiances: ['dungeon', 'cave', 'interior', 'church'],
     build(theme, seed, size) {
         const own = hashSeed(seed, SALT_STONE_ALTAR);
         const [width, height] = size;
@@ -244,7 +303,7 @@ function shelves(
     return {
         name,
         description,
-        ambiances: ['dungeon', 'cave', 'interior'],
+        ambiances: ['dungeon', 'cave', 'interior', 'church'],
         build(theme, seed, size) {
             const own = hashSeed(seed, salt);
             const [width, height] = size;

@@ -10,7 +10,7 @@ import type { TextureRecipe } from '../types';
 export const alcoveBackground: TextureRecipe = {
     name: 'alcove-background',
     description: 'the plain wall, darkened as a whole: the back wall of an alcove',
-    ambiances: ['dungeon', 'cave', 'interior'],
+    ambiances: ['dungeon', 'cave', 'interior', 'church'],
     build(theme, seed, size) {
         return {
             size,

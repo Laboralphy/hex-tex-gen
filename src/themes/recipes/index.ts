@@ -1,18 +1,22 @@
 import type { TextureRecipe } from '../types';
 import { alcoveBackground } from './alcove-background';
 import { archAlcove } from './arch-alcove';
-import { bannerWall1, bannerWall2 } from './banner-wall';
-import { barredWayCave, barredWayDungeon, barredWayInterior } from './barred-way';
+import { barredWayCave, barredWayChurch, barredWayDungeon, barredWayInterior } from './barred-way';
 import { breachedWall } from './breached-wall';
-import { burntWallCave, burntWallDungeon, burntWallInterior } from './burnt-wall';
+import { burntWallCave, burntWallChurch, burntWallDungeon, burntWallInterior } from './burnt-wall';
 import { caveAlcove } from './cave-alcove';
 import { caveWindow } from './cave-window';
+import { churchAlcove } from './church-alcove';
+import { churchWindow } from './church-window';
 import { columnAlcove } from './column-alcove';
 import { debug } from './debug';
+import { decoWall1, decoWall2, nicheWall } from './deco-wall';
 import { doorFrame } from './door-frame';
 import {
     caveDoorDouble,
     caveDoorSingle,
+    churchDoorDouble,
+    churchDoorSingle,
     dungeonDoorDouble,
     dungeonDoorSingle,
     interiorDoorDouble,
@@ -29,18 +33,22 @@ import { splatteredWall } from './splattered-wall';
 
 export { alcoveBackground } from './alcove-background';
 export { archAlcove } from './arch-alcove';
-export { bannerWall1, bannerWall2 } from './banner-wall';
-export { barredWayCave, barredWayDungeon, barredWayInterior } from './barred-way';
+export { barredWayCave, barredWayChurch, barredWayDungeon, barredWayInterior } from './barred-way';
 export { breachedWall } from './breached-wall';
-export { burntWallCave, burntWallDungeon, burntWallInterior } from './burnt-wall';
+export { burntWallCave, burntWallChurch, burntWallDungeon, burntWallInterior } from './burnt-wall';
 export { caveAlcove } from './cave-alcove';
 export { caveWindow } from './cave-window';
+export { churchAlcove } from './church-alcove';
+export { churchWindow } from './church-window';
 export { columnAlcove } from './column-alcove';
 export { debug, mainPalette } from './debug';
+export { decoWall1, decoWall2, nicheWall } from './deco-wall';
 export { doorFrame } from './door-frame';
 export {
     caveDoorDouble,
     caveDoorSingle,
+    churchDoorDouble,
+    churchDoorSingle,
     dungeonDoorDouble,
     dungeonDoorSingle,
     interiorDoorDouble,
@@ -65,20 +73,25 @@ export const recipes: TextureRecipe[] = [
     burntWallDungeon,
     burntWallCave,
     burntWallInterior,
+    burntWallChurch,
     breachedWall,
     doorFrame,
     archAlcove,
     caveAlcove,
     columnAlcove,
+    churchAlcove,
     alcoveBackground,
     smallWindow,
     caveWindow,
     interiorWindow,
+    churchWindow,
     barredWayDungeon,
     barredWayCave,
     barredWayInterior,
-    bannerWall1,
-    bannerWall2,
+    barredWayChurch,
+    decoWall1,
+    nicheWall,
+    decoWall2,
     woodenTable,
     stoneAltar,
     metalTable,
@@ -95,6 +108,8 @@ export const recipes: TextureRecipe[] = [
     caveDoorDouble,
     interiorDoorSingle,
     interiorDoorDouble,
+    churchDoorSingle,
+    churchDoorDouble,
     metalDoorSingle,
     metalDoorDouble,
     debug,

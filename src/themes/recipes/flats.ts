@@ -150,7 +150,7 @@ const square = (size: [number, number]): [number, number] => [size[0], size[0]];
 export const floor: TextureRecipe = {
     name: 'floor',
     description: 'the ground of the theme, a little darker than the wall, as wide as long',
-    ambiances: ['dungeon', 'cave', 'interior'],
+    ambiances: ['dungeon', 'cave', 'interior', 'church'],
     build(theme, seed, size) {
         return {
             size: square(size),
@@ -178,7 +178,7 @@ export const floor: TextureRecipe = {
 export const floorSplattered: TextureRecipe = {
     name: 'floor-splattered',
     description: 'the floor, splashed with the liquid of the theme',
-    ambiances: ['dungeon', 'cave', 'interior'],
+    ambiances: ['dungeon', 'cave', 'interior', 'church'],
     build(theme, seed, size) {
         return {
             size: square(size),
@@ -211,7 +211,7 @@ export const floorSplattered: TextureRecipe = {
 export const ceiling: TextureRecipe = {
     name: 'ceiling',
     description: 'the ground of the theme, darker than the floor, as wide as long',
-    ambiances: ['dungeon', 'cave', 'interior'],
+    ambiances: ['dungeon', 'cave', 'interior', 'church'],
     build(theme, seed, size) {
         return {
             size: square(size),
@@ -235,7 +235,7 @@ export const ceiling: TextureRecipe = {
 export const ceilingOpening: TextureRecipe = {
     name: 'ceiling-opening',
     description: 'the ceiling, with a dark square opening in its middle',
-    ambiances: ['dungeon', 'interior'],
+    ambiances: ['dungeon', 'interior', 'church'],
     build(theme, seed, size) {
         return {
             size: square(size),

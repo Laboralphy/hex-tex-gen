@@ -97,3 +97,10 @@ export const burntWallInterior = burntWall(
     { opacity: [0.7, 0.9], char: [0.2, 0.5] },
     'the plain wall, blackened by a fire that burned at its foot',
 );
+
+/** the burnt wall of churches: pale stones blackened like those of dungeons */
+export const burntWallChurch = burntWall(
+    'church',
+    { opacity: [0.7, 0.9], char: [0.2, 0.5] },
+    'the plain wall, blackened by a fire that burned at its foot',
+);
