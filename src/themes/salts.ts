@@ -125,3 +125,5 @@ export const SALT_CHURCH_WINDOW = 1028;
 export const SALT_CHURCH_BARRED_WAY = 1029;
 export const SALT_NICHE_WALL = 1030;
 export const SALT_CHURCH_ALCOVE = 1031;
+export const SALT_LOW_WOODEN_SHELVES = 1032;
+export const SALT_LOW_METAL_SHELVES = 1033;

@@ -37,6 +37,8 @@ export {
     floor,
     floorSplattered,
     ground,
+    lowMetalShelves,
+    lowWoodenShelves,
     metalShelves,
     mainPalette,
     metalTable,

@@ -86,6 +86,8 @@ export {
     interiorDoorSingle,
     metalDoorDouble,
     metalDoorSingle,
+    lowMetalShelves,
+    lowWoodenShelves,
     metalShelves,
     mainPalette,
     metalTable,

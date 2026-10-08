@@ -5,6 +5,8 @@ import {
     SALT_COBWEB,
     SALT_COBWEB_SHELF,
     SALT_COBWEB_SIDE,
+    SALT_LOW_METAL_SHELVES,
+    SALT_LOW_WOODEN_SHELVES,
     SALT_METAL_SHELVES,
     SALT_METAL_TABLE,
     SALT_PLAIN_WALL,
@@ -272,10 +274,6 @@ export const stoneAltar: TextureRecipe = {
     },
 };
 
-/** the beams across, by the height of their top, in percent of the texture height: one
- * along the top edge, then the shelves */
-const SHELVES = [0, 30, 60, 90];
-
 /** thickness of a shelf, in percent of the texture height */
 const SHELF = 10;
 
@@ -285,11 +283,28 @@ const SIDE = 15;
 /** darkening of the wall at the back of the shelves: a little darker than an alcove */
 const BACK_SHADE = 0.75;
 
+/** the beams across shelves, by the height of their top, in percent of the texture height */
+type ShelvesLayout = {
+    /** top of the furniture: above it, the texture is transparent */
+    top: number;
+    /** thickness of the beam along the top */
+    crown: number;
+    /** tops of the shelves under it, `SHELF` thick, the last one on the floor */
+    shelves: number[];
+};
+
+/** full-height shelves: a beam along the top edge, then three shelves */
+const FULL_HEIGHT: ShelvesLayout = { top: 0, crown: SHELF, shelves: [30, 60, 90] };
+
+/** low shelves, two thirds of the height: a thick beam capping them, then two shelves */
+const LOW: ShelvesLayout = { top: 33, crown: 12, shelves: [62, 90] };
+
 /**
- * Full-height shelves against the wall: the plain wall of the set, same stones or planks
- * included, set back and darkened as a whole, a beam along the top edge and three shelves
+ * Shelves against the wall: the plain wall of the set, same stones or planks included,
+ * set back and darkened as a whole, a beam along the top of the furniture and shelves
  * across the whole width, and two sides along the left and right edges over their ends,
- * beams of a template.
+ * beams of a template. Full-height shelves run into the ceiling, their sides over the top
+ * beam; lower ones are capped by it, over their sides, and are transparent above it.
  * @param beam the template of the beams and their parameters
  * @param material extra parameters of the beams drawn from the theme, such as a wood
  */
@@ -299,7 +314,9 @@ function shelves(
     salt: number,
     beam: Record<string, unknown>,
     material: (theme: Theme) => Record<string, unknown> = () => ({}),
+    layout: ShelvesLayout = FULL_HEIGHT,
 ): TextureRecipe {
+    const { top, crown } = layout;
     return {
         name,
         description,
@@ -308,26 +325,47 @@ function shelves(
             const own = hashSeed(seed, salt);
             const [width, height] = size;
             const made = { ...beam, ...material(theme), age: theme.decor.age };
-            const thick = Math.max(1, Math.round((SHELF / 100) * height));
-            const side = Math.max(1, Math.round((SIDE / 100) * width));
-            const shelf = (y: number, k: number): Placement => ({
-                patch: { ...made, size: [width, thick] },
+            const across = (y: number, thickness: number, k: number): Placement => ({
+                patch: {
+                    ...made,
+                    size: [width, Math.max(1, Math.round((thickness / 100) * height))],
+                },
                 x: 0,
                 y,
                 width: 100,
-                height: SHELF,
+                height: thickness,
                 wrap: false,
                 seed: hashSeed(own, k),
             });
+            const side = Math.max(1, Math.round((SIDE / 100) * width));
+            const sideHeight = 100 - top;
             const upright = (x: number, k: number): Placement => ({
-                patch: { ...made, direction: 'vertical', size: [side, height] },
+                patch: {
+                    ...made,
+                    direction: 'vertical',
+                    size: [side, Math.round((sideHeight / 100) * height)],
+                },
                 x,
-                y: 0,
+                y: top,
                 width: SIDE,
-                height: 100,
+                height: sideHeight,
                 wrap: false,
                 seed: hashSeed(own, k),
             });
+            const k = layout.shelves.length + 1;
+            const capping = across(top, crown, 0);
+            const beams = [
+                ...(top > 0 ? [] : [capping]),
+                ...layout.shelves.map((y, i) => across(y, SHELF, i + 1)),
+                upright(0, k),
+                upright(100 - SIDE, k + 1),
+                ...(top > 0 ? [capping] : []),
+            ];
+            // the middles of the beams over a compartment
+            const ceilings = [
+                top + crown / 2,
+                ...layout.shelves.slice(0, -1).map((y) => y + SHELF / 2),
+            ];
             return {
                 size,
                 // the seed of the plain wall: the same stones, in the shade of the shelves
@@ -338,20 +376,31 @@ function shelves(
                         id: 'back',
                         patch: { template: 'opening', back: { mode: 'shade', shade: BACK_SHADE } },
                         x: 0,
-                        y: 0,
+                        y: top,
                         width: 100,
-                        height: 100,
+                        height: 100 - top,
                         wrap: false,
                     },
-                    // the shelves, then the sides over their ends
+                    // nothing above the furniture: the engine draws the wall behind it
+                    ...(top > 0
+                        ? [
+                              {
+                                  id: 'above',
+                                  patch: { template: 'opening', depth: 0, back: { mode: 'cut' } },
+                                  x: 0,
+                                  y: 0,
+                                  width: 100,
+                                  height: top,
+                                  wrap: false,
+                              },
+                          ]
+                        : []),
                     // in an upper corner of a compartment, under a beam, against a side
                     ...cobweb(own, theme.decor.age, size, (side) => ({
                         x: side === 'left' ? SIDE / 2 : 100 - SIDE / 2,
-                        y: pickOne(SHELVES.slice(0, -1), own, SALT_COBWEB_SHELF) + SHELF / 2,
+                        y: pickOne(ceilings, own, SALT_COBWEB_SHELF),
                     })),
-                    ...SHELVES.map((y, k) => shelf(y, k)),
-                    upright(0, SHELVES.length),
-                    upright(100 - SIDE, SHELVES.length + 1),
+                    ...beams,
                 ],
             };
         },
@@ -373,4 +422,24 @@ export const metalShelves = shelves(
     'full-height metal shelves, three girders across the darkened wall between two sides',
     SALT_METAL_SHELVES,
     { template: 'beam', profile: 'girder' },
+);
+
+/** low wooden shelves: two levels under a thick wooden top, transparent above */
+export const lowWoodenShelves = shelves(
+    'low-wooden-shelves',
+    'wooden shelves two thirds of the height: two levels under a thick wooden top, transparent above',
+    SALT_LOW_WOODEN_SHELVES,
+    { template: 'woodbeam', profile: 'squared' },
+    beamWood,
+    LOW,
+);
+
+/** low metal shelves: two levels under a riveted girder, transparent above */
+export const lowMetalShelves = shelves(
+    'low-metal-shelves',
+    'metal shelves two thirds of the height: two levels under a riveted girder, transparent above',
+    SALT_LOW_METAL_SHELVES,
+    { template: 'beam', profile: 'girder' },
+    () => ({}),
+    LOW,
 );

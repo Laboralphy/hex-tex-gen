@@ -733,8 +733,54 @@ describe('generateSet', () => {
         expect(s).toBeLessThan(a);
     });
 
+    it('sets low shelves, capped by a thick beam, transparent above, in wood and in metal', () => {
+        for (const ambiance of Object.keys(ambiances)) {
+            const { textures, theme } = generateSet({ seed: 3, ambiance });
+            for (const [name, template] of [
+                ['low-wooden-shelves', 'woodbeam'],
+                ['low-metal-shelves', 'beam'],
+            ]) {
+                const shelves = textures[name];
+                expect(shelves.seed).toBe(textures['plain-wall'].seed);
+                expect(shelves.patches[0]).toEqual(textures['plain-wall'].patches[0]);
+                const [, back, above, ...beams] = shelves.patches.filter((p) => p.id !== 'cobweb');
+                expect(back).toMatchObject({ x: 0, y: 33, width: 100, height: 67 });
+                expect(above).toMatchObject({
+                    patch: { template: 'opening', back: { mode: 'cut' } },
+                    y: 0,
+                    height: 33,
+                });
+                const [s62, s90, left, right, top] = beams;
+                expect(s62).toMatchObject({ x: 0, y: 62, width: 100, height: 10 });
+                expect(s90).toMatchObject({ x: 0, y: 90, width: 100, height: 10 });
+                expect(left).toMatchObject({ x: 0, y: 33, width: 15, height: 67 });
+                expect(right).toMatchObject({ x: 85, y: 33, width: 15, height: 67 });
+                // laid last, over the ends of the sides
+                expect(top).toMatchObject({ x: 0, y: 33, width: 100, height: 12 });
+                for (const beam of beams) {
+                    expect(beam.patch).toMatchObject({ template, age: theme.decor.age });
+                }
+            }
+        }
+        const set = generateSet({ seed: 3, ambiance: 'dungeon', size: [64, 128] });
+        for (const name of ['low-wooden-shelves', 'low-metal-shelves']) {
+            const texture = renderTexture(set.textures[name], createMemoryLoader({}));
+            const alpha = (x: number, y: number) => texture.getPixel(x, y) & 0xff;
+            expect(alpha(32, 20), name).toBe(0);
+            expect(alpha(32, 60), name).toBe(255);
+            expect(alpha(32, 110), name).toBe(255);
+        }
+    });
+
     it('spins cobwebs on furniture as often as the decorations are worn', () => {
-        const furniture = ['wooden-table', 'metal-table', 'wooden-shelves', 'metal-shelves'];
+        const furniture = [
+            'wooden-table',
+            'metal-table',
+            'wooden-shelves',
+            'metal-shelves',
+            'low-wooden-shelves',
+            'low-metal-shelves',
+        ];
         const share: Record<string, number> = {};
         for (const ambiance of Object.keys(ambiances)) {
             let [webs, ages] = [0, 0];
